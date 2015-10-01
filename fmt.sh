@@ -7,7 +7,7 @@ PRIMERA_FILA_TABULADO=`mktemp /tmp/sbd_XXXXXXXX`
 FINAL_SIN_LINEA=`mktemp /tmp/sbd_XXXXXXXX`
 FINAL_SIN_LINEA_RETABULADO=`mktemp /tmp/sbd_XXXXXXXX`
 RESULTADO_FINAL=`mktemp /tmp/sbd_XXXXXXXX`
-NB_ITEMS="instancias"
+NB_ITEMS="chuletas"
 
 
 column -t > $INICIAL_TABULADO
