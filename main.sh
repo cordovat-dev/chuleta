@@ -49,7 +49,7 @@ function reporte {
 	rm $TEMP
 }
 
-locate -i chuleta | egrep -r "\.txt$" | grep -i "$TERMINO" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+locate -i chuleta | egrep "$DIRBASE" | egrep -r "\.txt$" | grep -i "$TERMINO" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
@@ -58,6 +58,8 @@ if [ $CANT_RESULTADOS -eq 1 ]; then
 	abrir `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le 12 ]; then
 	menu "$TEMPORAL"
+elif [ $CANT_RESULTADOS -gt 12 ];then
+	reporte "$TEMPORAL"
 fi
 
 rm $TEMPORAL
