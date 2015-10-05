@@ -3,6 +3,7 @@
 LARGO_PERMITIDO=$1
 DIRBASE=$2
 TERMINO=$3
+LISTA_PALABRAS="${@:3}"
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
@@ -49,7 +50,20 @@ function reporte {
 	rm $TEMP
 }
 
-locate -i chuleta | egrep "$DIRBASE" | egrep -r "\.txt$" | grep -i "$TERMINO" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+function filtrar {
+	LISTA="$1"
+	cat - | while read LINE
+	do
+		for termino in ${LISTA[@]}; do			
+			LINE=`echo "$LINE"|grep -i $termino`
+		done
+		if [ -n "$LINE" ];then
+			echo "$LINE"
+		fi
+	done	
+}
+
+locate -i chuleta | egrep "$DIRBASE" | egrep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
