@@ -63,7 +63,7 @@ function filtrar {
 	done	
 }
 
-locate -i chuleta | egrep "$DIRBASE" | egrep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+locate -ib chuleta | egrep "$DIRBASE" | egrep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
