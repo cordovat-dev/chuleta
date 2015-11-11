@@ -4,9 +4,15 @@ LARGO_PERMITIDO=$1
 DIRBASE=$2
 TERMINO=$3
 LISTA_PALABRAS="${@:3}"
+COMANDO="abrir"
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
+
+if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|grep -e -e`" ];then	
+	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/-e//g'`"
+	COMANDO="editar"
+fi
 
 function abrir {
 	CHULETA="$DIRBASE/$1"
@@ -17,6 +23,10 @@ function abrir {
 		echo
 		cat "$CHULETA"
 	fi	
+}
+
+function editar {
+	gnome-open $DIRBASE/$1
 }
 
 function menu {
@@ -34,7 +44,7 @@ function menu {
 			OPCION=`sed "${respuesta}q;d" "$1"`
 			echo
 			echo $OPCION
-			abrir $OPCION
+			$COMANDO $OPCION
 		fi
 	fi
 	rm $TEMP
@@ -69,7 +79,7 @@ CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
 if [ $CANT_RESULTADOS -eq 1 ]; then
 	cat "$TEMPORAL"
-	abrir `cat "$TEMPORAL"`
+	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le 12 ]; then
 	menu "$TEMPORAL"
 elif [ $CANT_RESULTADOS -gt 12 ];then
