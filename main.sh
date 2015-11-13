@@ -9,7 +9,7 @@ COMANDO="abrir"
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
 
-if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|grep -e -e`" ];then	
+if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e -e`" ];then	
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/-e//g'`"
 	COMANDO="editar"
 fi
@@ -65,7 +65,7 @@ function filtrar {
 	cat - | while read LINE
 	do
 		for termino in ${LISTA[@]}; do			
-			LINE=`echo "$LINE"|grep -i $termino`
+			LINE=`echo "$LINE"|fgrep -i $termino`
 		done
 		if [ -n "$LINE" ];then
 			echo "$LINE"
@@ -73,7 +73,7 @@ function filtrar {
 	done	
 }
 
-locate -ib chuleta | egrep "$DIRBASE" | egrep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+locate -ib chuleta | fgrep "$DIRBASE" | fgrep -r ".txt" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
