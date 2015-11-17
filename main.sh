@@ -73,7 +73,7 @@ function filtrar {
 	done	
 }
 
-locate -ib chuleta | fgrep "$DIRBASE" | fgrep -r ".txt" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+locate -ib chuleta | fgrep "$DIRBASE" | grep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
