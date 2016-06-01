@@ -73,11 +73,15 @@ function filtrar {
 	done	
 }
 
-locate -ib chuleta | fgrep "$DIRBASE" | grep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+if [ "$TERMINO" = "--reciente" ];then
+	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 | sed -r "s|$DIRBASE||g" > $TEMPORAL
+else
+	locate -ib chuleta | fgrep "$DIRBASE" | grep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
-if [ $CANT_RESULTADOS -eq 1 ]; then
+if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--reciente" ] ; then
 	cat "$TEMPORAL"
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le 12 ]; then
