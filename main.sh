@@ -75,6 +75,13 @@ function filtrar {
 
 if [ "$TERMINO" = "--reciente" ];then
 	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 | sed -r "s|$DIRBASE||g" > $TEMPORAL
+elif [ "$TERMINO" = "--update" ];then
+	echo "Generando autocompletación"
+	$RUTA/gac.sh $DIRBASE
+	echo "Actualizando BD locate"
+	echo "sudo updatedb"
+	sudo updatedb
+	exit 0
 else
 	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi

@@ -9,7 +9,6 @@ sort -u $TEMP|tr '\n' ' ' > ~/.cache/chu/lista_topicos
 rm $TEMP
 
 for line in $(cat ~/.cache/chu/lista_topicos);do
-	echo $line
 	find "$DIRBASE/$line" -type f -iname "chuleta*.txt" \
 	|sed -r "s|$DIRBASE/$line||g" \
 	|sed -r "s|\.txt||g" \
@@ -30,7 +29,6 @@ find "$DIRBASE" -type f -iname "chuleta*.txt" \
 |tr ' ' '\n' \
 |sort -u \
 |tr '\n' ' ' >  ~/.cache/chu/lista_comp
-
 
 exit 0
 
