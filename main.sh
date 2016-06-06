@@ -76,7 +76,7 @@ function filtrar {
 if [ "$TERMINO" = "--reciente" ];then
 	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 | sed -r "s|$DIRBASE||g" > $TEMPORAL
 else
-	locate -ib chuleta | fgrep "$DIRBASE" | grep -r "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`

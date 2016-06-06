@@ -1,0 +1,25 @@
+_chu() 
+{
+	local cur prev opts
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+	ARCHLT=$(echo ~/.cache/chu/lista_comp)
+	ARCHTOPS=$(echo ~/.cache/chu/lista_topicos)
+
+	#op1="--reciente $(cat $ARCHLT)"
+
+	if [ -n "$(grep -w ${prev} $ARCHTOPS)" ]; then
+		op1="$(cat ~/.cache/chu/lista_$prev)"
+		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
+		return 0
+	else		
+		op1="--reciente $(cat $ARCHLT)"
+		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
+		return 0
+	fi
+
+	
+
+}
+complete -F _chu chu
