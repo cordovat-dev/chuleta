@@ -9,8 +9,8 @@ COMANDO="abrir"
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
 
-if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e -e`" ];then	
-	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/-e//g'`"
+if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--editar'`" ];then	
+	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--editar//g'`"
 	COMANDO="editar"
 fi
 
