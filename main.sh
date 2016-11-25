@@ -82,6 +82,11 @@ elif [ "$TERMINO" = "--update" ];then
 	echo "sudo updatedb"
 	sudo updatedb
 	exit 0
+elif [ "$TERMINO" = "--totales" ];then
+	echo
+	for f in $(ls $DIRBASE);do echo "$f: $(ls $DIRBASE${f}/chu*.txt 2>/dev/null|wc -l)"; done |column -t|sort -k 2 -gr
+	echo
+	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
 else
 	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi

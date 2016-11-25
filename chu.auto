@@ -7,14 +7,12 @@ _chu()
 	ARCHLT=$(echo ~/.cache/chu/lista_comp)
 	ARCHTOPS=$(echo ~/.cache/chu/lista_topicos)
 
-	#op1="--reciente --update --editar $(cat $ARCHLT)"
-
 	if [ -n "$(grep -w ${prev} $ARCHTOPS)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
 		return 0
 	else		
-		op1="--reciente --update --editar $(cat $ARCHLT)"
+		op1="--reciente --update --editar --totales $(cat $ARCHLT)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
 		return 0
 	fi
