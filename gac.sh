@@ -2,6 +2,7 @@
 
 DIRBASE=$1
 TEMP=`mktemp /tmp/chuleta.XXXXX`
+rm ~/.cache/chu/*
 for line in $(find "$DIRBASE" -type f -iname "chuleta*.txt");do 
 	echo "$line"|xargs dirname|sed 's#.*/##' >> $TEMP
 done
