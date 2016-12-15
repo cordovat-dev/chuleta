@@ -87,6 +87,11 @@ elif [ "$TERMINO" = "--totales" ];then
 	for f in $(ls $DIRBASE);do echo "$f: $(ls $DIRBASE${f}/chu*.txt 2>/dev/null|wc -l)"; done |column -t|sort -k 2 -gr
 	echo
 	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
+elif [ "$TERMINO" = "--mostrar_topicos" ];then
+	for line in $(cat ~/.cache/chu/lista_topicos); do
+		echo $line
+	done
+	exit 0
 else
 	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
