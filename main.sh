@@ -8,6 +8,7 @@ COMANDO="abrir"
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
+TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
 
 if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--editar'`" ];then	
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--editar//g'`"
@@ -73,15 +74,25 @@ function filtrar {
 	done	
 }
 
+function salir {
+	rm ${TEMPORAL2} ${TEMPORAL}
+	exit $1
+}
+
 if [ "$TERMINO" = "--reciente" ];then
-	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
+	for s in $(cat $TEMPORAL);do
+		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE||g" ) >> ${TEMPORAL2}
+	done
+	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
+	
 elif [ "$TERMINO" = "--update" ];then
 	echo "Generando autocompletación"
 	$RUTA/gac.sh $DIRBASE
 	echo "Actualizando BD locate"
 	echo "sudo updatedb"
 	sudo updatedb
-	exit 0
+	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
 	for f in $(ls $DIRBASE);do echo "$f: $(ls $DIRBASE${f}/chu*.txt 2>/dev/null|wc -l)"; done |column -t|sort -k 2 -gr
@@ -91,7 +102,7 @@ elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	for line in $(cat ~/.cache/chu/lista_topicos); do
 		echo $line
 	done
-	exit 0
+	salir 0
 else
 	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
@@ -107,9 +118,8 @@ elif [ $CANT_RESULTADOS -gt 12 ];then
 	reporte "$TEMPORAL"
 fi
 
-rm $TEMPORAL
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
-exit 0
+salir 0
 
 
 
