@@ -12,7 +12,7 @@ _chu()
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
 		return 0
 	else		
-		op1="--reciente --update --editar --totales --mostrar_topicos $(cat $ARCHLT)"
+		op1="--reciente --update --editar --totales --mostrar_topicos --mostrar_terminos $(cat $ARCHLT)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
 		return 0
 	fi

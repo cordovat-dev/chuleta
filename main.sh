@@ -103,6 +103,9 @@ elif [ "$TERMINO" = "--mostrar_topicos" ];then
 		echo $line
 	done
 	salir 0
+elif [ "$TERMINO" = "--mostrar_terminos" ];then
+	cat ~/.cache/chu/lista_comp
+	salir 0
 else
 	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi

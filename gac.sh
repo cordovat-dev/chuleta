@@ -31,6 +31,8 @@ find "$DIRBASE" -type f -iname "chuleta*.txt" \
 |sort -u \
 |tr '\n' ' ' >  ~/.cache/chu/lista_comp
 
+echo '	' >> ~/.cache/chu/lista_comp
+
 exit 0
 
 
