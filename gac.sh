@@ -45,9 +45,9 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
 	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
 	find "$ruta_topico" -type f -iname "chuleta*.txt" \
-	|sed -r "s|$DIRBASE/$line||g" \
+	|sed -r "s|$ruta_topico||g" \
 	|sed -r "s|\.txt||g" \
-	|sed -r "s|chuleta_||g" \
+	|sed -r "s|$DIRBASE||g" \
 	|sed -r "s|/| |g" \
 	|sed -r "s|_| |g" \
 	|tr ' ' '\n' \
