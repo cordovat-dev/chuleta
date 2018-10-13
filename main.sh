@@ -90,12 +90,12 @@ elif [ "$TERMINO" = "--update" ];then
 	echo "Generando autocompletación"
 	sudo $RUTA/gac.sh $DIRBASE
 	echo "Actualizando BD locate"
-	echo "sudo updatedb -U ~/Documentos/referencia/chuletas/ -o ~/.cache/chu/db"
-	sudo updatedb -U ~/Documentos/referencia/chuletas/ -o ~/.cache/chu/db -n .git
+	echo "sudo updatedb -U $DIRBASE -o ~/.cache/chu/db"
+	sudo updatedb -U $DIRBASE -o ~/.cache/chu/db -n .git
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
-	for f in $(ls $DIRBASE);do echo "$f: $(ls $DIRBASE${f}/chu*.txt 2>/dev/null|wc -l)"; done |column -t|sort -k 2 -gr
+	for f in $(ls $DIRBASE);do echo "$f: $(ls ${DIRBASE}/${f}/chu*.txt|wc -l)"; done |column -t|sort -k 2 -gr
 	echo
 	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
 elif [ "$TERMINO" = "--mostrar_topicos" ];then
@@ -107,7 +107,7 @@ elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	cat ~/.cache/chu/lista_comp
 	salir 0
 else
-	locate -d ~/.cache/chu/db -ib chuleta | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -A -d ~/.cache/chu/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
