@@ -88,10 +88,10 @@ if [ "$TERMINO" = "--reciente" ];then
 	
 elif [ "$TERMINO" = "--update" ];then
 	echo "Generando autocompletación"
-	$RUTA/gac.sh $DIRBASE
+	sudo $RUTA/gac.sh $DIRBASE
 	echo "Actualizando BD locate"
-	echo "sudo updatedb"
-	sudo updatedb
+	echo "sudo updatedb -U ~/Documentos/referencia/chuletas/ -o ~/.cache/chu/db"
+	sudo updatedb -U ~/Documentos/referencia/chuletas/ -o ~/.cache/chu/db -n .git
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
@@ -107,7 +107,7 @@ elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	cat ~/.cache/chu/lista_comp
 	salir 0
 else
-	locate -ib chuleta | fgrep "$DIRBASE" | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -d ~/.cache/chu/db -ib chuleta | grep "\.txt$" | filtrar "$LISTA_PALABRAS" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
