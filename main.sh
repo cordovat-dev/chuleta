@@ -24,6 +24,8 @@ function abrir {
 		echo
 		cat "$CHULETA"
 	fi	
+	RUTA_CACHE=~/.cache/chu
+	echo "$CHULETA" >> ${RUTA_CACHE}/frecuentes
 }
 
 function editar {
