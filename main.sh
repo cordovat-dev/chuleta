@@ -5,6 +5,7 @@ DIRBASE=$2
 TERMINO=$3
 LISTA_PALABRAS="${@:3}"
 COMANDO="abrir"
+RUTA_LOGS=~/.cache/chu.logs
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
@@ -24,8 +25,7 @@ function abrir {
 		echo
 		cat "$CHULETA"
 	fi	
-	RUTA_CACHE=~/.cache/chu
-	echo "$CHULETA" >> ${RUTA_CACHE}/frecuentes
+	echo "$CHULETA" >> ${RUTA_LOGS}/frecuentes
 }
 
 function editar {
