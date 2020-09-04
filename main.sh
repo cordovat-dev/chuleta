@@ -97,7 +97,9 @@ elif [ "$TERMINO" = "--update" ];then
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
-	for f in $(ls $DIRBASE);do echo "$f: $(ls ${DIRBASE}/${f}/chu*.txt|wc -l)"; done |column -t|sort -k 2 -gr
+	for f in $(ls $DIRBASE);do 
+		echo "$f: $(find ${DIRBASE}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
+	done |column -t|sort -k 2 -gr
 	echo
 	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
 elif [ "$TERMINO" = "--mostrar_topicos" ];then
