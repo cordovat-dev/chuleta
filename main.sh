@@ -103,9 +103,12 @@ elif [ "$TERMINO" = "--totales" ];then
 	echo
 	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
 elif [ "$TERMINO" = "--mostrar_topicos" ];then
-	for line in $(cat ~/.cache/chu/lista_topicos); do
-		echo $line
-	done
+	cd ${DIRBASE}
+	tree -d .
+	cd -
+	#for line in $(cat ~/.cache/chu/lista_topicos); do
+	#	echo $line
+	#done
 	salir 0
 elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	cat ~/.cache/chu/lista_comp
