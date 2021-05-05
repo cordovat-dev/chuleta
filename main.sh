@@ -20,7 +20,7 @@ function abrir {
 	CHULETA="$DIRBASE/$1"
 	LONGITUD=`wc -l < "$CHULETA"`
 	if [ $LONGITUD -gt $LARGO_PERMITIDO ];then
-		gnome-open "$CHULETA"
+		start "$CHULETA"
 	else
 		echo
 		cat "$CHULETA"
@@ -29,7 +29,7 @@ function abrir {
 }
 
 function editar {
-	gnome-open $DIRBASE/$1
+	start $DIRBASE/$1
 }
 
 function menu {
