@@ -14,13 +14,15 @@ function borrar_temp()
 	rm -rf $TEMP ${TEMP2} ${TEMP3}
 }
 
-
-for line in $(find "$DIRBASE" -type f -iname "chuleta*.txt");do
-	VA=$(echo "$line"|xargs dirname|sed 's#.*/##')
+echo b1
+for line in $(locate -A -d ~/.cache/chu/db -iw chuleta);do
+	echo $line	
+	VA=$(basename $(dirname "$line"))
 	echo $VA >> $TEMP
 	VB=$(echo "$line"|xargs dirname)
 	echo "$VA	$VB" >> ${TEMP2}
 done
+echo b2
 cp $RUTA_CACHE/* ${TEMP3}/
 rm $RUTA_CACHE/*
 sort -u $TEMP|tr '\n' ' ' > $ARCHIVO_TOPICOS
@@ -37,6 +39,8 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	echo
 	borrar_temp
 	salir 1
+else
+	cp ${TEMP3}/db $RUTA_CACHE/
 fi
 
 borrar_temp

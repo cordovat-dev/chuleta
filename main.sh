@@ -89,14 +89,14 @@ if [ "$TERMINO" = "--reciente" ];then
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 	
 elif [ "$TERMINO" = "--update" ];then
-	echo "Generando autocompletación"
-	#$RUTA/gac.sh $DIRBASE
 	XXX=~
 	echo "Actualizando BD locate"
-	echo "updatedb --localpaths=\"$DIRBASE\" --output=$XXX/.cache/chu/db --prunepaths=\"*/.git\""
+	echo "updatedb --localpaths=\"$DIRBASE\" --output=$XXX/.cache/chu/db --prunepaths=\"*\\.git\""
 	echo a1
-	updatedb --localpaths="$DIRBASE" --output="$XXX/.cache/chu/db" --prunepaths="*/.git"
+	updatedb --localpaths="$DIRBASE" --output="$XXX/.cache/chu/db" --prunepaths="$DIRBASE/.git"
 	echo a2
+	echo "Generando autocompletación"
+	$RUTA/gac.sh $DIRBASE
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
