@@ -91,10 +91,8 @@ if [ "$TERMINO" = "--reciente" ];then
 elif [ "$TERMINO" = "--update" ];then
 	XXX=~
 	echo "Actualizando BD locate"
-	echo "updatedb --localpaths=\"$DIRBASE\" --output=$XXX/.cache/chu/db --prunepaths=\"*\\.git\""
-	echo a1
+	echo "updatedb --localpaths=\"$DIRBASE\" --output=$XXX/.cache/chu/db --prunepaths=\"$DIRBASE/.git\""
 	updatedb --localpaths="$DIRBASE" --output="$XXX/.cache/chu/db" --prunepaths="$DIRBASE/.git"
-	echo a2
 	echo "Generando autocompletación"
 	$RUTA/gac.sh $DIRBASE
 	salir 0

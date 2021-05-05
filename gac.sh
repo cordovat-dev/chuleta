@@ -14,15 +14,12 @@ function borrar_temp()
 	rm -rf $TEMP ${TEMP2} ${TEMP3}
 }
 
-echo b1
 for line in $(locate -A -d ~/.cache/chu/db -iw chuleta);do
-	echo $line	
 	VA=$(basename $(dirname "$line"))
 	echo $VA >> $TEMP
-	VB=$(echo "$line"|xargs dirname)
+	VB=$(dirname "$line")
 	echo "$VA	$VB" >> ${TEMP2}
 done
-echo b2
 cp $RUTA_CACHE/* ${TEMP3}/
 rm $RUTA_CACHE/*
 sort -u $TEMP|tr '\n' ' ' > $ARCHIVO_TOPICOS
@@ -48,7 +45,7 @@ borrar_temp
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
 	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
-	find "$ruta_topico" -type f -iname "chuleta*.txt" \
+	locate -A -d ~/.cache/chu/db -ir "$ruta_topico/chuleta.*\.txt" \
 	|sed -r "s|$ruta_topico||g" \
 	|sed -r "s|\.txt||g" \
 	|sed -r "s|$DIRBASE||g" \
@@ -58,8 +55,7 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 	|sort -u \
 	|tr '\n' ' ' > $RUTA_CACHE/lista_$line
 done
-
-find "$DIRBASE" -type f -iname "chuleta*.txt" \
+locate -A -d ~/.cache/chu/db -iw "$chuleta.*\.txt" \
 |sed -r "s|$DIRBASE||g" \
 |sed -r "s|\.txt||g" \
 |sed -r "s|chuleta_||g" \
