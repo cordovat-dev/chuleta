@@ -115,8 +115,8 @@ elif [ "$TERMINO" = "--totales" ];then
 	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
 elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	cd ${DIRBASE}
-	tree -d .
-	cd -
+	cmd //c tree .
+	cd - > /dev/null
 	salir 0
 elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	cat $RUTA_CACHE/lista_comp
