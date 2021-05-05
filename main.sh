@@ -90,10 +90,13 @@ if [ "$TERMINO" = "--reciente" ];then
 	
 elif [ "$TERMINO" = "--update" ];then
 	echo "Generando autocompletación"
-	sudo $RUTA/gac.sh $DIRBASE
+	#$RUTA/gac.sh $DIRBASE
+	XXX=~
 	echo "Actualizando BD locate"
-	echo "sudo updatedb -U $DIRBASE -o ~/.cache/chu/db"
-	sudo updatedb -U $DIRBASE -o ~/.cache/chu/db -n .git
+	echo "updatedb --localpaths=\"$DIRBASE\" --output=$XXX/.cache/chu/db --prunepaths=\"*/.git\""
+	echo a1
+	updatedb --localpaths="$DIRBASE" --output="$XXX/.cache/chu/db" --prunepaths="*/.git"
+	echo a2
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
