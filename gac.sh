@@ -63,7 +63,7 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 	|sort -u \
 	|tr '\n' ' ' > $RUTA_CACHE/lista_$line
 done
-locate -A -d $RUTA_CACHE/db -iw "$chuleta.*\.txt" \
+locate -A -d $RUTA_CACHE/db -ir "$chuleta.*\.txt" \
 |sed -r "s|$DIRBASE||g" \
 |sed -r "s|\.txt||g" \
 |sed -r "s|chuleta_||g" \

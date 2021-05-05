@@ -5,6 +5,7 @@ DIRBASE=$2
 TERMINO=$3
 LISTA_PALABRAS="${@:3}"
 COMANDO="abrir"
+RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
 
 RUTA=`dirname $0`
@@ -15,6 +16,14 @@ if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--editar'`" ];then
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--editar//g'`"
 	COMANDO="editar"
 fi
+
+function check_admin {
+	net session > /dev/null 2>&1
+	if [ $? -ne 0 ];then
+		echo "Esta operación debe ejecutarse como Admin"
+		salir 1
+	fi
+}
 
 function abrir {
 	CHULETA="$DIRBASE/$1"
@@ -89,10 +98,11 @@ if [ "$TERMINO" = "--reciente" ];then
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 	
 elif [ "$TERMINO" = "--update" ];then
+	check_admin
 	XXX=~
 	echo "Actualizando BD locate"
-	echo "updatedb --localpaths=\"$DIRBASE\" --output=$XXX/.cache/chu/db --prunepaths=\"$DIRBASE/.git\""
-	updatedb --localpaths="$DIRBASE" --output="$XXX/.cache/chu/db" --prunepaths="$DIRBASE/.git"
+	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
+	updatedb --localpaths="$DIRBASE" --output="$RUTA_CACHE/db" --prunepaths="$DIRBASE/.git"
 	echo "Generando autocompletación"
 	$RUTA/gac.sh $DIRBASE
 	salir 0
@@ -107,15 +117,12 @@ elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	cd ${DIRBASE}
 	tree -d .
 	cd -
-	#for line in $(cat ~/.cache/chu/lista_topicos); do
-	#	echo $line
-	#done
 	salir 0
 elif [ "$TERMINO" = "--mostrar_terminos" ];then
-	cat ~/.cache/chu/lista_comp
+	cat $RUTA_CACHE/lista_comp
 	salir 0
 else
-	locate -A -d ~/.cache/chu/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -A -d $RUTA_CACHE/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
