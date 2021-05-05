@@ -14,12 +14,20 @@ function borrar_temp()
 	rm -rf $TEMP ${TEMP2} ${TEMP3}
 }
 
-for line in $(locate -A -d ~/.cache/chu/db -iw chuleta);do
+CANT=$(locate -A -d $RUTA_CACHE/db -c -i chuleta_)
+PASO=$(( $CANT / 25 ))
+CONT=0
+for line in $(locate -A -d $RUTA_CACHE/db -iw chuleta);do
+	CONT=$(( $CONT + 1 ))
+	if [ $(( $CONT % $PASO )) -eq 0 ];then
+		echo -n "*"
+	fi
 	VA=$(basename $(dirname "$line"))
 	echo $VA >> $TEMP
 	VB=$(dirname "$line")
-	echo "$VA	$VB" >> ${TEMP2}
+	echo "$VA	$VB" >> ${TEMP2}	
 done
+echo
 cp $RUTA_CACHE/* ${TEMP3}/
 rm $RUTA_CACHE/*
 sort -u $TEMP|tr '\n' ' ' > $ARCHIVO_TOPICOS
@@ -45,7 +53,7 @@ borrar_temp
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
 	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
-	locate -A -d ~/.cache/chu/db -ir "$ruta_topico/chuleta.*\.txt" \
+	locate -A -d $RUTA_CACHE/db -ir "$ruta_topico/chuleta.*\.txt" \
 	|sed -r "s|$ruta_topico||g" \
 	|sed -r "s|\.txt||g" \
 	|sed -r "s|$DIRBASE||g" \
@@ -55,7 +63,7 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 	|sort -u \
 	|tr '\n' ' ' > $RUTA_CACHE/lista_$line
 done
-locate -A -d ~/.cache/chu/db -iw "$chuleta.*\.txt" \
+locate -A -d $RUTA_CACHE/db -iw "$chuleta.*\.txt" \
 |sed -r "s|$DIRBASE||g" \
 |sed -r "s|\.txt||g" \
 |sed -r "s|chuleta_||g" \
