@@ -27,7 +27,7 @@ filter() {
 	done
 }
 
-
+echo
 sort $ARCHIVO | uniq -c | sort -nrk 1 > $TEMP1
 AVG=$(cat $TEMP1| awk '{print $1}' | avg)
 filter $AVG < $TEMP1 > $TEMP2

@@ -121,7 +121,7 @@ elif [ "$TERMINO" = "--mostrar_topicos" ];then
 elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	cat $RUTA_CACHE/lista_comp
 	salir 0
-elif [ "$TERMINO" = "--tops" ];then
+elif [ "$TERMINO" = "--frecuentes" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1	
 	$RUTA/tops.sh "$TEMP1"
