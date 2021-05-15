@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARCHIVO=~/.cache/chu.logs/frecuentes
+ARCHIVO="$1"
 RUTA=$(dirname $0)
 TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 TEMP2=$(mktemp /tmp/chuleta.XXXXX)
@@ -26,6 +26,7 @@ filter() {
 		fi
 	done
 }
+
 
 sort $ARCHIVO | uniq -c | sort -nrk 1 > $TEMP1
 AVG=$(cat $TEMP1| awk '{print $1}' | avg)
