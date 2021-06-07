@@ -24,7 +24,7 @@ function abrir {
 	else
 		echo
 		cat "$CHULETA"
-	fi	
+	fi
 	echo "$CHULETA" >> ${RUTA_LOGS}/frecuentes
 }
 
@@ -106,9 +106,6 @@ elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	cd ${DIRBASE}
 	tree -d .
 	cd -
-	#for line in $(cat ~/.cache/chu/lista_topicos); do
-	#	echo $line
-	#done
 	salir 0
 elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	cat ~/.cache/chu/lista_comp
