@@ -27,7 +27,6 @@ sed -r 's#/$##g'|sort -u|\
 awk 'BEGIN {FS="/"; OFS="\t"}{print $NF, $0}'|\
 sort -u > $TEMP2
 
-echo
 cp $RUTA_CACHE/* ${TEMP3}/
 rm $RUTA_CACHE/*
 
@@ -58,15 +57,8 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 	awk -v RTO="$ruta_topico" -f $RUTA_SCRIPT/glst.awk > $RUTA_CACHE/lista_$line
 done
 
-locate -A -d $RUTA_CACHE/db -ir "$chuleta.*\.txt" \
-|sed -r "s|$DIRBASE||g" \
-|sed -r "s|\.txt||g" \
-|sed -r "s|chuleta_||g" \
-|sed -r "s|/| |g" \
-|sed -r "s|_| |g" \
-|tr ' ' '\n' \
-|sort -u \
-|tr '\n' ' ' >  $RUTA_CACHE/lista_comp
+locate -A -d $RUTA_CACHE/db -ir "$chuleta.*\.txt" |\
+awk -v RTO="$DIRBASE" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
  
 echo '	' >> $RUTA_CACHE/lista_comp
 
