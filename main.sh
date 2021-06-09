@@ -5,6 +5,7 @@ DIRBASE=$2
 TERMINO=$3
 LISTA_PALABRAS="${@:3}"
 COMANDO="abrir"
+RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
 
 RUTA=`dirname $0`
@@ -63,19 +64,6 @@ function reporte {
 	rm $TEMP
 }
 
-function filtrar {
-	LISTA="$1"
-	cat - | while read LINE
-	do
-		for termino in ${LISTA[@]}; do			
-			LINE=`echo "$LINE"|fgrep -i $termino`
-		done
-		if [ -n "$LINE" ];then
-			echo "$LINE"
-		fi
-	done	
-}
-
 function salir {
 	rm ${TEMPORAL2} ${TEMPORAL}
 	exit $1
@@ -89,11 +77,11 @@ if [ "$TERMINO" = "--reciente" ];then
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 	
 elif [ "$TERMINO" = "--update" ];then
-	echo "Generando autocompletación"
-	sudo $RUTA/gac.sh $DIRBASE
 	echo "Actualizando BD locate"
 	echo "sudo updatedb -U $DIRBASE -o ~/.cache/chu/db"
 	sudo updatedb -U $DIRBASE -o ~/.cache/chu/db -n .git
+	echo "Generando autocompletación"
+	$RUTA/gac.sh $DIRBASE
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
@@ -108,10 +96,15 @@ elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	cd -
 	salir 0
 elif [ "$TERMINO" = "--mostrar_terminos" ];then
-	cat ~/.cache/chu/lista_comp
+	cat $RUTA_CACHE/lista_comp
 	salir 0
+elif [ "$TERMINO" = "--frecuentes" ];then
+	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
+	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1	
+	$RUTA/tops.sh "$TEMP1"
+	rm "$TEMP1" 2> /dev/null
 else
-	locate -A -d ~/.cache/chu/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -A -d $RUTA_CACHE/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
