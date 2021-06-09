@@ -86,7 +86,6 @@ if [ "$TERMINO" = "--reciente" ];then
 	
 elif [ "$TERMINO" = "--update" ];then
 	check_admin
-	XXX=~
 	echo "Actualizando BD locate"
 	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
 	updatedb --localpaths="$DIRBASE" --output="$RUTA_CACHE/db" --prunepaths="$DIRBASE/.git"
@@ -99,7 +98,7 @@ elif [ "$TERMINO" = "--totales" ];then
 		echo "$f: $(find ${DIRBASE}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
 	done |column -t|sort -k 2 -gr
 	echo
-	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
+	echo $(locate -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	cd ${DIRBASE}
 	cmd //c tree .
