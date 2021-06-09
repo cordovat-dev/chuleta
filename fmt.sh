@@ -35,7 +35,6 @@ sed '1,1 !d' $FINAL_SIN_LINEA_RETABULADO > $RESULTADO_FINAL
 echo $SEPARADOR >> $RESULTADO_FINAL
 sed "2,1000 !d" $FINAL_SIN_LINEA_RETABULADO >> $RESULTADO_FINAL
 
-### 1s
 while read linea
 do
   echo "  $linea"

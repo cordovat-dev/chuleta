@@ -72,19 +72,6 @@ function reporte {
 	rm $TEMP
 }
 
-function filtrar {
-	LISTA="$1"
-	cat - | while read LINE
-	do
-		for termino in ${LISTA[@]}; do			
-			LINE=`echo "$LINE"|fgrep -i $termino`
-		done
-		if [ -n "$LINE" ];then
-			echo "$LINE"
-		fi
-	done	
-}
-
 function salir {
 	rm ${TEMPORAL2} ${TEMPORAL}
 	exit $1
