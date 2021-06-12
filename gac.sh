@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 DIRBASE=$1
 NAMEDIRBASE=$(basename $DIRBASE)
@@ -16,14 +17,29 @@ function borrar_temp()
 	rm -rf $TEMP ${TEMP2} ${TEMP3}
 }
 
-locate -A -d $RUTA_CACHE/db -iw chuleta|\
-grep -Ev "^.+(\.txt|\.gitignore)$" |\
-grep -o "[^/]*$"|grep -v "${NAMEDIRBASE}"|\
-sort -u|awk '{A=A $1 " "} END {print A}' > $TEMP
+# 1. searches all chuletas in the db, 
+# 2. removes the basename, 
+# 3. removes the trailing slash (last char),
+# 4. removes everything but the basename
+# 5. creates a sorted unique list 
+# RESULT: a list of all topics
+locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt"|\
+grep -o "^/.*\/"|\
+sed 's/.$//g'|\
+grep -o '[^/]*$'|\
+sort -u > $TEMP
 
-locate -A -d $RUTA_CACHE/db -iw chuleta|\
-grep "\.txt$" |grep -o "^/.*/"|\
-sed -r 's#/$##g'|sort -u|\
+# 1. searches all chuletas in the db, 
+# 2. removes the basename, 
+# 3. removes the trailing slash,
+# 4. reates a sorted unique list
+# 5. splits using slash and prints number of fields and all fields
+# 6. creates a sorted unique list 
+# RESULT: a list of folders names (a folder for each topic/subtopic)
+locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt"|\
+grep -o "^/.*/"|\
+sed -r 's#/$##g'|\
+sort -u|\
 awk 'BEGIN {FS="/"; OFS="\t"}{print $NF, $0}'|\
 sort -u > $TEMP2
 
@@ -53,11 +69,11 @@ borrar_temp
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
 	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
-	locate -A -d $RUTA_CACHE/db -ir "$ruta_topico/chuleta.*\.txt" |\
+	locate -A -d $RUTA_CACHE/db -ir "$ruta_topico/chuleta_.*\.txt" |\
 	awk -v RTO="$ruta_topico" -f $RUTA_SCRIPT/glst.awk > $RUTA_CACHE/lista_$line
 done
 
-locate -A -d $RUTA_CACHE/db -ir "$chuleta.*\.txt" |\
+locate -A -d $RUTA_CACHE/db -ir "chuleta_.*\.txt" |\
 awk -v RTO="$DIRBASE" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
  
 echo '	' >> $RUTA_CACHE/lista_comp
