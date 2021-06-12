@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -euo pipefail
 LARGO_PERMITIDO=$1
 DIRBASE=$2
 TERMINO=$3
@@ -85,11 +85,13 @@ elif [ "$TERMINO" = "--update" ];then
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then
 	echo
-	for f in $(ls $DIRBASE);do 
-		echo "$f: $(find ${DIRBASE}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
+	for f in $(ls $DIRBASE);do
+		if [ -d "${DIRBASE}/$f" ];then
+			echo "$f: $(find ${DIRBASE}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
+		fi
 	done |column -t|sort -k 2 -gr
 	echo
-	echo $(find "$DIRBASE" -type f -iname "chuleta*.txt"|wc -l) chuletas
+	echo $(locate -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--mostrar_topicos" ];then
 	cd ${DIRBASE}
 	tree -d .

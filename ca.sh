@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -euo pipefail
 
 LI=0
 LM=0
