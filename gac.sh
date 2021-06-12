@@ -75,8 +75,6 @@ done
 
 locate -A -d $RUTA_CACHE/db -ir "chuleta_.*\.txt" |\
 awk -v RTO="$DIRBASE" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
- 
-echo '	' >> $RUTA_CACHE/lista_comp
 
 exit 0
 

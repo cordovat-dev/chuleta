@@ -21,5 +21,4 @@ END{
 	n=asort(arr,sarr)
 	for (x in sarr)
 		printf("%s ",sarr[x])
-	print "\n"
 }
