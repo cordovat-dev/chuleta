@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 DIR=$(dirname "$0")
 net session > /dev/null 2>&1

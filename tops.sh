@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 ARCHIVO="$1"
 RUTA=$(dirname $0)

@@ -1,6 +1,10 @@
 #!/bin/bash
-RUTA=`dirname $0`
+set -eo pipefail
 
+PARM1="$1"
+PARM2="$2"
+set -u
+RUTA=`dirname $0`
 INICIAL_TABULADO=`mktemp /tmp/sbd_XXXXXXXX`
 NUM_PARTE_INFERIOR=`mktemp /tmp/sbd_XXXXXXXX`
 PRIMERA_FILA_TABULADO=`mktemp /tmp/sbd_XXXXXXXX`
@@ -12,7 +16,7 @@ NB_ITEMS="chuletas"
 column -t > $INICIAL_TABULADO
 CANTIDAD=0
 
-if [ "$1" = "-n" ];then
+if [ "$PARM1" = "-n" ];then
 	sed "2,1000 !d" $INICIAL_TABULADO | cat > $NUM_PARTE_INFERIOR
 	NUM=""
 	CANTIDAD=`cat $INICIAL_TABULADO | wc -l`
@@ -41,7 +45,7 @@ do
 done < $RESULTADO_FINAL
 if [ $CANTIDAD -gt 4 ]; then
 
-	if [ "$2" = "-i" ];then
+	if [ "$PARM2" = "-i" ];then
 		NB_ITEMS="items"
 	fi
 
