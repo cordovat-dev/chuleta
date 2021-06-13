@@ -1,8 +1,9 @@
 #!/bin/bash
+
+LARGO_PERMITIDO="$1"
+DIRBASE="$2"
+TERMINO="$3"
 set -euo pipefail
-LARGO_PERMITIDO=$1
-DIRBASE=$2
-TERMINO=$3
 LISTA_PALABRAS="${@:3}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
@@ -120,6 +121,7 @@ elif [ $CANT_RESULTADOS -gt 12 ];then
 	reporte "$TEMPORAL"
 fi
 
+set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 salir 0
 
