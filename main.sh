@@ -1,8 +1,9 @@
 #!/bin/bash
+
+LARGO_PERMITIDO="$1"
+DIRBASE="$2"
+TERMINO="$3"
 set -euo pipefail
-LARGO_PERMITIDO=$1
-DIRBASE=$2
-TERMINO=$3
 LISTA_PALABRAS="${@:3}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
@@ -16,14 +17,6 @@ if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--editar'`" ];then
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--editar//g'`"
 	COMANDO="editar"
 fi
-
-function check_admin {
-	net session > /dev/null 2>&1
-	if [ $? -ne 0 ];then
-		echo "Esta operación debe ejecutarse como Admin"
-		salir 1
-	fi
-}
 
 function abrir {
 	CHULETA="$DIRBASE/$1"
@@ -85,7 +78,6 @@ if [ "$TERMINO" = "--reciente" ];then
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 	
 elif [ "$TERMINO" = "--update" ];then
-	check_admin
 	echo "Actualizando BD locate"
 	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
 	updatedb --localpaths="$DIRBASE" --output="$RUTA_CACHE/db" --prunepaths="$DIRBASE/.git"
@@ -129,6 +121,7 @@ elif [ $CANT_RESULTADOS -gt 12 ];then
 	reporte "$TEMPORAL"
 fi
 
+set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 salir 0
 
