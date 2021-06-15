@@ -73,10 +73,9 @@ function salir {
 if [ "$TERMINO" = "--reciente" ];then
 	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
 	for s in $(cat $TEMPORAL);do
-		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE||g" ) >> ${TEMPORAL2}
+		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE/||g" ) >> ${TEMPORAL2}
 	done
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
-	
 elif [ "$TERMINO" = "--update" ];then
 	echo "Actualizando BD locate"
 	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
@@ -103,7 +102,7 @@ elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	salir 0
 elif [ "$TERMINO" = "--frecuentes" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1	
+	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 else
