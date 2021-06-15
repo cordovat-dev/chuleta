@@ -27,7 +27,7 @@ function abrir {
 		echo
 		cat "$CHULETA"
 	fi	
-	echo "$CHULETA" >> ${RUTA_LOGS}/frecuentes
+	echo "$CHULETA" |sed -r "s|$DIRBASE/||g">> ${RUTA_LOGS}/frecuentes
 }
 
 function editar {
@@ -107,7 +107,7 @@ elif [ "$TERMINO" = "--frecuentes" ];then
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 else
-	locate -A -d $RUTA_CACHE/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
