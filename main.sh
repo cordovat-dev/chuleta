@@ -27,7 +27,7 @@ function abrir {
 		echo
 		cat "$CHULETA"
 	fi
-	echo "$CHULETA" >> ${RUTA_LOGS}/frecuentes
+	echo "$CHULETA" |sed -r "s|$DIRBASE/||g">> ${RUTA_LOGS}/frecuentes
 }
 
 function editar {
@@ -73,10 +73,9 @@ function salir {
 if [ "$TERMINO" = "--reciente" ];then
 	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
 	for s in $(cat $TEMPORAL);do
-		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE||g" ) >> ${TEMPORAL2}
+		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE/||g" ) >> ${TEMPORAL2}
 	done
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
-	
 elif [ "$TERMINO" = "--update" ];then
 	echo "Actualizando BD locate"
 	echo "sudo updatedb -U $DIRBASE -o ~/.cache/chu/db"
@@ -103,11 +102,11 @@ elif [ "$TERMINO" = "--mostrar_terminos" ];then
 	salir 0
 elif [ "$TERMINO" = "--frecuentes" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1	
+	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 else
-	locate -A -d $RUTA_CACHE/db -iw chuleta $LISTA_PALABRAS | grep "\.txt$" | sed -r "s|$DIRBASE||g" > $TEMPORAL
+	locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
