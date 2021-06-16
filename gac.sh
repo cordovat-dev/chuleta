@@ -51,8 +51,7 @@ cp ${TEMP2} $ARCHIVO_RUTAS_TOPICOS
 
 if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];then
 	echo
-	echo Tópicos duplicados. No se puede actualizar datos
-	echo de autocompletación:
+	echo Duplicated topics found. Can''t update autocomplete data:
 	echo
 	x="$(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -v "1"|awk '{print $2}')"
 	find $DIRBASE -type d -iname "$x"
