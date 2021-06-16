@@ -77,10 +77,10 @@ if [ "$TERMINO" = "--reciente" ];then
 	done
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 elif [ "$TERMINO" = "--update" ];then
-	echo "Actualizando BD locate"
+	echo "Updating database"
 	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
 	updatedb --localpaths="$DIRBASE" --output="$RUTA_CACHE/db" --prunepaths="$DIRBASE/.git"
-	echo "Generando autocompletación"
+	echo "Generating autocompletion"
 	$RUTA/gac.sh $DIRBASE
 	salir 0
 elif [ "$TERMINO" = "--totales" ];then

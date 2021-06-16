@@ -5,7 +5,7 @@ DIR=$(dirname "$0")
 set +e
 net session > /dev/null 2>&1
 if [ $? -ne 0 ];then
-	echo "Esta operación debe ejecutarse como Admin"
+	echo "This action must be run as Administrator"
 	exit 1
 fi
 set -e
