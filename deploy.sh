@@ -10,10 +10,10 @@ if [ $? -ne 0 ];then
 fi
 set -e
 
-if [ ! -d "~/.cache/chu" ];then
+if [ ! -d ~/.cache/chu ];then
 	mkdir ~/.cache/chu
 fi
-if [ ! -d "~/.cache/chu.logs" ];then
+if [ ! -d ~/.cache/chu.logs ];then
 	mkdir ~/.cache/chu.logs
 fi
 cp -f $DIR/chu.auto /usr/share/bash-completion/completions/chu
