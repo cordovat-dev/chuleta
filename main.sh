@@ -13,8 +13,8 @@ RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
 TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
 
-if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--editar'`" ];then	
-	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--editar//g'`"
+if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit'`" ];then	
+	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--edit//g'`"
 	COMANDO="editar"
 fi
 
@@ -70,7 +70,7 @@ function salir {
 	exit $1
 }
 
-if [ "$TERMINO" = "--reciente" ];then
+if [ "$TERMINO" = "--recent" ];then
 	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
 	for s in $(cat $TEMPORAL);do
 		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE/||g" ) >> ${TEMPORAL2}
@@ -83,7 +83,7 @@ elif [ "$TERMINO" = "--update" ];then
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $DIRBASE
 	salir 0
-elif [ "$TERMINO" = "--totales" ];then
+elif [ "$TERMINO" = "--totals" ];then
 	echo
 	for f in $(ls $DIRBASE);do
 		if [ -d "${DIRBASE}/$f" ];then
@@ -92,15 +92,15 @@ elif [ "$TERMINO" = "--totales" ];then
 	done |column -t|sort -k 2 -gr
 	echo
 	echo $(locate -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
-elif [ "$TERMINO" = "--mostrar_topicos" ];then
+elif [ "$TERMINO" = "--topics" ];then
 	cd ${DIRBASE}
 	cmd //c tree .
 	cd - > /dev/null
 	salir 0
-elif [ "$TERMINO" = "--mostrar_terminos" ];then
+elif [ "$TERMINO" = "--terms" ];then
 	cat $RUTA_CACHE/lista_comp
 	salir 0
-elif [ "$TERMINO" = "--frecuentes" ];then
+elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
@@ -111,7 +111,7 @@ fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
-if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--reciente" ] ; then
+if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then
 	cat "$TEMPORAL"
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le 12 ]; then
