@@ -23,7 +23,7 @@ sort $ARCHIVO | uniq -c | sort -nrk 1 > $TEMP1
 AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP1)
 awk -v AVG=$AVG '$1 >= AVG' < $TEMP1 > $TEMP2
 AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP2)
-echo "Cant	Chuletas" > $TEMP1
+echo "Count	Chuletas" > $TEMP1
 awk -v AVG=$AVG '$1 >= AVG {print $1,$2}' < $TEMP2 >> $TEMP1
 $RUTA/./fmt.sh -n < $TEMP1
 rm "$TEMP1 $TEMP2" 2> /dev/null
