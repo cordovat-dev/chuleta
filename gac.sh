@@ -23,7 +23,7 @@ function borrar_temp()
 # 4. removes everything but the basename
 # 5. creates a sorted unique list 
 # RESULT: a list of all topics
-locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt"|\
+locate --max-database-age -1 -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt"|\
 grep -o "^/.*\/"|\
 sed 's/.$//g'|\
 grep -o '[^/]*$'|\
@@ -36,7 +36,7 @@ sort -u > $TEMP
 # 5. splits using slash and prints number of fields and all fields
 # 6. creates a sorted unique list 
 # RESULT: a list of folders names (a folder for each topic/subtopic)
-locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt"|\
+locate --max-database-age -1 -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt"|\
 grep -o "^/.*/"|\
 sed -r 's#/$##g'|\
 sort -u|\
@@ -68,11 +68,11 @@ borrar_temp
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
 	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
-	locate -A -d $RUTA_CACHE/db -ir "$ruta_topico/chuleta_.*\.txt" |\
+	locate --max-database-age -1 -A -d $RUTA_CACHE/db -ir "$ruta_topico/chuleta_.*\.txt" |\
 	awk -v RTO="$ruta_topico" -f $RUTA_SCRIPT/glst.awk > $RUTA_CACHE/lista_$line
 done
 
-locate -A -d $RUTA_CACHE/db -ir "chuleta_.*\.txt" |\
+locate --max-database-age -1 -A -d $RUTA_CACHE/db -ir "chuleta_.*\.txt" |\
 awk -v RTO="$DIRBASE" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
 
 exit 0

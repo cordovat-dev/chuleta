@@ -91,7 +91,7 @@ elif [ "$TERMINO" = "--totals" ];then
 		fi
 	done |column -t|sort -k 2 -gr
 	echo
-	echo $(locate -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
+	echo $(locate --max-database-age -1 -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${DIRBASE}
 	tree -d .
@@ -106,7 +106,7 @@ elif [ "$TERMINO" = "--frequent" ];then
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 else
-	locate -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
+	locate --max-database-age -1 -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
