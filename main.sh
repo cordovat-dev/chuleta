@@ -1,5 +1,9 @@
 #!/bin/bash
 
+MAX_DB_AGE=""
+# if env var CHU_NO_OLD_DB_WRN is set (no matter the value), then age of locate database is ignored
+test -z ${CHU_NO_OLD_DB_WRN+x} || MAX_DB_AGE="--max-database-age -1"
+
 LARGO_PERMITIDO="$1"
 DIRBASE="$2"
 TERMINO="$3"
@@ -91,7 +95,7 @@ elif [ "$TERMINO" = "--totals" ];then
 		fi
 	done |column -t|sort -k 2 -gr
 	echo
-	echo $(locate --max-database-age -1 -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
+	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${DIRBASE}
 	tree -d .
@@ -106,7 +110,7 @@ elif [ "$TERMINO" = "--frequent" ];then
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 else
-	locate --max-database-age -1 -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
+	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
