@@ -72,7 +72,7 @@ function salir {
 
 if [ "$TERMINO" = "--recent" ];then
 	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -10 > $TEMPORAL
-	time while read s
+	while read s
 	do
 		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE/||g" ) >> ${TEMPORAL2}
 		#ls -l --time-style="+%y-%m-%d_%H:%M" $s | awk -v BDIR=/c/Users/Global/chuleta/chuleta-data/ 'func change(a,b) {while (i=index($0,a)) $0 = substr($0,1,i-1) b substr($0,i+length(a))} {change(BDIR,""); print $6, $7}'  >> ${TEMPORAL2}
