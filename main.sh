@@ -26,16 +26,16 @@ function abrir {
 	CHULETA="$DIRBASE/$1"
 	LONGITUD=`wc -l < "$CHULETA"`
 	if [ $LONGITUD -gt $LARGO_PERMITIDO ];then
-		gnome-open "$CHULETA"
+		start "$CHULETA"
 	else
 		echo
 		cat "$CHULETA"
-	fi
+	fi	
 	echo "$CHULETA" |sed -r "s|$DIRBASE/||g">> ${RUTA_LOGS}/frecuentes
 }
 
 function editar {
-	gnome-open $DIRBASE/$1
+	start $DIRBASE/$1
 }
 
 function menu {
@@ -82,8 +82,8 @@ if [ "$TERMINO" = "--recent" ];then
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 elif [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
-	echo "sudo updatedb -U $DIRBASE -o ~/.cache/chu/db"
-	sudo updatedb -U $DIRBASE -o ~/.cache/chu/db -n .git
+	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
+	updatedb --localpaths="$DIRBASE" --output="$RUTA_CACHE/db" --prunepaths="$DIRBASE/.git"
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $DIRBASE
 	salir 0
@@ -98,8 +98,8 @@ elif [ "$TERMINO" = "--totals" ];then
 	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${DIRBASE}
-	tree -d .
-	cd -
+	cmd //c tree .
+	cd - > /dev/null
 	salir 0
 elif [ "$TERMINO" = "--terms" ];then
 	cat $RUTA_CACHE/lista_comp
