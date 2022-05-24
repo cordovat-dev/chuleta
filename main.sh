@@ -98,7 +98,7 @@ elif [ "$TERMINO" = "--totals" ];then
 	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${DIRBASE}
-	cmd //c tree .
+	tree.com //a . | tail -n +3
 	cd - > /dev/null
 	salir 0
 elif [ "$TERMINO" = "--terms" ];then
