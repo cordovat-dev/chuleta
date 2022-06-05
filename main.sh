@@ -7,8 +7,21 @@ test -z ${CHU_NO_OLD_DB_WRN+x} || MAX_DB_AGE="--max-database-age -1"
 LARGO_PERMITIDO="$1"
 DIRBASE="$2"
 TERMINO="$3"
+echo $CHU_NO_OLD_DB_WRN
+echo $LARGO_PERMITIDO
+echo $DIRBASE
+echo $MAX_RESULTS_MENU
+
+source ~/.config/chu/chu.conf
 set -euo pipefail
 LISTA_PALABRAS="${@:3}"
+echo $LISTA_PALABRAS
+echo ============
+echo $CHU_NO_OLD_DB_WRN
+echo $LARGO_PERMITIDO
+echo $DIRBASE
+echo $MAX_RESULTS_MENU
+exit 0
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
