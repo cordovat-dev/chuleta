@@ -2,12 +2,12 @@
 
 set -euo pipefail
 source ~/.config/chu/chu.conf
-# variables read from conf file: CHU_NO_OLD_DB_WRN, LARGO_PERMITIDO, DIRBASE, MAX_RESULTS_MENU
+# variables read from conf file: NO_OLD_DB_WRN, LARGO_PERMITIDO, BASE_DIR, MAX_MENU_LENGTH
 MAX_DB_AGE=""
-test $CHU_NO_OLD_DB_WRN -eq 1 || MAX_DB_AGE="--max-database-age -1"
+test $NO_OLD_DB_WRN -eq 1 || MAX_DB_AGE="--max-database-age -1"
 
-DIRBASE=$1
-NAMEDIRBASE=$(basename $DIRBASE)
+BASE_DIR=$1
+NAMEDIRBASE=$(basename $BASE_DIR)
 RUTA_SCRIPT=$(dirname $0)
 RUTA_CACHE=~/.cache/chu
 ARCHIVO_TOPICOS=$RUTA_CACHE/lista_topicos
@@ -59,7 +59,7 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	echo Duplicated topics found. Can''t update autocomplete data:
 	echo
 	x="$(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -v "1"|awk '{print $2}')"
-	find $DIRBASE -type d -iname "$x"
+	find $BASE_DIR -type d -iname "$x"
 	cp -pr ${TEMP3}/* $RUTA_CACHE/
 	echo
 	borrar_temp
@@ -78,7 +78,7 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 done
 
 locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -ir "chuleta_.*\.txt" |\
-awk -v RTO="$DIRBASE" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
+awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
 
 exit 0
 

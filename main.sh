@@ -3,10 +3,10 @@
 set -euo pipefail
 TERMINO="$1"
 source ~/.config/chu/chu.conf
-# variables read from conf file: CHU_NO_OLD_DB_WRN, MAX_CAT_LENGTH, DIRBASE, MAX_RESULTS_MENU
+# variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH
 MAX_DB_AGE=""
-# if env var CHU_NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
-test $CHU_NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
+# if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
+test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
 LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
@@ -22,7 +22,7 @@ if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit'`" ];then
 fi
 
 function abrir {
-	CHULETA="$DIRBASE/$1"
+	CHULETA="$BASE_DIR/$1"
 	LONGITUD=`wc -l < "$CHULETA"`
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
 		start "$CHULETA"
@@ -30,11 +30,11 @@ function abrir {
 		echo
 		cat "$CHULETA"
 	fi	
-	echo "$CHULETA" |sed -r "s|$DIRBASE/||g">> ${RUTA_LOGS}/frecuentes
+	echo "$CHULETA" |sed -r "s|$BASE_DIR/||g">> ${RUTA_LOGS}/frecuentes
 }
 
 function editar {
-	start $DIRBASE/$1
+	start $BASE_DIR/$1
 }
 
 function menu {
@@ -74,29 +74,29 @@ function salir {
 }
 
 if [ "$TERMINO" = "--recent" ];then
-	find "$DIRBASE" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
+	find "$BASE_DIR" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
 	for s in $(cat $TEMPORAL);do
-		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$DIRBASE/||g" ) >> ${TEMPORAL2}
+		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$BASE_DIR/||g" ) >> ${TEMPORAL2}
 	done
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 elif [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
-	echo "updatedb --localpaths=\"$DIRBASE\" --output=$RUTA_CACHE/db --prunepaths=\"$DIRBASE/.git\""
-	updatedb --localpaths="$DIRBASE" --output="$RUTA_CACHE/db" --prunepaths="$DIRBASE/.git"
+	echo "updatedb --localpaths=\"$BASE_DIR\" --output=$RUTA_CACHE/db --prunepaths=\"$BASE_DIR/.git\""
+	updatedb --localpaths="$BASE_DIR" --output="$RUTA_CACHE/db" --prunepaths="$BASE_DIR/.git"
 	echo "Generating autocompletion"
-	$RUTA/gac.sh $DIRBASE
+	$RUTA/gac.sh $BASE_DIR
 	salir 0
 elif [ "$TERMINO" = "--totals" ];then
 	echo
-	for f in $(ls $DIRBASE);do
-		if [ -d "${DIRBASE}/$f" ];then
-			echo "$f: $(find ${DIRBASE}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
+	for f in $(ls $BASE_DIR);do
+		if [ -d "${BASE_DIR}/$f" ];then
+			echo "$f: $(find ${BASE_DIR}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
 		fi
 	done |column -t|sort -k 2 -gr
 	echo
 	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
 elif [ "$TERMINO" = "--topics" ];then
-	cd ${DIRBASE}
+	cd ${BASE_DIR}
 	tree.com //a . | tail -n +3
 	cd - > /dev/null
 	salir 0
@@ -105,7 +105,7 @@ elif [ "$TERMINO" = "--terms" ];then
 	salir 0
 elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1
+	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${BASE_DIR}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 elif [ "$TERMINO" = "--show_config" ];then
@@ -113,7 +113,7 @@ elif [ "$TERMINO" = "--show_config" ];then
 	echo
 	cat ~/.config/chu/chu.conf
 else
-	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
+	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
@@ -121,9 +121,9 @@ CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then
 	cat "$TEMPORAL"
 	$COMANDO `cat "$TEMPORAL"`
-elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_RESULTS_MENU ]; then
+elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
 	menu "$TEMPORAL"
-elif [ $CANT_RESULTADOS -gt $MAX_RESULTS_MENU ];then
+elif [ $CANT_RESULTADOS -gt $MAX_MENU_LENGTH ];then
 	reporte "$TEMPORAL"
 fi
 
