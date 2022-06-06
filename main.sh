@@ -107,6 +107,10 @@ elif [ "$TERMINO" = "--frequent" ];then
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${DIRBASE}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
+elif [ "$TERMINO" = "--show_config" ];then
+	echo ~/.config/chu/chu.conf
+	echo
+	cat ~/.config/chu/chu.conf
 else
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$DIRBASE/||g" > $TEMPORAL
 fi
@@ -116,9 +120,9 @@ CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then
 	cat "$TEMPORAL"
 	$COMANDO `cat "$TEMPORAL"`
-elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le 12 ]; then
+elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_RESULTS_MENU ]; then
 	menu "$TEMPORAL"
-elif [ $CANT_RESULTADOS -gt 12 ];then
+elif [ $CANT_RESULTADOS -gt $MAX_RESULTS_MENU ];then
 	reporte "$TEMPORAL"
 fi
 
