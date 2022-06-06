@@ -94,7 +94,7 @@ elif [ "$TERMINO" = "--totals" ];then
 		fi
 	done |column -t|sort -k 2 -gr
 	echo
-	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt") chuletas
+	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt$") chuletas
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${BASE_DIR}
 	tree.com //a . | tail -n +3
