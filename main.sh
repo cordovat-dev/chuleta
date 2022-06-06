@@ -1,27 +1,12 @@
 #!/bin/bash
 
-MAX_DB_AGE=""
-# if env var CHU_NO_OLD_DB_WRN is set (no matter the value), then age of locate database is ignored
-test -z ${CHU_NO_OLD_DB_WRN+x} || MAX_DB_AGE="--max-database-age -1"
-
-LARGO_PERMITIDO="$1"
-DIRBASE="$2"
-TERMINO="$3"
-echo $CHU_NO_OLD_DB_WRN
-echo $LARGO_PERMITIDO
-echo $DIRBASE
-echo $MAX_RESULTS_MENU
-
-source ~/.config/chu/chu.conf
 set -euo pipefail
-LISTA_PALABRAS="${@:3}"
-echo $LISTA_PALABRAS
-echo ============
-echo $CHU_NO_OLD_DB_WRN
-echo $LARGO_PERMITIDO
-echo $DIRBASE
-echo $MAX_RESULTS_MENU
-exit 0
+TERMINO="$1"
+source ~/.config/chu/chu.conf
+MAX_DB_AGE=""
+# if env var CHU_NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
+test $CHU_NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
+LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs

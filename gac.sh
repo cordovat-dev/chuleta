@@ -1,9 +1,9 @@
 #!/bin/bash
 
-MAX_DB_AGE=""
-test -z ${CHU_NO_OLD_DB_WRN+x} || MAX_DB_AGE="--max-database-age -1"
-
 set -euo pipefail
+source ~/.config/chu/chu.conf
+MAX_DB_AGE=""
+test $CHU_NO_OLD_DB_WRN -eq 1 || MAX_DB_AGE="--max-database-age -1"
 
 DIRBASE=$1
 NAMEDIRBASE=$(basename $DIRBASE)
