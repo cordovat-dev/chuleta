@@ -1,7 +1,7 @@
 #!/bin/bash
 
-set -euo pipefail
 TERMINO="$1"
+set -euo pipefail
 source ~/.config/chu/chu.conf
 # variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH
 MAX_DB_AGE=""
