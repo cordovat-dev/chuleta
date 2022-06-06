@@ -2,6 +2,7 @@
 
 set -euo pipefail
 source ~/.config/chu/chu.conf
+# variables read from conf file: CHU_NO_OLD_DB_WRN, LARGO_PERMITIDO, DIRBASE, MAX_RESULTS_MENU
 MAX_DB_AGE=""
 test $CHU_NO_OLD_DB_WRN -eq 1 || MAX_DB_AGE="--max-database-age -1"
 

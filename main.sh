@@ -3,6 +3,7 @@
 set -euo pipefail
 TERMINO="$1"
 source ~/.config/chu/chu.conf
+# variables read from conf file: CHU_NO_OLD_DB_WRN, LARGO_PERMITIDO, DIRBASE, MAX_RESULTS_MENU
 MAX_DB_AGE=""
 # if env var CHU_NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
 test $CHU_NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
