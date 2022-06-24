@@ -2,3 +2,4 @@
 !*.sh
 !*.awk
 !*.auto
+!*.conf
