@@ -15,6 +15,9 @@ RUTA_LOGS=~/.cache/chu.logs
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
 TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
+MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
+OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
+SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
 if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit'`" ];then	
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--edit//g'`"
@@ -25,7 +28,7 @@ function abrir {
 	CHULETA="$BASE_DIR/$1"
 	LONGITUD=`wc -l < "$CHULETA"`
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
-		start "$CHULETA"
+		$OPEN_COMMAND "$CHULETA"
 	else
 		echo
 		cat "$CHULETA"
@@ -34,7 +37,7 @@ function abrir {
 }
 
 function editar {
-	start $BASE_DIR/$1
+	$OPEN_COMMAND $BASE_DIR/$1
 }
 
 function menu {
@@ -81,8 +84,10 @@ if [ "$TERMINO" = "--recent" ];then
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
 elif [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
-	echo "updatedb --localpaths=\"$BASE_DIR\" --output=$RUTA_CACHE/db --prunepaths=\"$BASE_DIR/.git\""
-	updatedb --localpaths="$BASE_DIR" --output="$RUTA_CACHE/db" --prunepaths="$BASE_DIR/.git"
+	echo "$SUDO_COMMAND updatedb --localpaths=\"$BASE_DIR\" "
+	echo " --output=$RUTA_CACHE/db "
+	echo " --prunepaths=\"$BASE_DIR/.git\""
+	$SUDO_COMMAND updatedb --localpaths="$BASE_DIR" --output="$RUTA_CACHE/db" --prunepaths="$BASE_DIR/.git"
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	salir 0
@@ -97,8 +102,13 @@ elif [ "$TERMINO" = "--totals" ];then
 	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt$") chuletas
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${BASE_DIR}
-	tree.com //a . | tail -n +3
-	cd - > /dev/null
+	if [ $MINGW == "YES" ];then
+		tree.com //a . | tail -n +3
+		cd - > /dev/null
+	else
+		tree -d .
+		cd -		
+	fi
 	salir 0
 elif [ "$TERMINO" = "--terms" ];then
 	cat $RUTA_CACHE/lista_comp
