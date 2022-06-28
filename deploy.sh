@@ -23,8 +23,9 @@ fi
 if [ ! -d ~/.config/chu ];then
 	mkdir ~/.config/chu
 fi
-if [ ! -f ~/.config/chu/chu.config ];then
+if [ ! -f ~/.config/chu/chu.conf ];then
 	cp $DIR/chu.conf ~/.config/chu/
+	echo MINGW=$MINGW >> ~/.config/chu/chu.conf
 fi
 
 if [ $MINGW == "YES" ];then

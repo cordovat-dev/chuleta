@@ -15,7 +15,6 @@ RUTA_LOGS=~/.cache/chu.logs
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
 TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
-MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
 OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
