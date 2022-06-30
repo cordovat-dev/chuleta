@@ -16,7 +16,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	else		
-		op1="--recent --update --totals --topics --terms --edit --frequent --show_config $(cat $ARCHLT)"
+		op1="--recent --update --totals --topics --terms --edit --frequent --show_config --cached $(cat $ARCHLT)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
 		return 0
 	fi

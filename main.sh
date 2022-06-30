@@ -11,6 +11,7 @@ LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
+MENUCACHE=$RUTA_CACHE/menu$PPID
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
@@ -45,7 +46,7 @@ function menu {
 	COUNT=`wc -l < $1`
 	echo "Chuletas" > "$TEMP"
 	cat $1 >> "$TEMP"
-	$RUTA/./fmt.sh < "$TEMP"
+	$RUTA/./fmt.sh < "$TEMP" | tee $MENUCACHE
 	echo 
 	read -p "  ?  " respuesta
 	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
@@ -81,6 +82,7 @@ if [ "$TERMINO" = "--recent" ];then
 		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$BASE_DIR/||g" ) >> ${TEMPORAL2}
 	done
 	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
+	salir 0
 elif [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
 	echo "$SUDO_COMMAND updatedb --localpaths=\"$BASE_DIR\" "
@@ -99,6 +101,7 @@ elif [ "$TERMINO" = "--totals" ];then
 	done |column -t|sort -k 2 -gr
 	echo
 	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt$") chuletas
+	salir 0
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${BASE_DIR}
 	if [ $MINGW == "YES" ];then
@@ -112,15 +115,33 @@ elif [ "$TERMINO" = "--topics" ];then
 elif [ "$TERMINO" = "--terms" ];then
 	cat $RUTA_CACHE/lista_comp
 	salir 0
+elif [ "$TERMINO" = "--cached" ];then
+	set +u
+	LINENUM="$2"
+	set -u
+	if [ -f $MENUCACHE ];then
+		if [[ $LINENUM =~ [0-9]+ ]];then
+			FILEPATH=$(grep "$2" $MENUCACHE|awk '{print $2}')
+			if [ -n $FILEPATH ];then
+				echo $FILEPATH
+				echo
+				$COMANDO $FILEPATH
+			fi
+		else
+			cat $MENUCACHE
+		fi
+	fi
 elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${BASE_DIR}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
+	salir 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
 	echo
 	cat ~/.config/chu/chu.conf
+	salir 0
 else
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
@@ -138,6 +159,7 @@ fi
 
 set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
+find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
 salir 0
 
 
