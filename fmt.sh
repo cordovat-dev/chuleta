@@ -1,8 +1,10 @@
 #!/bin/bash
 set -eo pipefail
 
-PARM1="$1"
-PARM2="$2"
+# these two parms must be used together in this sequence or not at all:
+# -n -i
+PARM1="$1" # no line numbers, but a total 
+PARM2="$2" # change "chuletas" legend to "items"
 set -u
 RUTA=`dirname $0`
 INICIAL_TABULADO=`mktemp /tmp/sbd_XXXXXXXX`
