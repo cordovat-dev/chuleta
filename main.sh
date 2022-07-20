@@ -44,9 +44,9 @@ function menu {
 	echo
 	TEMP=`mktemp /tmp/chuleta.XXXXX`
 	COUNT=`wc -l < $1`
-	echo "Chuletas" > "$TEMP"
 	cat $1 >> "$TEMP"
-	$RUTA/./fmt.sh < "$TEMP" | tee $MENUCACHE
+	colour=$(test $COLOUR = "YES" && echo "-c" && echo "")
+	$RUTA/./fmt2.sh $colour < "$TEMP" | tee $MENUCACHE
 	echo 
 	read -p "  ?  " respuesta
 	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
@@ -64,9 +64,8 @@ function menu {
 function reporte {
 	echo
 	TEMP=`mktemp /tmp/chuleta.XXXXX`
-	echo "Chuletas" > "$TEMP"
 	cat $1 >> "$TEMP"
-	$RUTA/./fmt.sh -n < "$TEMP"	
+	$RUTA/./fmt2.sh -r < "$TEMP"
 	echo
 	rm $TEMP
 }
