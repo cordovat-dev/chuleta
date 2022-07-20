@@ -33,8 +33,14 @@ if [ $COLOUR -eq 1 ] ;then
 fi
 
 > /tmp/pruebacolor.txt
-printf "  %-4s%s\n" "#" $TITLE
-echo
+
+	if [ $REPORT -eq 1 ]; then
+		printf "  %s\n" $TITLE
+		echo
+	else
+		printf "  %-4s%s\n" "#" $TITLE
+		echo
+	fi
 while read linea
 do
 	COUNT=$(( $COUNT + 1 ))
