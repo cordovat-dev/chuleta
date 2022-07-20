@@ -19,6 +19,14 @@ TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
 OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
+COPEN=""
+CCLOSE=""
+
+if [ $COLOUR = "YES" ] ;then
+	COPEN=$(tput setaf 3) # yellow
+	CCLOSE=$(tput sgr0)
+fi
+
 if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit'`" ];then	
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--edit//g'`"
 	COMANDO="editar"
@@ -147,8 +155,8 @@ fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
-if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then
-	cat "$TEMPORAL"
+if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then	
+	printf "%s%s%s" $COPEN $(cat $TEMPORAL) $CCLOSE
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
 	menu "$TEMPORAL"
