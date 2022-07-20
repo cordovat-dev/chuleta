@@ -1,0 +1,3 @@
+- Fix cached error with color
+- Fix no working when COLOUR=NO in config file
+- Fix unbound var when param commented out in config file
