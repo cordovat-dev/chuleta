@@ -62,7 +62,7 @@ function menu {
 		if [ $OPCION -ge 1 -a $OPCION -le $COUNT ];then
 			OPCION=`sed "${respuesta}q;d" "$1"`
 			echo
-			echo $OPCION
+			printf "%s%s%s\n" $COPEN $OPCION $CCLOSE
 			$COMANDO $OPCION
 		fi
 	fi
@@ -156,7 +156,7 @@ fi
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
 if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then	
-	printf "%s%s%s" $COPEN $(cat $TEMPORAL) $CCLOSE
+	printf "%s%s%s\n" $COPEN $(cat $TEMPORAL) $CCLOSE
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
 	menu "$TEMPORAL"
