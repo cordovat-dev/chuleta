@@ -3,7 +3,13 @@
 TERMINO="$1"
 set -euo pipefail
 source ~/.config/chu/chu.conf
-# variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH
+# variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH, MINGW, COLO
+NO_OLD_DB_WRN=${NO_OLD_DB_WRN:-0}
+MAX_CAT_LENGTH=${MAX_CAT_LENGTH:-20}
+BASE_DIR=${BASE_DIR:-~/chuleta/chuleta-data}
+MAX_MENU_LENGTH=${MAX_MENU_LENGTH:-12}
+MINGW=${MINGW:-YES}
+COLOUR=${COLOUR:-YES}
 MAX_DB_AGE=""
 # if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
 test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
