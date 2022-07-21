@@ -12,6 +12,7 @@ COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
 MENUCACHE=$RUTA_CACHE/menu$PPID
+MENUCACHE_NC=${MENUCACHE}_nc
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
@@ -34,7 +35,7 @@ fi
 
 function abrir {
 	CHULETA="$BASE_DIR/$1"
-	LONGITUD=`wc -l < "$CHULETA"`
+	LONGITUD=$(wc -l < $CHULETA)
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
 		$OPEN_COMMAND "$CHULETA"
 	else
@@ -54,7 +55,10 @@ function menu {
 	COUNT=`wc -l < $1`
 	cat $1 >> "$TEMP"
 	colour=$(test $COLOUR = "YES" && echo "-c" && echo "")
-	$RUTA/./fmt2.sh $colour < "$TEMP" | tee $MENUCACHE
+	rm ${MENUCACHE}
+	rm ${MENUCACHE_NC}
+	$RUTA/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
+	
 	echo 
 	read -p "  ?  " respuesta
 	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
@@ -126,16 +130,16 @@ elif [ "$TERMINO" = "--cached" ];then
 	set +u
 	LINENUM="$2"
 	set -u
-	if [ -f $MENUCACHE ];then
+	if [ -f ${MENUCACHE_NC} ];then
 		if [[ $LINENUM =~ [0-9]+ ]];then
-			FILEPATH=$(grep "$2" $MENUCACHE|awk '{print $2}')
+			FILEPATH=$(grep " $2 " ${MENUCACHE_NC}|awk '{print $2}')
 			if [ -n $FILEPATH ];then
 				echo $FILEPATH
 				echo
 				$COMANDO $FILEPATH
 			fi
 		else
-			cat $MENUCACHE
+			cat ${MENUCACHE}
 		fi
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
