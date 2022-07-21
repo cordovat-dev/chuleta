@@ -55,8 +55,8 @@ function menu {
 	COUNT=`wc -l < $1`
 	cat $1 >> "$TEMP"
 	colour=$(test $COLOUR = "YES" && echo "-c" && echo "")
-	rm ${MENUCACHE}
-	rm ${MENUCACHE_NC}
+	rm ${MENUCACHE} &> /dev/null
+	rm ${MENUCACHE_NC} &> /dev/null
 	$RUTA/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
 	
 	echo 
