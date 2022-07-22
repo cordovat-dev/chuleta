@@ -1,1 +1,2 @@
 - Fix: printing header in reports, should only print footer
+- Make printing of found unique filename multi-topic-colored
