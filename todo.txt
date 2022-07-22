@@ -1,0 +1,1 @@
+- Fix: printing header in reports, should only print footer
