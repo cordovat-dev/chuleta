@@ -1,1 +1,0 @@
-- Fix no working when COLOUR=NO in config file

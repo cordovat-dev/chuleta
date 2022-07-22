@@ -60,7 +60,7 @@ function menu {
 	TEMP=`mktemp /tmp/chuleta.XXXXX`
 	COUNT=`wc -l < $1`
 	cat $1 >> "$TEMP"
-	colour=$(test $COLOUR = "YES" && echo "-c" && echo "")
+	colour=$(test $COLOUR = "YES" && echo "-c" || echo "")
 	test -f ${MENUCACHE} && rm ${MENUCACHE}
 	test -f ${MENUCACHE_NC} && rm ${MENUCACHE_NC}
 	$RUTA/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
