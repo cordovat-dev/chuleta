@@ -140,7 +140,7 @@ elif [ "$TERMINO" = "--cached" ];then
 		if [[ $LINENUM =~ [0-9]+ ]];then
 			FILEPATH=$(grep " $2 " ${MENUCACHE_NC}|awk '{print $2}')
 			if [ -n $FILEPATH ];then
-				echo $FILEPATH
+				printf "%s%s%s\n" $COPEN $FILEPATH $CCLOSE
 				echo
 				$COMANDO $FILEPATH
 			fi
