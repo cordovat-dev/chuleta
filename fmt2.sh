@@ -42,11 +42,9 @@ fi
 		printf "  %-4s%s\n" "#" $TITLE
 		echo
 	fi
-	set -x
 	if [ -n "$NOCOLOR_FILE" ];then
 		echo -n "" > ${NOCOLOR_FILE}
 	fi
-	set +x
 while read linea
 do
 	COUNT=$(( $COUNT + 1 ))
