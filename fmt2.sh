@@ -52,10 +52,7 @@ do
 		printf "  %s\n" $linea
 	else
 		if [ $COLOUR -eq 1 ];then
-			MAIN_TOPIC=$(echo $linea | grep -Eo "^[^/]+")
-			REST_OF_PATH=$(echo $linea | grep -Eo "/.*$")
-			#PRUEBA=$(printf "  %s%-4s%s%s\n" $COPEN $COUNT $CCLOSE $linea)
-			printf "  %s%-4s%s%s%s%s\n" $COPEN $COUNT $CTOPEN $MAIN_TOPIC $CCLOSE $REST_OF_PATH >> $TEMP
+			$RUTA/ct.sh $COUNT $linea >> $TEMP
 		else
 			printf "  %-4s%s\n" $COUNT $linea
 		fi
