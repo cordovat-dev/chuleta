@@ -43,6 +43,7 @@ function abrir {
 	CHULETA="$BASE_DIR/$1"
 	LONGITUD=$(wc -l < $CHULETA)
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
+		echo "  opening in editor or viewer..."
 		$OPEN_COMMAND "$CHULETA"
 	else
 		echo
@@ -72,7 +73,7 @@ function menu {
 		if [ $OPCION -ge 1 -a $OPCION -le $COUNT ];then
 			OPCION=`sed "${respuesta}q;d" "$1"`
 			echo
-			printf "%s%s%s\n" $COPEN $OPCION $CCLOSE
+			$RUTA/ct.sh $respuesta $OPCION
 			$COMANDO $OPCION
 		fi
 	fi
@@ -140,7 +141,7 @@ elif [ "$TERMINO" = "--cached" ];then
 		if [[ $LINENUM =~ [0-9]+ ]];then
 			FILEPATH=$(grep " $2 " ${MENUCACHE_NC}|awk '{print $2}')
 			if [ -n $FILEPATH ];then
-				printf "%s%s%s\n" $COPEN $FILEPATH $CCLOSE
+				$RUTA/ct.sh $LINENUM $FILEPATH
 				echo
 				$COMANDO $FILEPATH
 			fi
@@ -166,7 +167,7 @@ fi
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
 if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then	
-	printf "%s%s%s\n" $COPEN $(cat $TEMPORAL) $CCLOSE
+	$RUTA/ct.sh 1 $(cat $TEMPORAL)
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
 	menu "$TEMPORAL"
