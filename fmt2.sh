@@ -1,10 +1,6 @@
 #!/bin/bash
 set -eo pipefail
 
-# these two parms must be used together in this sequence or not at all:
-# -n -i
-PARM1="$1" # no line numbers, but a total 
-PARM2="$2" # change "chuletas" legend to "items"
 set -u
 RUTA=`dirname $0`
 COUNT=0
@@ -35,10 +31,7 @@ if [ $COLOUR -eq 1 ] ;then
 	CTOPEN=$(tput setaf 5)
 fi
 
-	if [ $REPORT -eq 1 ]; then
-		printf "  %s\n" $TITLE
-		echo
-	else
+	if [ $REPORT -ne 1 ]; then
 		printf "  %-4s%s\n" "#" $TITLE
 		echo
 	fi
@@ -64,7 +57,7 @@ done
 cat $TEMP
 if [ $REPORT -eq 1 ]; then
 	echo
-	echo "  $LEGEND"
+	echo "  $COUNT $LEGEND"
 fi
 rm $TEMP
 
