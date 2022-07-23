@@ -7,10 +7,26 @@ CCLOSE=$(tput sgr0)
 CTOPEN=$(tput setaf 5) # magenta
 C2TOPEN=$(tput setaf 2) # green
 C3TOPEN=$(tput setaf 6) # cyan
-COUNT=$1
-DATA=$2
+COUNT=0
+DATA=""
+COLOUR=0
+
+while getopts n:d:c flag
+do
+    case "${flag}" in
+        n) COUNT=${OPTARG};;
+        d) DATA=${OPTARG};;
+        c) COLOUR=1;;
+    esac
+done
+
+if [ $COLOUR -eq 0 ];then
+	printf "  %-4s%s\n" $COUNT $DATA
+	exit 0
+fi
 
 IFS="/" read -a myarray <<< $DATA
+
 declare -i y=1
 printf "  %s%-4s%s%s" $COPEN $COUNT $CTOPEN ${myarray[0]}
 

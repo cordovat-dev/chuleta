@@ -45,7 +45,7 @@ do
 		printf "  %s\n" $linea
 	else
 		if [ $COLOUR -eq 1 ];then
-			$RUTA/ct.sh $COUNT $linea >> $TEMP
+			$RUTA/ct.sh -n $COUNT -d $linea -c >> $TEMP
 		else
 			printf "  %-4s%s\n" $COUNT $linea
 		fi

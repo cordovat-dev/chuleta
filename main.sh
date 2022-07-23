@@ -10,6 +10,9 @@ BASE_DIR=${BASE_DIR:-~/chuleta/chuleta-data}
 MAX_MENU_LENGTH=${MAX_MENU_LENGTH:-12}
 MINGW=${MINGW:-YES}
 COLOUR=${COLOUR:-YES}
+set -x
+test $COLOUR = "YES" && echo "-c" || echo ""
+set +x
 MAX_DB_AGE=""
 # if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
 test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
@@ -73,7 +76,7 @@ function menu {
 		if [ $OPCION -ge 1 -a $OPCION -le $COUNT ];then
 			OPCION=`sed "${respuesta}q;d" "$1"`
 			echo
-			$RUTA/ct.sh $respuesta $OPCION
+			$RUTA/ct.sh -n $respuesta -d $OPCION $(test $COLOUR = "YES" && echo "-c" || echo "")
 			$COMANDO $OPCION
 		fi
 	fi
@@ -141,7 +144,7 @@ elif [ "$TERMINO" = "--cached" ];then
 		if [[ $LINENUM =~ [0-9]+ ]];then
 			FILEPATH=$(grep " $2 " ${MENUCACHE_NC}|awk '{print $2}')
 			if [ -n $FILEPATH ];then
-				$RUTA/ct.sh $LINENUM $FILEPATH
+				$RUTA/ct.sh -n $LINENUM -d $FILEPATH $(test $COLOUR = "YES" && echo "-c" || echo "")
 				echo
 				$COMANDO $FILEPATH
 			fi
@@ -167,7 +170,7 @@ fi
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
 if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then	
-	$RUTA/ct.sh 1 $(cat $TEMPORAL)
+	$RUTA/ct.sh -n 1 -d $(cat $TEMPORAL) $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
 	menu "$TEMPORAL"
