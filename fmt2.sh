@@ -5,9 +5,6 @@ set -u
 RUTA=`dirname $0`
 COUNT=0
 COLOUR=0
-COPEN=$(tput sgr0)
-CCLOSE=$(tput sgr0)
-CTOPEN=$(tput sgr0)
 REPORT=0
 LEGEND="chuletas"
 TITLE="Chuletas"
@@ -24,12 +21,6 @@ do
 		f) NOCOLOR_FILE=${OPTARG};;
     esac
 done
-
-if [ $COLOUR -eq 1 ] ;then
-	COPEN=$(tput setaf 3) # yellow
-	CCLOSE=$(tput sgr0)
-	CTOPEN=$(tput setaf 5)
-fi
 
 	if [ $REPORT -ne 1 ]; then
 		printf "  %-4s%s\n" "#" $TITLE

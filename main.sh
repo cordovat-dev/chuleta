@@ -26,14 +26,6 @@ TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
 OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
-COPEN=""
-CCLOSE=""
-
-if [ $COLOUR = "YES" ] ;then
-	COPEN=$(tput setaf 3) # yellow
-	CCLOSE=$(tput sgr0)
-fi
-
 if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit'`" ];then	
 	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--edit//g'`"
 	COMANDO="editar"
