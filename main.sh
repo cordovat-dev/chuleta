@@ -7,6 +7,10 @@ source ~/.config/chu/chu.conf
 MAX_DB_AGE=""
 # if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
 test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
+if [ ${#} -eq 1 ] && [[ ${1} =~ [0-9]+ ]];then
+	TERMINO="--cached"
+	set -- "--cached" "$1"
+fi
 LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
