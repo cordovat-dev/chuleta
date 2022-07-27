@@ -156,6 +156,10 @@ elif [ "$TERMINO" = "--show_config" ];then
 	echo
 	cat ~/.config/chu/chu.conf
 	salir 0
+elif [ "$TERMINO" = "--random" ];then
+	CHULETA=$(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g"|shuf| head -1)
+	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
+	$COMANDO $CHULETA
 else
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
