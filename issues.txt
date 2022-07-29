@@ -1,0 +1,8 @@
+- "chu mingw64" outputs nothing even when a file like this exists:
+
+	win/chuleta_install_additional_program_to_mingw64.txt
+	
+	yet the file is found when using other keywords, line "chu install addi"
+
+- "chu users" will output every existing chuleta because it matches the base directory path stored 
+	in the locate database, for example: /c/Users/ChuckNorris/chuleta/chuleta-data
