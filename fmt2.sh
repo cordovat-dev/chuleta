@@ -22,13 +22,14 @@ do
     esac
 done
 
-	if [ $REPORT -ne 1 ]; then
-		printf "  %-4s%s\n" "#" $TITLE
-		echo
-	fi
-	if [ -n "$NOCOLOR_FILE" ];then
-		echo -n "" > ${NOCOLOR_FILE}
-	fi
+if [ $REPORT -ne 1 ]; then
+	printf "  %-4s%s\n" "#" $TITLE
+	echo
+fi
+if [ -n "$NOCOLOR_FILE" ];then
+	echo -n "" > ${NOCOLOR_FILE}
+fi
+	
 while read linea
 do
 	COUNT=$(( $COUNT + 1 ))
