@@ -28,7 +28,7 @@ function borrar_temp()
 # 4. removes everything but the basename
 # 5. creates a sorted unique list 
 # RESULT: a list of all topics
-locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$"|\
+locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$"|\
 grep -o "^/.*\/"|\
 sed 's/.$//g'|\
 grep -o '[^/]*$'|\
@@ -41,7 +41,7 @@ sort -u > $TEMP
 # 5. splits using slash and prints number of fields and all fields
 # 6. creates a sorted unique list 
 # RESULT: a list of folders names (a folder for each topic/subtopic)
-locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$"|\
+locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$"|\
 grep -o "^/.*/"|\
 sed -r 's#/$##g'|\
 sort -u|\
