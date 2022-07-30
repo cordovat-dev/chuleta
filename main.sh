@@ -7,7 +7,7 @@ source ~/.config/chu/chu.conf
 MAX_DB_AGE=""
 # if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
 test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
-if [ ${#} -eq 1 ] && [[ ${1} =~ [0-9]+ ]];then
+if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	TERMINO="--cached"
 	set -- "--cached" "$1"
 fi
@@ -30,14 +30,20 @@ fi
 
 function abrir {
 	CHULETA="$BASE_DIR/$1"
-	LONGITUD=`wc -l < "$CHULETA"`
+	set +u
+	RNDCHU="$2"
+	set -u
+	LONGITUD=$(wc -l < $CHULETA)
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
+		echo "  opening in editor or viewer..."
 		$OPEN_COMMAND "$CHULETA"
 	else
 		echo
 		cat "$CHULETA"
-	fi	
-	echo "$CHULETA" |sed -r "s|$BASE_DIR/||g">> ${RUTA_LOGS}/frecuentes
+	fi
+	if [ "$RNDCHU" != "--random" ]; then
+		echo "$CHULETA" |sed -r "s|$BASE_DIR/||g">> ${RUTA_LOGS}/frecuentes
+	fi
 }
 
 function editar {
@@ -146,8 +152,12 @@ elif [ "$TERMINO" = "--show_config" ];then
 	echo
 	cat ~/.config/chu/chu.conf
 	salir 0
+elif [ "$TERMINO" = "--random" ];then
+	CHULETA=$(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g"|shuf| head -1)
+	echo $CHULETA
+	$COMANDO $CHULETA "--random"
 else
-	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -iwr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
+	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
