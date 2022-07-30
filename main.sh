@@ -1,4 +1,4 @@
-#!/bin/bash
+	#!/bin/bash
 
 TERMINO="$1"
 set -euo pipefail
@@ -146,6 +146,10 @@ elif [ "$TERMINO" = "--show_config" ];then
 	echo
 	cat ~/.config/chu/chu.conf
 	salir 0
+elif [ "$TERMINO" = "--random" ];then
+	CHULETA=$(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g"|shuf| head -1)
+	echo $CHULETA
+	$COMANDO $CHULETA
 else
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
