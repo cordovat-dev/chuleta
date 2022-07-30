@@ -167,6 +167,9 @@ elif [ "$TERMINO" = "--random" ];then
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
 else
+	set +e
+	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
+	set -e
 	cat $RUTA_CACHE/db.txt|$RUTA/grl.sh $LISTA_PALABRAS  > $TEMPORAL
 	# locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
@@ -186,9 +189,3 @@ set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
 salir 0
-
-
-
-
-
-
