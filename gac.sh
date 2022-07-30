@@ -65,7 +65,7 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	borrar_temp
 	salir 1
 else
-	cp ${TEMP3}/db $RUTA_CACHE/
+	cp ${TEMP3}/db* $RUTA_CACHE/
 fi
 
 borrar_temp
