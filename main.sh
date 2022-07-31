@@ -171,7 +171,6 @@ else
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
 	set -e
 	cat $RUTA_CACHE/db.txt|$RUTA/grl.sh $LISTA_PALABRAS  > $TEMPORAL
-	# locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" $LISTA_PALABRAS | sed -r "s|$BASE_DIR/||g" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
