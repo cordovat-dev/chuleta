@@ -1,2 +1,1 @@
-002 "chu users" will output every existing chuleta because it matches the base directory path stored 
-	in the locate database, for example: /c/Users/ChuckNorris/chuleta/chuleta-data
+
