@@ -39,7 +39,7 @@ do
 		if [ $COLOUR -eq 1 ];then
 			$RUTA/ct.sh -n $COUNT -d $linea -c >> $TEMP
 		else
-			printf "  %-4s%s\n" $COUNT $linea
+			printf "  %-4s%s\n" $COUNT $linea >> $TEMP
 		fi
 		if [ -n "$NOCOLOR_FILE" ];then
 			printf "  %-4s%s\n" $COUNT $linea >> ${NOCOLOR_FILE}
