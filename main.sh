@@ -159,7 +159,7 @@ elif [ "$TERMINO" = "--random" ];then
 	$COMANDO $CHULETA "--random"
 else
 	set +e
-	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
+	test $NO_OLD_DB_WRN -eq 1 || locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
 	set -e
 	cat $RUTA_CACHE/db.txt|$RUTA/grl.sh $LISTA_PALABRAS  > $TEMPORAL
 fi
