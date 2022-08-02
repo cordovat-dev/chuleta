@@ -7,7 +7,7 @@ DB="/c/Users/Global/chuleta/chuleta/chuletas.db"
 DATATEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
 SCRIPTTEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
 find $BASE_DIR -regextype sed \
--regex "^.*[a-z0-9/_-]*chuleta_[a-z0-9/_-]*\.txt$"|\
+-regex "^.*[.a-z0-9/_-]*chuleta_[.a-z0-9/_-]*\.txt$"|\
 sed "s|$BASE_DIR||g" > $DATATEMP
 
 echo ".echo on" >> $SCRIPTTEMP
