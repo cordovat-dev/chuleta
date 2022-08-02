@@ -13,3 +13,4 @@ for ARG in $*; do
 		echo -n " and "
 	fi
 done
+echo -n " order by id;"
