@@ -3,7 +3,7 @@
 TERMINO="$1"
 set -euo pipefail
 source ~/.config/chu/chu.conf
-# variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH
+# variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH, MINGW
 MAX_DB_AGE=""
 # if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
 test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
@@ -159,7 +159,7 @@ elif [ "$TERMINO" = "--random" ];then
 	$COMANDO $CHULETA "--random"
 else
 	set +e
-	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
+	test $NO_OLD_DB_WRN -eq 1 || locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
 	set -e
 	cat $RUTA_CACHE/db.txt|$RUTA/grl.sh $LISTA_PALABRAS  > $TEMPORAL
 fi
