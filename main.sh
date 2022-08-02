@@ -170,7 +170,7 @@ else
 	set +e
 	test $NO_OLD_DB_WRN -eq 1 || locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
 	set -e
-	cat $RUTA_CACHE/db.txt|$RUTA/grl.sh $LISTA_PALABRAS  > $TEMPORAL
+	sqlite3 $RUTA/chuletas.db "$($RUTA/gs.sh $@)" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
