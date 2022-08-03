@@ -116,7 +116,7 @@ elif [ "$TERMINO" = "--totals" ];then
 		fi
 	done |column -t|sort -k 2 -gr
 	echo
-	echo $(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -icr "chuleta_.*\.txt$") chuletas
+	echo $(sqlite3 $RUTA_CACHE/chuletas.db "select count(*) from chuleta;") chuletas
 	salir 0
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${BASE_DIR}
@@ -166,7 +166,7 @@ else
 	set +e
 	test $NO_OLD_DB_WRN -eq 1 || locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
 	set -e
-	sqlite3 $RUTA/chuletas.db "$($RUTA/gs.sh $@)" > $TEMPORAL
+	sqlite3 $RUTA_CACHE/chuletas.db "$($RUTA/gs.sh $@)" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
