@@ -107,6 +107,7 @@ elif [ "$TERMINO" = "--update" ];then
 	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db"
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
+	echo Done.
 	salir 0
 elif [ "$TERMINO" = "--totals" ];then
 	echo

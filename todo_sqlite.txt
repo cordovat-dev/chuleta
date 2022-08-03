@@ -3,7 +3,7 @@ x parameterize sqls.sh
 x substitute updatedb with sqls in "--update"
 x substitute locate with sqlite in gac.sh
 x substitute locate with sqlite in "--totals"
-- create a frequents table
+x create a frequents table
 - update frequents table
 - search frequents table
 - make a backup of sqlite db
