@@ -23,7 +23,7 @@ SCRIPTTEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
 
 find $BASE_DIR -regextype sed \
 -regex "^.*[.a-z0-9/_-]*chuleta_[.a-z0-9/_-]*\.txt$"|\
-sed "s|$BASE_DIR||g" > $DATATEMP
+sed "s|$BASE_DIR/||g" > $DATATEMP
 
 echo ".echo on" >> $SCRIPTTEMP
 echo "drop table if exists tempimp;" >> $SCRIPTTEMP
