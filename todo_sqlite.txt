@@ -1,6 +1,8 @@
-- rename test_sqlite.sh to sqls.sh
-- substitute updatedb for sqls in "--update"
-- substitute locate for sqls in "--totals"
+x rename test_sqlite.sh to sqls.sh
+- parameterize sqls.sh
+x substitute updatedb with sqls in "--update"
+- substitute locate with in gac.sh 
+- substitute locate with sqls in "--totals"
 - create a frequents table
 - update frequents table
 - search frequents table
