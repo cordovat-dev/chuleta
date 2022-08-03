@@ -2,10 +2,25 @@
 
 set -euo pipefail
 
-BASE_DIR="/c/Users/Global/chuleta/chuleta-data/"
-DB="/c/Users/Global/chuleta/chuleta/chuletas.db"
+BASE_DIR=""
+DB=""
+while getopts b:d: flag
+do
+    case "${flag}" in
+		b) BASE_DIR=${OPTARG};;
+		d) DB=${OPTARG};;
+    esac
+done
+
+test -z $BASE_DIR && exit 1
+test -z $DB && exit 1
+
+# BASE_DIR="/c/Users/Global/chuleta/chuleta-data/"
+# DB="/c/Users/Global/chuleta/chuleta/chuletas.db"
 DATATEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
 SCRIPTTEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
+
+
 find $BASE_DIR -regextype sed \
 -regex "^.*[.a-z0-9/_-]*chuleta_[.a-z0-9/_-]*\.txt$"|\
 sed "s|$BASE_DIR||g" > $DATATEMP

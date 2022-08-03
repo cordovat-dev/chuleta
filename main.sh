@@ -104,7 +104,7 @@ if [ "$TERMINO" = "--recent" ];then
 	salir 0
 elif [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
-	$RUTA/sqls.sh
+	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db"
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	salir 0
