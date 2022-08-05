@@ -150,7 +150,7 @@ elif [ "$TERMINO" = "--cached" ];then
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${BASE_DIR}/##g" > $TEMP1
+	$RUTA/sqlf.sh -f "$RUTA_LOGS/frecuentes" -d "$RUTA_CACHE/chuletas.db" > $TEMP1
 	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
 	rm "$TEMP1" 2> /dev/null
 	salir 0

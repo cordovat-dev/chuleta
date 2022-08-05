@@ -3,8 +3,7 @@ set -euo pipefail
 
 ARCHIVO=""
 RUTA=$(dirname $0)
-TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-TEMP2=$(mktemp /tmp/chuleta.XXXXX)
+
 COLOUR=0
 
 while getopts f:c flag
@@ -28,15 +27,5 @@ rand=$[$RANDOM % ${#arr[@]}]
 echo
 echo ${arr[$rand]}
 echo
-sort $ARCHIVO | uniq -c | sort -nrk 1 > $TEMP1
-AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP1)
-awk -v AVG=$AVG '$1 >= AVG' < $TEMP1 > $TEMP2
-AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP2)
-rm $TEMP1
-awk -v AVG=$AVG '$1 >= AVG {print $1,$2}' < $TEMP2 >> $TEMP1
-$RUTA/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $TEMP1
-rm "$TEMP1 $TEMP2" 2> /dev/null
 
-
-
-
+$RUTA/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $ARCHIVO

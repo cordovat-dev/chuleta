@@ -4,8 +4,12 @@ x substitute updatedb with sqls in "--update"
 x substitute locate with sqlite in gac.sh
 x substitute locate with sqlite in "--totals"
 x create a frequents table
-- update frequents table
-- search frequents table
+x improve frequents table
+x update frequents table
+x search frequents table
+- optimize frequents
+- make frequents an attached db
 - make a backup of sqlite db
 x move sqlitedb to ./cache dir
 - remove --recent functionality
+- add "old database" message
