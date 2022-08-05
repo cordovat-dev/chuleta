@@ -13,3 +13,4 @@ x search frequents table
 x move sqlitedb to ./cache dir
 - remove --recent functionality
 - add "old database" message
+- create color frequents report in case theres no change
