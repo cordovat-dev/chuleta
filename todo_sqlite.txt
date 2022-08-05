@@ -8,7 +8,14 @@ x improve frequents table
 x update frequents table
 x search frequents table
 - optimize frequents
-- make frequents an attached db
+x make frequents an attached db
+	x create frequent database
+	x create frequent table in frequent database
+	x delete frequent table from chuletas.db
+	x modify v_tops
+	x modify scripts that reference frequent table
+	x backup frequent in gac.sh
+- update settings table on update
 - make a backup of sqlite db
 x move sqlitedb to ./cache dir
 - remove --recent functionality
