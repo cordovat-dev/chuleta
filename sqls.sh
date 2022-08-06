@@ -4,16 +4,19 @@ set -euo pipefail
 
 BASE_DIR=""
 DB=""
-while getopts b:d: flag
+NUM_DAYS_OLD=""
+while getopts b:d:w: flag
 do
     case "${flag}" in
 		b) BASE_DIR=${OPTARG};;
 		d) DB=${OPTARG};;
+		w) NUM_DAYS_OLD=${OPTARG};;
     esac
 done
 
 test -z $BASE_DIR && exit 1
 test -z $DB && exit 1
+test -z $NUM_DAYS_OLD && exit 1
 
 DATATEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
 SCRIPTTEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
@@ -25,6 +28,8 @@ sed "s|$BASE_DIR/||g" > $DATATEMP
 
 echo "select 'Updating settings';" >> $SCRIPTTEMP
 echo "insert or replace into settings(cod_set,value) values ('BASE_DIR','$BASE_DIR');" >> $SCRIPTTEMP
+echo "insert or replace into settings(cod_set,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);" >> $SCRIPTTEMP
+echo "insert or replace into settings(cod_set,value) values ('NUM_DAYS_OLD',$NUM_DAYS_OLD);" >> $SCRIPTTEMP
 echo "drop table if exists tempimp;" >> $SCRIPTTEMP
 echo "create temp table tempimp(path TEXT);" >> $SCRIPTTEMP
 echo ".mode line" >> $SCRIPTTEMP

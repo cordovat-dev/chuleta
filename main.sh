@@ -10,9 +10,8 @@ BASE_DIR=${BASE_DIR:-~/chuleta/chuleta-data}
 MAX_MENU_LENGTH=${MAX_MENU_LENGTH:-12}
 MINGW=${MINGW:-YES}
 COLOUR=${COLOUR:-YES}
-MAX_DB_AGE=""
-# if env var NO_OLD_DB_WRN is set to 1, then age of locate database is ignored
-test $NO_OLD_DB_WRN -eq 1 && MAX_DB_AGE="--max-database-age -1"
+NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
+# if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	TERMINO="--cached"
 	set -- "--cached" "$1"
@@ -97,7 +96,7 @@ function salir {
 
 if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
-	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db"
+	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db" -w $NUM_DAYS_OLD
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	echo Done.
@@ -110,6 +109,7 @@ elif [ "$TERMINO" = "--totals" ];then
 		fi
 	done |column -t|sort -k 2 -gr
 	echo
+	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	echo $(sqlite3 $RUTA_CACHE/chuletas.db "select count(*) from chuleta;") chuletas
 	salir 0
 elif [ "$TERMINO" = "--topics" ];then
@@ -154,13 +154,12 @@ elif [ "$TERMINO" = "--show_config" ];then
 	cat ~/.config/chu/chu.conf
 	salir 0
 elif [ "$TERMINO" = "--random" ];then
+	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	CHULETA=$(sqlite3 $RUTA_CACHE/chuletas.db "select path from chuleta order by random() limit 1;")
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
 else
-	set +e
-	test $NO_OLD_DB_WRN -eq 1 || locate $MAX_DB_AGE -A -d $RUTA_CACHE/db $RANDOM$RANDOM$RANDOM$RANDOM
-	set -e
+	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	sqlite3 $RUTA_CACHE/chuletas.db "$($RUTA/gs.sh $@)" > $TEMPORAL
 fi
 

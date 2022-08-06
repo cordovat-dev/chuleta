@@ -19,5 +19,5 @@ x update settings table on update
 - make a backup of sqlite db
 x move sqlitedb to ./cache dir
 x remove --recent functionality
-- add "old database" message
+x add "old database" message
 - create color frequents report cache in case theres no change

@@ -17,3 +17,21 @@ order by
         c.id
 /* v_chuleta_ap(id,path) */
 /* v_chuleta_ap(id,path) */;
+CREATE VIEW v_old_db_msg as
+select
+	'Database is '||cast(d.age as int)||' days old. Please run chu --update .' msg
+from
+        (
+                select
+                        (julianday(CURRENT_TIMESTAMP) - julianday(value)) >=
+                        (select value from settings where cod_set='NUM_DAYS_OLD') old,
+                        (julianday(CURRENT_TIMESTAMP) - julianday(value)) age
+                from
+                        settings
+                where
+                        cod_set = 'LAST_UPDATED'
+        ) d
+        join (
+                select 1 old
+        ) m on (d.old = m.old)
+/* v_old_db_msg(msg) */;
