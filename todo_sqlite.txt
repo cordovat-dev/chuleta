@@ -19,7 +19,7 @@ x update settings table on update
 - make a backup of sqlite db
 x move sqlitedb to ./cache dir
 x remove --recent functionality
-x add "old database" message
 - create color frequents report cache in case theres no change
 - modify deploy to include SQLite databases
 - add dependency check
+- create color frequents report cache in case theres no change
