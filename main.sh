@@ -166,7 +166,7 @@ fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
-if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then	
+if [ $CANT_RESULTADOS -eq 1 ]; then
 	$RUTA/ct.sh -n 1 -d $(cat $TEMPORAL) $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
