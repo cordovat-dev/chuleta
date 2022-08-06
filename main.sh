@@ -95,14 +95,7 @@ function salir {
 	exit $1
 }
 
-if [ "$TERMINO" = "--recent" ];then
-	find "$BASE_DIR" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
-	for s in $(cat $TEMPORAL);do
-		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$BASE_DIR/||g" ) >> ${TEMPORAL2}
-	done
-	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
-	salir 0
-elif [ "$TERMINO" = "--update" ];then
+if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
 	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db"
 	echo "Generating autocompletion"

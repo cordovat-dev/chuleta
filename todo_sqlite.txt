@@ -18,6 +18,6 @@ x make frequents an attached db
 x update settings table on update
 - make a backup of sqlite db
 x move sqlitedb to ./cache dir
-- remove --recent functionality
+x remove --recent functionality
 - add "old database" message
-- create color frequents report in case theres no change
+- create color frequents report cache in case theres no change
