@@ -168,7 +168,7 @@ fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
 
-if [ $CANT_RESULTADOS -eq 1 ] && [ "$TERMINO" != "--recent" ] ; then
+if [ $CANT_RESULTADOS -eq 1 ]; then
 	cat "$TEMPORAL"
 	$COMANDO `cat "$TEMPORAL"`
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
