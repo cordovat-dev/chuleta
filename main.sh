@@ -154,7 +154,7 @@ elif [ "$TERMINO" = "--show_config" ];then
 	cat ~/.config/chu/chu.conf
 	salir 0
 elif [ "$TERMINO" = "--random" ];then
-	CHULETA=$(locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g"|shuf| head -1)
+	CHULETA=$(sqlite3 $RUTA_CACHE/chuletas.db "select path from chuleta order by random() limit 1;")
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
 else
