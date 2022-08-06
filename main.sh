@@ -93,14 +93,7 @@ function reporte {
 
 
 
-if [ "$TERMINO" = "--recent" ];then
-	find "$BASE_DIR" -type f -iname "chuleta*.txt" -mtime -30 > $TEMPORAL
-	for s in $(cat $TEMPORAL);do
-		echo "$(date '+%y-%m-%d_%H:%M' -r $s)" $(echo $s|sed -r "s|$BASE_DIR/||g" ) >> ${TEMPORAL2}
-	done
-	sort -r -k 1 ${TEMPORAL2} > ${TEMPORAL}
-	salir 0
-elif [ "$TERMINO" = "--update" ];then
+if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
 	echo "$SUDO_COMMAND updatedb --localpaths=\"$BASE_DIR\" "
 	echo " --output=$RUTA_CACHE/db "
