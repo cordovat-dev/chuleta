@@ -23,3 +23,4 @@ x add "old database" message
 - create color frequents report cache in case theres no change
 - modify deploy to include SQLite databases
 - add dependency check
+- delete old frequent backups
