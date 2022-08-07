@@ -27,8 +27,8 @@ test -z $BASE_DIR && exit 1
 test -z $DB && exit 1
 test -z $NUM_DAYS_OLD && exit 1
 
-DATATEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
-SCRIPTTEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
+DATATEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)
+SCRIPTTEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)
 
 
 find $BASE_DIR -regextype sed \

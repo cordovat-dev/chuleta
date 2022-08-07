@@ -26,7 +26,7 @@ test -z $DATAFILE && exit 1
 test -z $DB && exit 1
 test -z $CACHE_DIR && exit 1
 
-SCRIPTTEMP=$(mktemp /tmp/chuleta_insertsXXXXX)
+SCRIPTTEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)
 
 echo "attach database '$CACHE_DIR/frequent.db' as frequent;" >> $SCRIPTTEMP
 echo "begin transaction;" >> $SCRIPTTEMP
