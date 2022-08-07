@@ -107,6 +107,7 @@ elif [ "$TERMINO" = "--update" ];then
 	echo " --prunepaths=\"$BASE_DIR/.git\""
 	$SUDO_COMMAND updatedb --localpaths="$BASE_DIR" --output="$RUTA_CACHE/db" --prunepaths="$BASE_DIR/.git"
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g" > "$RUTA_CACHE/db.txt"
+	rm $MENUCACHE $MENUCACHE_NC
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	echo Done.
