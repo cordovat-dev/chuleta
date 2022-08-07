@@ -104,7 +104,8 @@ function reporte {
 if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
 	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db" -w $NUM_DAYS_OLD
-	rm $MENUCACHE $MENUCACHE_NC 2> /dev/null
+	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
+	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	echo Done.
@@ -154,7 +155,7 @@ elif [ "$TERMINO" = "--frequent" ];then
 	$RUTA/sqlf.sh -f "$RUTA_LOGS/frequent_" -d "$RUTA_CACHE/chuletas.db" -c "$RUTA_CACHE"  > $TEMP1
 	head -n 3 $TEMP1
 	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1")
-	rm "$TEMP1" 2> /dev/null
+	echo Done.
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
