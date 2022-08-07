@@ -147,8 +147,8 @@ elif [ "$TERMINO" = "--cached" ];then
 elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${BASE_DIR}/##g" > $TEMP1
-	$RUTA/tops.sh "$TEMP1"
 	echo Done.
+	$RUTA/tops.sh "$TEMP1"
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
