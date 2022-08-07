@@ -16,7 +16,7 @@ x make frequents an attached db
 	x modify scripts that reference frequent table
 	x backup frequent in gac.sh
 x update settings table on update
-- make a backup of sqlite db
+x make a backup of sqlite db
 x move sqlitedb to ./cache dir
 x remove --recent functionality
 x add "old database" message

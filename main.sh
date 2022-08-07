@@ -102,7 +102,9 @@ function reporte {
 
 
 if [ "$TERMINO" = "--update" ];then
+	echo "Backing up database"
 	echo "Updating database"
+	cp "$RUTA_CACHE/chuletas.db" "$RUTA_CACHE/chuletas.db.$(date +%Y%m%d%H%M%S)"
 	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db" -w $NUM_DAYS_OLD
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
