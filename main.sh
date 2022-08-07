@@ -101,7 +101,9 @@ function reporte {
 }
 
 if [ "$TERMINO" = "--update" ];then
+	echo "Backing up database"
 	echo "Updating database"
+	cp "$RUTA_CACHE/db" "$RUTA_CACHE/db.$(date +%Y%m%d%H%M%S)"
 	echo "$SUDO_COMMAND updatedb --localpaths=\"$BASE_DIR\" "
 	echo " --output=$RUTA_CACHE/db "
 	echo " --prunepaths=\"$BASE_DIR/.git\""
