@@ -104,7 +104,7 @@ function reporte {
 if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
 	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db" -w $NUM_DAYS_OLD
-	rm $MENUCACHE $MENUCACHE_NC
+	rm $MENUCACHE $MENUCACHE_NC 2> /dev/null
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	echo Done.
