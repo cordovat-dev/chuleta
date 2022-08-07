@@ -91,8 +91,6 @@ function reporte {
 	echo
 }
 
-
-
 if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
 	echo "$SUDO_COMMAND updatedb --localpaths=\"$BASE_DIR\" "
@@ -100,7 +98,7 @@ if [ "$TERMINO" = "--update" ];then
 	echo " --prunepaths=\"$BASE_DIR/.git\""
 	$SUDO_COMMAND updatedb --localpaths="$BASE_DIR" --output="$RUTA_CACHE/db" --prunepaths="$BASE_DIR/.git"
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g" > "$RUTA_CACHE/db.txt"
-	rm $MENUCACHE 2> /dev/null
+	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	echo Done.
@@ -148,7 +146,7 @@ elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${BASE_DIR}/##g" > $TEMP1
 	$RUTA/tops.sh "$TEMP1"
-	rm "$TEMP1" 2> /dev/null
+	echo Done.
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
