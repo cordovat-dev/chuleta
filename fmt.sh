@@ -21,12 +21,12 @@ PARM1="$1" # no line numbers, but a total
 PARM2="$2" # change "chuletas" legend to "items"
 set -u
 RUTA=`dirname $0`
-INICIAL_TABULADO=`mktemp /tmp/sbd_XXXXXXXX`
-NUM_PARTE_INFERIOR=`mktemp /tmp/sbd_XXXXXXXX`
-PRIMERA_FILA_TABULADO=`mktemp /tmp/sbd_XXXXXXXX`
-FINAL_SIN_LINEA=`mktemp /tmp/sbd_XXXXXXXX`
-FINAL_SIN_LINEA_RETABULADO=`mktemp /tmp/sbd_XXXXXXXX`
-RESULTADO_FINAL=`mktemp /tmp/sbd_XXXXXXXX`
+INICIAL_TABULADO=`mktemp /tmp/chuleta.XXXXXXXX`
+NUM_PARTE_INFERIOR=`mktemp /tmp/chuleta.XXXXXXXX`
+PRIMERA_FILA_TABULADO=`mktemp /tmp/chuleta.XXXXXXXX`
+FINAL_SIN_LINEA=`mktemp /tmp/chuleta.XXXXXXXX`
+FINAL_SIN_LINEA_RETABULADO=`mktemp /tmp/chuleta.XXXXXXXX`
+RESULTADO_FINAL=`mktemp /tmp/chuleta.XXXXXXXX`
 NB_ITEMS="chuletas"
 
 column -t > $INICIAL_TABULADO
