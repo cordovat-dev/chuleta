@@ -1,4 +1,13 @@
 #!/bin/bash
+
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
+	exit $1
+}
+
 set -euo pipefail
 LISTA_PALABRAS=( $@ )
 TEMP=$(mktemp /tmp/chuleta.XXXXX)
@@ -19,5 +28,3 @@ do
 		echo $linea
 	fi
 done
-
-rm $TEMP

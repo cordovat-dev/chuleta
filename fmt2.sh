@@ -1,4 +1,13 @@
 #!/bin/bash
+
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
+	exit $1
+}
+
 set -eo pipefail
 
 set -u
@@ -63,6 +72,5 @@ if [ $REPORT -eq 1 ]; then
 	echo
 	echo "  $COUNT $LEGEND"
 fi
-rm $TEMP
 
 
