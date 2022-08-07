@@ -99,8 +99,6 @@ function reporte {
 	echo
 }
 
-
-
 if [ "$TERMINO" = "--update" ];then
 	echo "Backing up database"
 	echo "Updating database"
@@ -156,8 +154,8 @@ elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	$RUTA/sqlf.sh -f "$RUTA_LOGS/frequent_" -d "$RUTA_CACHE/chuletas.db" -c "$RUTA_CACHE"  > $TEMP1
 	head -n 3 $TEMP1
-	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1")
 	echo Done.
+	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1")
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
