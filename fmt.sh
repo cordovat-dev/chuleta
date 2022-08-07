@@ -1,4 +1,18 @@
 #!/bin/bash
+
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${INICIAL_TABULADO}" && test -f "${INICIAL_TABULADO}" && rm "${INICIAL_TABULADO}"
+	test -n "${NUM_PARTE_INFERIOR}" && test -f "${NUM_PARTE_INFERIOR}" && rm "${NUM_PARTE_INFERIOR}"
+	test -n "${PRIMERA_FILA_TABULADO}" && test -f "${PRIMERA_FILA_TABULADO}" && rm "${PRIMERA_FILA_TABULADO}"
+	test -n "${FINAL_SIN_LINEA}" && test -f "${FINAL_SIN_LINEA}" && rm "${FINAL_SIN_LINEA}"
+	test -n "${FINAL_SIN_LINEA_RETABULADO}" && test -f "${FINAL_SIN_LINEA_RETABULADO}" && rm "${FINAL_SIN_LINEA_RETABULADO}"
+	test -n "${RESULTADO_FINAL}" && test -f "${RESULTADO_FINAL}" && rm "${RESULTADO_FINAL}"
+	exit $1
+}
+
 set -eo pipefail
 
 # these two parms must be used together in this sequence or not at all:
@@ -55,11 +69,5 @@ if [ $CANTIDAD -gt 4 ]; then
 	echo "  $CANTIDAD $NB_ITEMS"
 fi
 
-rm $INICIAL_TABULADO
-rm $NUM_PARTE_INFERIOR
-rm $PRIMERA_FILA_TABULADO
-rm $FINAL_SIN_LINEA
-rm $FINAL_SIN_LINEA_RETABULADO
-rm $RESULTADO_FINAL
 
 
