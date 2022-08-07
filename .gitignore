@@ -8,3 +8,5 @@
 !todo_sqlite.txt
 !sqlite_db_schema.sql
 !sqlite_frequent_db_schema.sql
+test.sh
+test2.sh

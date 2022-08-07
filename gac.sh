@@ -1,5 +1,15 @@
 #!/bin/bash
 
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
+	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
+	test -n "${TEMP3}" && [[ "${TEMP3}" =~ ^\/tmp\/.* ]] && test -d "${TEMP3}" && rm -rf "${TEMP3}"
+	exit $1
+}
+
 set -euo pipefail
 source ~/.config/chu/chu.conf
 # variables read from conf file: NO_OLD_DB_WRN, LARGO_PERMITIDO, BASE_DIR, MAX_MENU_LENGTH
@@ -16,11 +26,6 @@ ARCHIVO_TOPICOS_REPETIDOS=$RUTA_CACHE/lista_topicos_repetidos
 TEMP=`mktemp /tmp/chuleta.XXXXX`
 TEMP2=`mktemp /tmp/chuleta.XXXXX`
 TEMP3=`mktemp -d /tmp/chuleta.XXXXX`
-
-function borrar_temp()
-{
-	rm -rf $TEMP ${TEMP2} ${TEMP3}
-}
 
 # 1. searches all chuletas in the db, 
 # 2. removes the basename, 
@@ -62,13 +67,10 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	find $BASE_DIR -type d -iname "$x"
 	cp -pr ${TEMP3}/* $RUTA_CACHE/
 	echo
-	borrar_temp
 	salir 1
 else
 	find ${TEMP3}/ -type f ! -iname "lista_*" -exec cp {} $RUTA_CACHE/ \;
 fi
-
-borrar_temp
 
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
@@ -81,6 +83,3 @@ sqlite3 $RUTA_CACHE/chuletas.db "select path from v_chuleta_ap;" |\
 awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
 
 exit 0
-
-
-

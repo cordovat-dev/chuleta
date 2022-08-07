@@ -1,5 +1,13 @@
 #!/bin/bash
 
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${SCRIPTTEMP}" && test -f "${SCRIPTTEMP}" && rm "${SCRIPTTEMP}"
+	exit $1
+}
+
 set -euo pipefail
 
 DATAFILE=""
@@ -48,5 +56,4 @@ if [ $? -eq 0 ];then
 	mv $DATAFILE $DATAFILE$(date +%Y%m%d%H%M%S)
 	touch $DATAFILE
 fi
-rm $SCRIPTTEMP
 

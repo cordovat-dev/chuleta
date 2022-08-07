@@ -1,5 +1,14 @@
 #!/bin/bash
 
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${DATATEMP}" && test -f "${DATATEMP}" && rm "${DATATEMP}"
+	test -n "${SCRIPTTEMP}" && test -f "${SCRIPTTEMP}" && rm "${SCRIPTTEMP}"
+	exit $1
+}
+
 set -euo pipefail
 
 BASE_DIR=""
@@ -44,4 +53,3 @@ echo "select count(*) after from chuleta;" >> $SCRIPTTEMP
 echo ".quit" >> $SCRIPTTEMP
 
 sqlite3 $DB ".read "$SCRIPTTEMP
-rm $DATATEMP $SCRIPTTEMP

@@ -1,5 +1,17 @@
 #!/bin/bash
 
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${TEMPORAL2}" && test -f "${TEMPORAL2}" && rm "${TEMPORAL2}"
+	test -n "${TEMPORAL}" && test -f "${TEMPORAL}" && rm "${TEMPORAL}"
+	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
+	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
+
+	exit $1
+}
+
 TERMINO="$1"
 set -euo pipefail
 source ~/.config/chu/chu.conf
@@ -77,7 +89,6 @@ function menu {
 			$COMANDO $OPCION
 		fi
 	fi
-	rm $TEMP
 }
 
 function reporte {
@@ -86,13 +97,9 @@ function reporte {
 	cat $1 >> "$TEMP"
 	$RUTA/./fmt2.sh -r < "$TEMP"
 	echo
-	rm $TEMP
 }
 
-function salir {
-	rm ${TEMPORAL2} ${TEMPORAL}
-	exit $1
-}
+
 
 if [ "$TERMINO" = "--update" ];then
 	echo "Updating database"
@@ -100,7 +107,7 @@ if [ "$TERMINO" = "--update" ];then
 	echo "Generating autocompletion"
 	$RUTA/gac.sh $BASE_DIR
 	echo Done.
-	salir 0
+	exit 0
 elif [ "$TERMINO" = "--totals" ];then
 	echo
 	for f in $(ls $BASE_DIR);do
@@ -111,7 +118,7 @@ elif [ "$TERMINO" = "--totals" ];then
 	echo
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	echo $(sqlite3 $RUTA_CACHE/chuletas.db "select count(*) from chuleta;") chuletas
-	salir 0
+	exit 0
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${BASE_DIR}
 	if [ $MINGW == "YES" ];then
@@ -121,10 +128,10 @@ elif [ "$TERMINO" = "--topics" ];then
 		tree -d .
 		cd -		
 	fi
-	salir 0
+	exit 0
 elif [ "$TERMINO" = "--terms" ];then
 	cat $RUTA_CACHE/lista_comp
-	salir 0
+	exit 0
 elif [ "$TERMINO" = "--cached" ];then
 	set +u
 	LINENUM="$2"
@@ -147,12 +154,12 @@ elif [ "$TERMINO" = "--frequent" ];then
 	head -n 3 $TEMP1
 	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1")
 	rm "$TEMP1" 2> /dev/null
-	salir 0
+	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
 	echo
 	cat ~/.config/chu/chu.conf
-	salir 0
+	exit 0
 elif [ "$TERMINO" = "--random" ];then
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	CHULETA=$(sqlite3 $RUTA_CACHE/chuletas.db "select path from chuleta order by random() limit 1;")
@@ -177,4 +184,4 @@ fi
 set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
-salir 0
+exit 0
