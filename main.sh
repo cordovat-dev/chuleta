@@ -151,11 +151,17 @@ elif [ "$TERMINO" = "--cached" ];then
 		fi
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
-	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-	$RUTA/sqlf.sh -f "$RUTA_LOGS/frequent_" -d "$RUTA_CACHE/chuletas.db" -c "$RUTA_CACHE"  > $TEMP1
-	head -n 3 $TEMP1
-	echo Done.
-	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1")
+	if [ -f "$RUTA_LOGS/frequent_" ] && [ $(wc -l < "$RUTA_LOGS/frequent_") -ge 10 ]; then
+		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
+		$RUTA/sqlf.sh -f "$RUTA_LOGS/frequent_" -d "$RUTA_CACHE/chuletas.db" -c "$RUTA_CACHE"  > $TEMP1
+		head -n 3 $TEMP1
+		echo Done.
+		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1") | tee "$RUTA_CACHE/frequent_report_cache"
+	elif [ -f "$RUTA_CACHE/frequent_report_cache" ]; then
+		cat "$RUTA_CACHE/frequent_report_cache"
+	else
+		echo "Not enough info"
+	fi
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
