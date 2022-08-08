@@ -1,4 +1,14 @@
 #!/bin/bash
+
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
+	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
+	exit $1
+}
+
 set -euo pipefail
 
 ARCHIVO=""
@@ -35,8 +45,3 @@ AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP2)
 rm $TEMP1
 awk -v AVG=$AVG '$1 >= AVG {print $1,$2}' < $TEMP2 >> $TEMP1
 $RUTA/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $TEMP1
-rm "$TEMP1 $TEMP2" 2> /dev/null
-
-
-
-
