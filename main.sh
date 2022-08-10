@@ -175,7 +175,7 @@ elif [ "$TERMINO" = "--random" ];then
 	$COMANDO $CHULETA "--random"
 else
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
-	sqlite3 $RUTA_CACHE/chuletas.db "$($RUTA/gs.sh $@)" > $TEMPORAL
+	sqlite3 $RUTA_CACHE/chuletas.db "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
