@@ -65,6 +65,7 @@ function abrir {
 }
 
 function editar {
+	echo "  opening in editor ..."
 	$OPEN_COMMAND $BASE_DIR/$1
 }
 
