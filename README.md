@@ -22,4 +22,4 @@ Feel free to fork this project to support a different name convention
 1. Starts with "chuleta_"
 2. Ends with ".txt"
 3. No spaces
-4. Valid characters: [A-Za-z0-9-]
+4. Valid characters: [.A-Za-z0-9-]
