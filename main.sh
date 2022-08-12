@@ -201,4 +201,8 @@ fi
 set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
+
+find $RUTA_CACHE -iname "db.*" -mtime +30 -print0|\
+tar -czvf backup.db.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
+
 exit 0
