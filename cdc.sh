@@ -15,14 +15,15 @@ BASE_DIR=~/chuleta/chuleta-data
 TEMP=$(mktemp /tmp/chuleta.XXXXX)
 EXCODE=0
 new_name=""
-TABLE_DELETED="deleted_$(date +%Y%m%d%H%M%S)"
-TABLE_UPDATED="updated_$(date +%Y%m%d%H%M%S)"
+UPDATES_TABLE="update_$(date +%Y%m%d%H%M%S)"
 cd $BASE_DIR
 
 echo ".echo on"
+echo "drop table $UPDATES_TABLE;"
 echo "begin transaction;"
-echo "create table $TABLE_DELETED(path text, count integer);"
-echo "create table $TABLE_UPDATED(path text, count integer);"
+echo "create frequent_$(date +%Y%m%d%H%M%S) as select * from frequent;"
+echo
+echo "create table $UPDATES_TABLE(path text, count integer, old_path text, oper text );"
 while read old_name
 do
   if [ ! -f $BASE_DIR/$old_name ];then
@@ -34,7 +35,7 @@ do
 	EXCODE=$?
 	set -e
 	if [ $EXCODE -eq 0 ];then
-		echo "insert into $TABLE_DELETED select * from frequent where path = '$old_name';"
+		echo "insert into $UPDATES_TABLE select path, count, null, 'delete' from frequent where path = '$old_name';"
 		echo
 		echo "delete from frequent where path = '$old_name';"
 		echo
@@ -45,11 +46,11 @@ do
 	set -e
 	if [ $EXCODE -eq 0 ];then
 		new_name=$(grep -o "rename to .*" $TEMP|sed 's/rename to //g')
-		echo "insert into $TABLE_UPDATED select * from frequent where path = '$new_name';"
+		echo "insert into $UPDATES_TABLE select path, count, '$old_name', 'update' from frequent where path = '$new_name';"
 		echo
 		echo "update frequent set count=count+(select count from frequent where path ='$old_name') where path='$new_name';"
 		echo
-		echo "insert into $TABLE_DELETED select * from frequent where path = '$old_name';"
+		echo "insert into $UPDATES_TABLE select path, count, '$new_name', 'delete' from frequent where path = '$old_name';"
 		echo
 		echo "delete from frequent where path ='$old_name';"
 		echo
