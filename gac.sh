@@ -53,7 +53,7 @@ sort -u|\
 awk 'BEGIN {FS="/"; OFS="\t"}{print $NF, $0}'|\
 sort -u > $TEMP2
 
-cp $RUTA_CACHE/* ${TEMP3}/
+cp -pr $RUTA_CACHE/* ${TEMP3}/
 rm $RUTA_CACHE/*
 
 cp $TEMP $ARCHIVO_TOPICOS
@@ -69,7 +69,7 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	echo
 	salir 1
 else
-	find ${TEMP3}/ -type f ! -iname "lista_*" -exec cp {} $RUTA_CACHE/ \;
+	find ${TEMP3}/ -type f ! -iname "lista_*" -exec cp -pr {} $RUTA_CACHE/ \;
 fi
 
 for line in $(cat $ARCHIVO_TOPICOS);do
