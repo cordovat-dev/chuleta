@@ -100,7 +100,11 @@ function reporte {
 	echo
 }
 
-if [ "$TERMINO" = "--update" ];then
+function  update() {
+	local autocomp=""
+	set +u
+	autocomp="$1"
+	set -u
 	echo "Backing up database"
 	echo "Updating database"
 	cp "$RUTA_CACHE/db" "$RUTA_CACHE/db.$(date +%Y%m%d%H%M%S)"
@@ -111,10 +115,18 @@ if [ "$TERMINO" = "--update" ];then
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g" > "$RUTA_CACHE/db.txt"
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
-	echo "Generating autocompletion"
-	$RUTA/gac.sh $BASE_DIR
+	if [ "$autocomp" != "quick" ];then
+		echo "Generating autocompletion"
+		$RUTA/gac.sh $BASE_DIR
+	fi
 	echo Done.
 	exit 0
+}
+
+if [ "$TERMINO" = "--update" ];then
+	update
+elif [ "$TERMINO" = "--quick-update" ];then	
+	update quick
 elif [ "$TERMINO" = "--totals" ];then
 	echo
 	for f in $(ls $BASE_DIR);do
