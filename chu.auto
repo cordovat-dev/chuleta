@@ -6,7 +6,7 @@ _chu()
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 	ARCHLT=$(echo ~/.cache/chu/lista_comp)
 	ARCHTOPS=$(echo ~/.cache/chu/lista_topicos)
-	parms_unitarios="--update --totals --topics --terms --frequent --show_config --random"
+	parms_unitarios="--update --totals --topics --terms --frequent --show_config --random --quick-update"
 
 	if [ -n "$(grep -w -- "${prev}" $ARCHTOPS)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
@@ -16,7 +16,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	else		
-		op1="--update --totals --topics --terms --edit --frequent --show_config --cached --random $(cat $ARCHLT)"
+		op1="--update --totals --topics --terms --edit --frequent --show_config --cached --random --quick-update $(cat $ARCHLT)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
 		return 0
 	fi
