@@ -91,20 +91,32 @@ function reporte {
 	echo
 }
 
-
-
-if [ "$TERMINO" = "--update" ];then
+function  update() {
+	local autocomp=""
+	set +u
+	autocomp="$1"
+	set -u
+	echo "Backing up database"
 	echo "Updating database"
+	cp "$RUTA_CACHE/db" "$RUTA_CACHE/db.$(date +%Y%m%d%H%M%S)"
 	echo "$SUDO_COMMAND updatedb --localpaths=\"$BASE_DIR\" "
 	echo " --output=$RUTA_CACHE/db "
 	echo " --prunepaths=\"$BASE_DIR/.git\""
 	$SUDO_COMMAND updatedb --localpaths="$BASE_DIR" --output="$RUTA_CACHE/db" --prunepaths="$BASE_DIR/.git"
 	locate $MAX_DB_AGE -A -d $RUTA_CACHE/db -wr "chuleta_.*\.txt$" | sed -r "s|$BASE_DIR/||g" > "$RUTA_CACHE/db.txt"
-	rm $MENUCACHE 2> /dev/null
-	echo "Generating autocompletion"
-	$RUTA/gac.sh $BASE_DIR
+	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
+	if [ "$autocomp" != "quick" ];then
+		echo "Generating autocompletion"
+		$RUTA/gac.sh $BASE_DIR
+	fi
 	echo Done.
 	exit 0
+}
+
+if [ "$TERMINO" = "--update" ];then
+	update
+elif [ "$TERMINO" = "--quick-update" ];then	
+	update quick
 elif [ "$TERMINO" = "--totals" ];then
 	echo
 	for f in $(ls $BASE_DIR);do
@@ -147,8 +159,8 @@ elif [ "$TERMINO" = "--cached" ];then
 elif [ "$TERMINO" = "--frequent" ];then
 	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 	cat "$RUTA_LOGS/frecuentes" | sed -r "s#${BASE_DIR}/##g" > $TEMP1
+	echo Done.
 	$RUTA/tops.sh "$TEMP1"
-	rm "$TEMP1" 2> /dev/null
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
