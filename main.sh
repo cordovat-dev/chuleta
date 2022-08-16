@@ -207,12 +207,12 @@ find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
 
 find $RUTA_CACHE -iname "chuletas.db.*" -mtime +30 -print0|\
-tar -czvf backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
+tar -czvf $RUTA_CACHE/backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
 
 find $RUTA_CACHE -iname "frequent.db.*" -mtime +30 -print0|\
-tar -czvf backup.frequent.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
+tar -czvf $RUTA_CACHE/backup.frequent.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
 
 find $RUTA_LOGS -iname "frequent_*" -mtime +30 -print0|\
-tar -czvf backup.frequent_.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
+tar -czvf $RUTA_LOGS/backup.frequent_.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T -
 
 exit 0
