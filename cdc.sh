@@ -23,10 +23,15 @@ cd $BASE_DIR
 echo ".echo on" > "${TEMP2}"
 echo "create temp table tempimp(path text);" >> "${TEMP2}"
 echo "drop table if exists frequent_2;" >> "${TEMP2}"
+echo "drop table if exists summary;" >> "${TEMP2}"
 echo "create table frequent_2 (path text, count integer);" >> "${TEMP2}"
+echo "create table summary (path text primary key not null, count integer);" >> "${TEMP2}"
 echo ".mode csv" >> "${TEMP2}"
 echo ".import $DATAFILE tempimp" >> "${TEMP2}"
 echo "insert into frequent_2 select path,1 from tempimp;" >> "${TEMP2}"
+echo "insert into summary select path, sum(count) from frequent_2 group by path;" >> "${TEMP2}"
+echo "delete from frequent_2;" >> "${TEMP2}"
+echo "insert into frequent_2 select * from summary;" >> "${TEMP2}"
 sqlite3 $RUTA_CACHE/frequent.db ".read "${TEMP2}
 
 echo ".echo on"
