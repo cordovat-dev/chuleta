@@ -60,7 +60,8 @@ function abrir {
 		cat "$CHULETA"
 	fi
 	if [ "$RNDCHU" != "--random" ]; then
-		echo "$CHULETA" |sed -r "s|$BASE_DIR/||g">> ${RUTA_LOGS}/frequent_
+		#echo "$CHULETA" |sed -r "s|$BASE_DIR/||g">> ${RUTA_LOGS}/frequent_
+		sqlite3 $RUTA_CACHE/frequent.db "insert into frequent_log values('$1',1);"
 	fi
 }
 
