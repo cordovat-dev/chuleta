@@ -24,4 +24,4 @@ x create color frequents report cache in case theres no change
 x modify deploy to include SQLite databases
 - add dependency check
 x delete old frequent backups
-- find "dead" chuleta in frequent db
+x find "dead" chuleta in frequent db
