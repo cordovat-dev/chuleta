@@ -36,8 +36,3 @@ find $RUTA_CACHE -iname "frequent.db.*" -mtime +30 -print0 > $TEMPORAL
 test $(cat $TEMPORAL|wc -w) -gt 0 && \
 tar -czvf backup.frequent.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T TEMPORAL
 
-cd $RUTA_LOGS
-
-find $RUTA_LOGS -iname "frequent_*" -mtime +30 -print0 > $TEMPORAL
-test $(cat $TEMPORAL|wc -w) -gt 0 && \
-tar -czvf backup.frequent_.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T TEMPORAL

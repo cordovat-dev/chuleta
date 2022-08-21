@@ -60,7 +60,6 @@ function abrir {
 		cat "$CHULETA"
 	fi
 	if [ "$RNDCHU" != "--random" ]; then
-		#echo "$CHULETA" |sed -r "s|$BASE_DIR/||g">> ${RUTA_LOGS}/frequent_
 		sqlite3 $RUTA_CACHE/frequent.db "insert into frequent_log values('$1',1);"
 	fi
 }
@@ -109,6 +108,7 @@ function  update() {
 	echo "Backing up database"
 	echo "Updating database"
 	cp "$RUTA_CACHE/chuletas.db" "$RUTA_CACHE/chuletas.db.$(date +%Y%m%d%H%M%S)"
+	cp "$RUTA_CACHE/frequent.db" "$RUTA_CACHE/frequent.db.$(date +%Y%m%d%H%M%S)"
 	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db" -w $NUM_DAYS_OLD
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
@@ -165,12 +165,12 @@ elif [ "$TERMINO" = "--cached" ];then
 		fi
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
-	if [ -f "$RUTA_LOGS/frequent_" ] && [ $(wc -l < "$RUTA_LOGS/frequent_") -ge 10 ]; then
+	if [ $(sqlite3 $RUTA_CACHE/frequent.db "select age from v_report_cache_age;") -gt 2 ]; then
 		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-		$RUTA/sqlf.sh -f "$RUTA_LOGS/frequent_" -d "$RUTA_CACHE/chuletas.db" -c "$RUTA_CACHE"  > $TEMP1
-		head -n 3 $TEMP1
-		echo Done.
-		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f <(sed '1,3d' "$TEMP1") | tee "$RUTA_CACHE/frequent_report_cache"
+		sqlite3 $RUTA_CACHE/frequent.db ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
+		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"| \
+		tee "$RUTA_CACHE/frequent_report_cache"
+		sqlite3 $RUTA_CACHE/frequent.db "insert or replace into settings (key,value) values ('LAST_UPDATED_REPORT_CACHE',CURRENT_TIMESTAMP);" 
 	elif [ -f "$RUTA_CACHE/frequent_report_cache" ]; then
 		cat "$RUTA_CACHE/frequent_report_cache"
 	else
