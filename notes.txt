@@ -13,7 +13,7 @@
 2. frequent filenames will be imported there with count of 1
 3. export content of table in file X
 3. generate report of files renamed since last registered commit and create a sed script with it
-	git diff --name-status -C HEAD~32..HEAD|grep "^R"|awk '{printf("s#%s#$s#g",$2,$3)}'
+	git diff --name-status -C HEAD~32..HEAD|grep "^R"|awk '{printf("s#%s#%s#g\n",$2,$3)}'
 4. run sed script on X and generate Y
 5. delete everything from frequentZ
 6. import file Y into frequentZ
