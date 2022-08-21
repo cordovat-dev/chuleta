@@ -14,6 +14,8 @@ do
     esac
 done
 
+test -z $ARCHIVO && exit 1
+
 arr[0]="You should consider trying to learn the following by heart:"
 arr[1]="It's about time you memorize the following:"
 arr[2]="Don't just copy and paste, understand!:"
