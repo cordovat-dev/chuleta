@@ -36,9 +36,9 @@ find $BASE_DIR -regextype sed \
 sed "s|$BASE_DIR/||g" > $DATATEMP
 
 echo "select 'Updating settings';" >> $SCRIPTTEMP
-echo "insert or replace into settings(cod_set,value) values ('BASE_DIR','$BASE_DIR');" >> $SCRIPTTEMP
-echo "insert or replace into settings(cod_set,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);" >> $SCRIPTTEMP
-echo "insert or replace into settings(cod_set,value) values ('NUM_DAYS_OLD',$NUM_DAYS_OLD);" >> $SCRIPTTEMP
+echo "insert or replace into settings(key,value) values ('BASE_DIR','$BASE_DIR');" >> $SCRIPTTEMP
+echo "insert or replace into settings(key,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);" >> $SCRIPTTEMP
+echo "insert or replace into settings(key,value) values ('NUM_DAYS_OLD',$NUM_DAYS_OLD);" >> $SCRIPTTEMP
 echo "drop table if exists tempimp;" >> $SCRIPTTEMP
 echo "create temp table tempimp(path TEXT);" >> $SCRIPTTEMP
 echo ".mode line" >> $SCRIPTTEMP
