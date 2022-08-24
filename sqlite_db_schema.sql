@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "chuleta" (
         "path"  TEXT NOT NULL
 );
 CREATE TABLE settings(
-        cod_set text primary key not null,
+        key text primary key not null,
         value text
 );
 CREATE VIEW v_chuleta_ap as
@@ -12,7 +12,7 @@ select
         s.value||'/'||c.path path
 from
         chuleta c,
-        (select value from settings where cod_set = 'BASE_DIR') s
+        (select value from settings where key = 'BASE_DIR') s
 order by
         c.id
 /* v_chuleta_ap(id,path) */
@@ -24,12 +24,12 @@ from
         (
                 select
                         (julianday(CURRENT_TIMESTAMP) - julianday(value)) >=
-                        (select value from settings where cod_set='NUM_DAYS_OLD') old,
+                        (select value from settings where key='NUM_DAYS_OLD') old,
                         (julianday(CURRENT_TIMESTAMP) - julianday(value)) age
                 from
                         settings
                 where
-                        cod_set = 'LAST_UPDATED'
+                        key = 'LAST_UPDATED'
         ) d
         join (
                 select 1 old
