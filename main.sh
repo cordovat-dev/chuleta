@@ -36,6 +36,7 @@ FREQUENTDB=$RUTA_CACHE/frequent.db
 CHULETADB=$RUTA_CACHE/chuletas.db
 MENUCACHE=$RUTA_CACHE/menu$PPID
 MENUCACHE_NC=${MENUCACHE}_nc
+REPORT_CACHE_FILE=$RUTA_CACHE/frequent_report_cache
 
 RUTA=`dirname $0`
 TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
@@ -171,10 +172,10 @@ elif [ "$TERMINO" = "--frequent" ];then
 		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 		sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
 		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"| \
-		tee "$RUTA_CACHE/frequent_report_cache"
+		tee "${REPORT_CACHE_FILE}"
 		sqlite3 ${FREQUENTDB} "insert or replace into settings (key,value) values ('LAST_UPDATED_REPORT_CACHE',CURRENT_TIMESTAMP);" 
-	elif [ -f "$RUTA_CACHE/frequent_report_cache" ]; then
-		cat "$RUTA_CACHE/frequent_report_cache"
+	elif [ -f "${REPORT_CACHE_FILE}" ]; then
+		cat "${REPORT_CACHE_FILE}"
 	else
 		echo "Not enough info"
 	fi

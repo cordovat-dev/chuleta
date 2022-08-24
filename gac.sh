@@ -24,6 +24,7 @@ CHULETADB=$RUTA_CACHE/chuletas.db
 ARCHIVO_TOPICOS=$RUTA_CACHE/lista_topicos
 ARCHIVO_RUTAS_TOPICOS=$RUTA_CACHE/lista_rutas_topicos
 ARCHIVO_TOPICOS_REPETIDOS=$RUTA_CACHE/lista_topicos_repetidos
+ARCHIVO_LISTA_COMPLETA=$RUTA_CACHE/lista_comp
 TEMP=`mktemp /tmp/chuleta.XXXXX`
 TEMP2=`mktemp /tmp/chuleta.XXXXX`
 TEMP3=`mktemp -d /tmp/chuleta.XXXXX`
@@ -81,6 +82,6 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 done
 
 sqlite3 "${CHULETADB}" "select path from v_chuleta_ap;" |\
-awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  $RUTA_CACHE/lista_comp
+awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  "${ARCHIVO_LISTA_COMPLETA}"
 
 exit 0
