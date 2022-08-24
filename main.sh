@@ -32,6 +32,8 @@ LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
 RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
+FREQUENTDB=$RUTA_CACHE/frequent.db
+CHULETADB=$RUTA_CACHE/chuletas.db
 MENUCACHE=$RUTA_CACHE/menu$PPID
 MENUCACHE_NC=${MENUCACHE}_nc
 
@@ -60,7 +62,7 @@ function abrir {
 		cat "$CHULETA"
 	fi
 	if [ "$RNDCHU" != "--random" ]; then
-		sqlite3 $RUTA_CACHE/frequent.db "insert into frequent_log values('$1',1);"
+		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"
 	fi
 }
 
@@ -107,9 +109,9 @@ function  update() {
 	set -u
 	echo "Backing up database"
 	echo "Updating database"
-	cp "$RUTA_CACHE/chuletas.db" "$RUTA_CACHE/chuletas.db.$(date +%Y%m%d%H%M%S)"
-	cp "$RUTA_CACHE/frequent.db" "$RUTA_CACHE/frequent.db.$(date +%Y%m%d%H%M%S)"
-	$RUTA/sqls.sh -b "$BASE_DIR" -d "$RUTA_CACHE/chuletas.db" -w $NUM_DAYS_OLD
+	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
+	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
+	$RUTA/sqls.sh -b "$BASE_DIR" -d "${CHULETADB}" -w $NUM_DAYS_OLD
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
 	if [ "$autocomp" != "quick" ];then
@@ -133,7 +135,7 @@ elif [ "$TERMINO" = "--totals" ];then
 	done |column -t|sort -k 2 -gr
 	echo
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
-	echo $(sqlite3 $RUTA_CACHE/chuletas.db "select count(*) from chuleta;") chuletas
+	echo $(sqlite3 ${CHULETADB} "select count(*) from chuleta;") chuletas
 	exit 0
 elif [ "$TERMINO" = "--topics" ];then
 	cd ${BASE_DIR}
@@ -165,12 +167,12 @@ elif [ "$TERMINO" = "--cached" ];then
 		fi
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
-	if [ $(sqlite3 $RUTA_CACHE/frequent.db "select age from v_report_cache_age;") -gt 2 ]; then
+	if [ $(sqlite3 ${FREQUENTDB} "select age from v_report_cache_age;") -gt 2 ]; then
 		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-		sqlite3 $RUTA_CACHE/frequent.db ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
+		sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
 		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"| \
 		tee "$RUTA_CACHE/frequent_report_cache"
-		sqlite3 $RUTA_CACHE/frequent.db "insert or replace into settings (key,value) values ('LAST_UPDATED_REPORT_CACHE',CURRENT_TIMESTAMP);" 
+		sqlite3 ${FREQUENTDB} "insert or replace into settings (key,value) values ('LAST_UPDATED_REPORT_CACHE',CURRENT_TIMESTAMP);" 
 	elif [ -f "$RUTA_CACHE/frequent_report_cache" ]; then
 		cat "$RUTA_CACHE/frequent_report_cache"
 	else
@@ -184,12 +186,12 @@ elif [ "$TERMINO" = "--show_config" ];then
 	exit 0
 elif [ "$TERMINO" = "--random" ];then
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
-	CHULETA=$(sqlite3 $RUTA_CACHE/chuletas.db "select path from chuleta order by random() limit 1;")
+	CHULETA=$(sqlite3 ${CHULETADB} "select path from chuleta order by random() limit 1;")
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
 else
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
-	sqlite3 $RUTA_CACHE/chuletas.db "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
+	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
 fi
 
 CANT_RESULTADOS=`cat $TEMPORAL | wc -l`

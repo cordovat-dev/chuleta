@@ -13,6 +13,8 @@ done
 test -z $NO_OLD_DB_WRN && exit 1
 test -z $RUTA_CACHE && exit 1
 
+CHULETADB=$RUTA_CACHE/chuletas.db
+
 if [ $NO_OLD_DB_WRN -ne 1 ];then
-	sqlite3 "$RUTA_CACHE/chuletas.db" "select * from v_old_db_msg;"
+	sqlite3 "${CHULETADB}" "select * from v_old_db_msg;"
 fi

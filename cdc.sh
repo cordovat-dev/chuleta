@@ -20,12 +20,13 @@ TEMPRESULTDATA=$(mktemp /tmp/chuleta.XXXXX)
 TEMPRESULTDATA2=$(mktemp /tmp/chuleta.XXXXX)
 TEMPSCRIPT=$(mktemp /tmp/chuleta.XXXXX)
 TEMPSED=$(mktemp /tmp/chuleta.XXXXX)
+FREQUENTDB=$RUTA_CACHE/frequent.db
 EXCODE=0
 BACKUPTABLE="frequent_log_$(date +%Y%m%d%H%M%S)"
 
-cp -p $RUTA_CACHE/frequent.db $RUTA_CACHE/frequent.db.$(date +%Y%m%d%H%M%S)
+cp -p ${FREQUENTDB} ${FREQUENTDB}.$(date +%Y%m%d%H%M%S)
 
-sqlite3 $RUTA_CACHE/frequent.db <<EOF
+sqlite3 ${FREQUENTDB} <<EOF
 .echo on
 select 'Exporting '||(select count(*) from frequent_log)||' rows';
 .mode csv
@@ -41,7 +42,7 @@ sed -Ef ${TEMPSED} ${TEMPDATA} > ${TEMPRESULTDATA}
 git diff --name-status -C $(git rev-list HEAD|tail -1)..HEAD|grep "^D"|awk '{printf("#%s#d\n",$2)}' > ${TEMPSED}
 sed -Ef ${TEMPSED} ${TEMPRESULTDATA} > ${TEMPRESULTDATA2}
 
-sqlite3 $RUTA_CACHE/frequent.db <<EOF
+sqlite3 ${FREQUENTDB} <<EOF
 .echo on
 create table ${BACKUPTABLE} as select * from frequent_log;
 insert into ${BACKUPTABLE} select * from frequent_log;
