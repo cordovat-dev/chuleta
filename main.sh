@@ -115,6 +115,8 @@ function  update() {
 	if [ "$autocomp" != "quick" ];then
 		echo "Generating autocompletion"
 		$RUTA/gac.sh $BASE_DIR
+	else
+		sleep 1
 	fi
 	echo Done.
 	exit 0
