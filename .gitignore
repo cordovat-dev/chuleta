@@ -3,6 +3,7 @@
 !*.awk
 !*.auto
 !*.conf
+!*.sed
 !todo.txt
 !issues.txt
 !todo_sqlite.txt
