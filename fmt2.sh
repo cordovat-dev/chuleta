@@ -48,18 +48,25 @@ fi
 	
 while read linea
 do
-	COUNT=$(( $COUNT + 1 ))
+	if [ $HASNUMBERS -eq 1 ];then
+		   lineatemp=$linea
+		   COUNT=$(awk '{print $1}' <(echo $lineatemp))
+		   linea=$(awk '{print $2}' <(echo $lineatemp))
+	else
+		   COUNT=$(( $COUNT + 1 ))
+	fi
 	if [ $REPORT -eq 1 ]; then
 		printf "  %s\n" $linea
 	else
-		if [ $HASNUMBERS -ne 1 ];then
-			printf "  %-4s%s\n" $COUNT $linea
-		else
-			printf "  %s\n" $linea
-		fi	
+		printf "  %-4s%s\n" $COUNT $linea
 	fi
 done > $TEMP
-$RUTA/ac.sed $TEMP
+
+if [ $COLOUR -eq 1 ]; then
+	$RUTA/ac.sed $TEMP
+else
+	cat $TEMP
+fi
 if [ $REPORT -eq 1 ]; then
 	echo
 	echo "  $COUNT $LEGEND"

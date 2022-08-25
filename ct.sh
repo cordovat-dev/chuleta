@@ -22,6 +22,6 @@ if [ $COLOUR -eq 0 ];then
 	exit 0
 fi
 
-echo "$COUNT $DATA" | $RUTA/ac.sed
+printf "  %-4s%s\n" $COUNT $DATA | $RUTA/ac.sed
 
 exit 0
