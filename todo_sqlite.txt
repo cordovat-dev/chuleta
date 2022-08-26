@@ -25,3 +25,6 @@ x modify deploy to include SQLite databases
 - add dependency check
 x delete old frequent backups
 x find "dead" chuleta in frequent db
+- create totals view ()
+  select substr(path,1,instr(path,'/')-1) main_topic, count(*) from chuleta group by main_topic order by count(*) desc;
+
