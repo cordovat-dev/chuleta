@@ -170,9 +170,13 @@ elif [ "$TERMINO" = "--cached" ];then
 		fi
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
-	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-	sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
-	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
+	if [ $(sqlite3 $RUTA_CACHE/frequent.db "select count(*) from  v_log_summary;") -eq 0 ];then
+		echo "Not enough info(2)"
+	else
+		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
+		sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
+		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
+	fi
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
