@@ -1,8 +1,5 @@
-- add dependency check
 x generate nohup files in tmp
-- Fix: difference in totals report (total doesn't add up if DB hasn't been updated and chuletas have been deleted or added)
-- Add percentages to totals report
+x Fix: difference in totals report (total doesn't add up if DB hasn't been updated and chuletas have been deleted or added)
+x Add percentages to totals report
 - add dependency check
-- create totals view ()
-  select substr(path,1,instr(path,'/')-1) main_topic, count(*) from chuleta group by main_topic order by count(*) desc;
 

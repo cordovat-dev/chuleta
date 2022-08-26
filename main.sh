@@ -131,11 +131,8 @@ elif [ "$TERMINO" = "--quick-update" ];then
 	update quick
 elif [ "$TERMINO" = "--totals" ];then
 	echo
-	for f in $(ls $BASE_DIR);do
-		if [ -d "${BASE_DIR}/$f" ];then
-			echo "$f: $(find ${BASE_DIR}/${f}/ -type f -iname "chuleta_*.txt"|wc -l)"
-		fi
-	done |column -t|sort -k 2 -gr
+	sqlite3 ${CHULETADB} ".mode csv" ".separator ' '" "select main_topic, count, pc from v_totals;"|\
+	awk '{printf "%s: %s %2s%s\n", $1, $2, $3, "%"}'|sed 's/[^0-9]0%/-/'| column -t
 	echo
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	echo $(sqlite3 ${CHULETADB} "select count(*) from chuleta;") chuletas

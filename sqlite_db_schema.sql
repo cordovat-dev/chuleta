@@ -35,3 +35,22 @@ from
                 select 1 old
         ) m on (d.old = m.old)
 /* v_old_db_msg(msg) */;
+CREATE VIEW v_totals as
+select
+        t1.main_topic,
+        t1.count,
+        cast(round(cast(t1.count as real)/cast(t2.total as real)*100,0) as int) pc
+from
+        (
+                select
+                        substr(path,1,instr(c.path,'/')-1) main_topic,
+                        count(*) count
+                from
+                        chuleta c
+                group by
+                        main_topic
+        ) t1
+        join (select count(*) total from chuleta) t2
+order by
+        t1.count desc
+/* v_totals(main_topic,count,pc) */;
