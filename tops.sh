@@ -1,10 +1,30 @@
 #!/bin/bash
+
+trap exit_handler EXIT
+
+function exit_handler {
+	set +u
+	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
+	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
+	exit $1
+}
+
 set -euo pipefail
 
-ARCHIVO="$1"
+ARCHIVO=""
 RUTA=$(dirname $0)
-TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-TEMP2=$(mktemp /tmp/chuleta.XXXXX)
+
+COLOUR=0
+
+while getopts f:c flag
+do
+    case "${flag}" in
+		c) COLOUR=1;;
+		f) ARCHIVO=${OPTARG};;
+    esac
+done
+
+test -z $ARCHIVO && exit 1
 
 arr[0]="You should consider trying to learn the following by heart:"
 arr[1]="It's about time you memorize the following:"
@@ -19,15 +39,5 @@ rand=$[$RANDOM % ${#arr[@]}]
 echo
 echo ${arr[$rand]}
 echo
-sort $ARCHIVO | uniq -c | sort -nrk 1 > $TEMP1
-AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP1)
-awk -v AVG=$AVG '$1 >= AVG' < $TEMP1 > $TEMP2
-AVG=$(awk '{acum = acum + $1} END {print acum/NR}' $TEMP2)
-echo "Count	Chuletas" > $TEMP1
-awk -v AVG=$AVG '$1 >= AVG {print $1,$2}' < $TEMP2 >> $TEMP1
-$RUTA/./fmt.sh -n < $TEMP1
-rm "$TEMP1 $TEMP2" 2> /dev/null
 
-
-
-
+$RUTA/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $ARCHIVO

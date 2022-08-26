@@ -1,0 +1,5 @@
+x generate nohup files in tmp
+x Fix: difference in totals report (total doesn't add up if DB hasn't been updated and chuletas have been deleted or added)
+x Add percentages to totals report
+- add dependency check
+
