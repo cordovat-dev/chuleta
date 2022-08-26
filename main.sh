@@ -170,17 +170,9 @@ elif [ "$TERMINO" = "--cached" ];then
 		fi
 	fi
 elif [ "$TERMINO" = "--frequent" ];then
-	if [ $(sqlite3 ${FREQUENTDB} "select age from v_report_cache_age;") -gt 2 ]; then
-		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
-		sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
-		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"| \
-		tee "${REPORT_CACHE_FILE}"
-		sqlite3 ${FREQUENTDB} "insert or replace into settings (key,value) values ('LAST_UPDATED_REPORT_CACHE',CURRENT_TIMESTAMP);" 
-	elif [ -f "${REPORT_CACHE_FILE}" ]; then
-		cat "${REPORT_CACHE_FILE}"
-	else
-		echo "Not enough info"
-	fi
+	TEMP1=$(mktemp /tmp/chuleta.XXXXX)
+	sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
+	$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
 	exit 0
 elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf

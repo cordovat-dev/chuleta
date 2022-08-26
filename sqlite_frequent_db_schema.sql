@@ -32,9 +32,3 @@ where count > (
 ) order by count desc
 /* v_log_summary(count,path) */;
 CREATE TABLE settings (key text primary key not null, value text);
-CREATE VIEW v_report_cache_age as
-select
-       cast(trunc((julianday(CURRENT_TIMESTAMP) -julianday(value))*24) as int) AS AGE
-from settings
-       where key = 'LAST_UPDATED_REPORT_CACHE'
-/* v_report_cache_age(AGE) */;

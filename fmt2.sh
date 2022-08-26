@@ -20,6 +20,7 @@ TITLE="Chuletas"
 NOCOLOR_FILE=""
 HASNUMBERS=0
 HEADERCOL1="#"
+COUNT=0
 TEMP=$(mktemp /tmp/chuleta.XXXXX)
 
 while getopts rl:t:cnf: flag
@@ -48,26 +49,24 @@ fi
 while read linea
 do
 	if [ $HASNUMBERS -eq 1 ];then
-		lineatemp=$linea
-		COUNT=$(awk '{print $1}' <(echo $lineatemp))
-		linea=$(awk '{print $2}' <(echo $lineatemp))
+		   lineatemp=$linea
+		   COUNT=$(awk '{print $1}' <(echo $lineatemp))
+		   linea=$(awk '{print $2}' <(echo $lineatemp))
 	else
-		COUNT=$(( $COUNT + 1 ))
+		   COUNT=$(( $COUNT + 1 ))
 	fi
 	if [ $REPORT -eq 1 ]; then
 		printf "  %s\n" $linea
 	else
-		if [ $COLOUR -eq 1 ];then
-			$RUTA/ct.sh -n $COUNT -d $linea -c >> $TEMP
-		else
-			printf "  %-4s%s\n" $COUNT $linea >> $TEMP
-		fi
-		if [ -n "$NOCOLOR_FILE" ];then
-			printf "  %-4s%s\n" $COUNT $linea >> ${NOCOLOR_FILE}
-		fi;
+		printf "  %-4s%s\n" $COUNT $linea
 	fi
-done
-cat $TEMP
+done > $TEMP
+
+if [ $COLOUR -eq 1 ]; then
+	$RUTA/ac.sed $TEMP
+else
+	cat $TEMP
+fi
 if [ $REPORT -eq 1 ]; then
 	echo
 	echo "  $COUNT $LEGEND"
