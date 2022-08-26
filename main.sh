@@ -208,5 +208,5 @@ set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
 
-(nohup $RUTA/cob.sh -c $RUTA_CACHE -l $RUTA_LOGS ) 2>/dev/null &
+(nohup $RUTA/cob.sh -c $RUTA_CACHE -l $RUTA_LOGS > $(mktemp /tmp/chuleta.nohup.XXXXX)) 2>/dev/null &
 exit 0
