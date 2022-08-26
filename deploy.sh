@@ -3,6 +3,14 @@ set -euo pipefail
 
 DIR=$(dirname "$0")
 MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
+RUTA=$(dirname $0)
+BACKUPNAME=""
+RUTA_CACHE=~/.cache/chu
+RUTA_LOGS=~/.cache/chu.logs
+RUTA_CONF=~/.config/chu
+CONFIG_FILE=$RUTA_CONF/chu.conf
+CHULETADB=$RUTA_CACHE/chuletas.db
+FREQUENTDB=$RUTA_CACHE/frequent.db
 
 if [ $MINGW == "YES" ];then
 	set +e
@@ -14,18 +22,33 @@ if [ $MINGW == "YES" ];then
 	set -e
 fi
 
-if [ ! -d ~/.cache/chu ];then
-	mkdir ~/.cache/chu
+if [ ! -d "${RUTA_CACHE}" ];then
+	mkdir "${RUTA_CACHE}"
 fi
-if [ ! -d ~/.cache/chu.logs ];then
-	mkdir ~/.cache/chu.logs
+
+if [ -f "${CHULETADB}" ];then
+	BACKUPNAME="$(echo ${CHULETADB}.$(date +%Y%m%d%H%M%S))"
+	mv "${CHULETADB}" "$BACKUPNAME"
+	echo "Old chuletas.db moved to $BACKUPNAME"
 fi
-if [ ! -d ~/.config/chu ];then
-	mkdir ~/.config/chu
+sqlite3 "${CHULETADB}" ".read "$RUTA/sqlite_db_schema.sql
+if [ -f "${FREQUENTDB}" ];then
+	BACKUPNAME="$(echo ${FREQUENTDB}.$(date +%Y%m%d%H%M%S))"
+	mv "${FREQUENTDB}" "$BACKUPNAME"
+	echo "Old frequent.db moved to $BACKUPNAME"
 fi
-if [ ! -f ~/.config/chu/chu.conf ];then
-	cp $DIR/chu.conf ~/.config/chu/
-	echo MINGW=$MINGW >> ~/.config/chu/chu.conf
+sqlite3 "${FREQUENTDB}" ".read "$RUTA/sqlite_frequent_db_schema.sql
+	
+if [ ! -d "${RUTA_LOGS}" ];then
+	mkdir "${RUTA_LOGS}"
+fi
+if [ ! -d "${RUTA_CONF}" ];then
+	mkdir "${RUTA_CONF}"
+fi
+if [ ! -f "${CONFIG_FILE}" ];then
+	cp $DIR/chu.conf "${RUTA_CONF}/"
+	echo MINGW=$MINGW >> "${CONFIG_FILE}"
+	echo "...Please edit ${CONFIG_FILE} file."
 fi
 
 if [ $MINGW == "YES" ];then
@@ -33,3 +56,5 @@ if [ $MINGW == "YES" ];then
 else
 	sudo cp -f $DIR/chu.auto /etc/bash_completion.d/
 fi
+
+echo "... Please run chu --update before using the utility."

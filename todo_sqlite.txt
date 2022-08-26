@@ -1,0 +1,30 @@
+x rename test_sqlite.sh to sqls.sh
+x parameterize sqls.sh
+x substitute updatedb with sqls in "--update"
+x substitute locate with sqlite in gac.sh
+x substitute locate with sqlite in "--totals"
+x create a frequents table
+x improve frequents table
+x update frequents table
+x search frequents table
+- optimize frequents
+x make frequents an attached db
+	x create frequent database
+	x create frequent table in frequent database
+	x delete frequent table from chuletas.db
+	x modify v_tops
+	x modify scripts that reference frequent table
+	x backup frequent in gac.sh
+x update settings table on update
+x make a backup of sqlite db
+x move sqlitedb to ./cache dir
+x remove --recent functionality
+x add "old database" message
+x create color frequents report cache in case theres no change
+x modify deploy to include SQLite databases
+- add dependency check
+x delete old frequent backups
+x find "dead" chuleta in frequent db
+- create totals view ()
+  select substr(path,1,instr(path,'/')-1) main_topic, count(*) from chuleta group by main_topic order by count(*) desc;
+
