@@ -44,7 +44,7 @@ TEMPORAL2=$(mktemp /tmp/chuleta.XXXXX)
 OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
-if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit')" ];then	
+if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit')" ];then
 	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--edit//g')"
 	COMANDO="editar"
 fi
@@ -81,8 +81,8 @@ function menu {
 	test -f ${MENUCACHE} && rm ${MENUCACHE}
 	test -f ${MENUCACHE_NC} && rm ${MENUCACHE_NC}
 	$RUTA/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
-	
-	echo 
+
+	echo
 	read -p "  ?  " respuesta
 	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
 		OPCION=$respuesta
@@ -127,7 +127,7 @@ function  update() {
 
 if [ "$TERMINO" = "--update" ];then
 	update
-elif [ "$TERMINO" = "--quick-update" ];then	
+elif [ "$TERMINO" = "--quick-update" ];then
 	update quick
 elif [ "$TERMINO" = "--totals" ];then
 	echo
@@ -144,7 +144,7 @@ elif [ "$TERMINO" = "--topics" ];then
 		cd - > /dev/null
 	else
 		tree -d .
-		cd -		
+		cd -
 	fi
 	exit 0
 elif [ "$TERMINO" = "--terms" ];then

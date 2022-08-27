@@ -29,11 +29,11 @@ TEMP=$(mktemp /tmp/chuleta.XXXXX)
 TEMP2=$(mktemp /tmp/chuleta.XXXXX)
 TEMP3=$(mktemp -d /tmp/chuleta.XXXXX)
 
-# 1. searches all chuletas in the db, 
-# 2. removes the basename, 
+# 1. searches all chuletas in the db,
+# 2. removes the basename,
 # 3. removes the trailing slash (last char),
 # 4. removes everything but the basename
-# 5. creates a sorted unique list 
+# 5. creates a sorted unique list
 # RESULT: a list of all topics
 sqlite3 "${CHULETADB}" "select path from v_chuleta_ap;"|\
 grep -o "^/.*\/"|\
@@ -41,12 +41,12 @@ sed 's/.$//g'|\
 grep -o '[^/]*$'|\
 sort -u > $TEMP
 
-# 1. searches all chuletas in the db, 
-# 2. removes the basename, 
+# 1. searches all chuletas in the db,
+# 2. removes the basename,
 # 3. removes the trailing slash,
 # 4. creates a sorted unique list
 # 5. splits using slash and prints number of fields and all fields
-# 6. creates a sorted unique list 
+# 6. creates a sorted unique list
 # RESULT: a list of folders names (a folder for each topic/subtopic)
 sqlite3 "${CHULETADB}" "select path from v_chuleta_ap;"|\
 grep -o "^/.*/"|\

@@ -3,15 +3,15 @@ CREATE TABLE frequent(
         count integer
 );
 CREATE VIEW v_tops as
-select count, path 
+select count, path
 from
 	frequent
 where count > (
-	select 
+	select
 		avg(count)
-	from 
+	from
 		frequent
-	where 
+	where
 		count > (select avg(count) from frequent)
 ) order by count desc
 /* v_tops(count,path) */
