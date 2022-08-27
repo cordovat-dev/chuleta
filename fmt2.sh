@@ -67,6 +67,11 @@ if [ $COLOUR -eq 1 ]; then
 else
 	cat $TEMP
 fi
+
+if [ -n "$NOCOLOR_FILE" ];then
+	cp $TEMP ${NOCOLOR_FILE}
+fi;
+
 if [ $REPORT -eq 1 ]; then
 	echo
 	echo "  $COUNT $LEGEND"
