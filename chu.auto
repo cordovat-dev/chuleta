@@ -1,4 +1,4 @@
-_chu() 
+_chu()
 {
 	local cur prev opts
 	COMPREPLY=()
@@ -10,14 +10,14 @@ _chu()
 
 	if [ -n "$(grep -w -- "${prev}" $ARCHTOPS)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
-		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
+		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
 	elif [ -n "$(grep -w -- "${prev}" <(printf "%s\n" "$parms_unitarios"))"  ]; then
 		COMPREPLY=
 		return 0
-	else		
+	else
 		op1="--update --totals --topics --terms --edit --frequent --show_config --cached --random --quick-update $(cat $ARCHLT)"
-		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )	
+		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
 	fi
 

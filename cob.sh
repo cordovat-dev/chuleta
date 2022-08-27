@@ -30,7 +30,7 @@ cd $RUTA_CACHE
 
 find . -iname "chuletas.db.*" -mtime +30 -print0 > $TEMPORAL
 test $(cat $TEMPORAL|wc -w) -gt 0 && \
-tar -czvf backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T $TEMPORAL 
+tar -czvf backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T $TEMPORAL
 
 find $RUTA_CACHE -iname "frequent.db.*" -mtime +30 -print0 > $TEMPORAL
 test $(cat $TEMPORAL|wc -w) -gt 0 && \
