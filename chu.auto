@@ -6,6 +6,10 @@ _chu()
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 	ARCHLT=$(echo ~/.cache/chu/lista_comp)
 	ARCHTOPS=$(echo ~/.cache/chu/lista_topicos)
+	if [ ! -f "${ARCHLT}" ] || [ ! -f "${ARCHTOPS}" ]; then
+		COMPREPLY=
+		return 0
+	fi
 	parms_unitarios="--update --totals --topics --terms --frequent --show_config --random --quick-update"
 
 	if [ -n "$(grep -w -- "${prev}" $ARCHTOPS)" ]; then
