@@ -38,14 +38,14 @@ MENUCACHE=$RUTA_CACHE/menu$PPID
 MENUCACHE_NC=${MENUCACHE}_nc
 REPORT_CACHE_FILE=$RUTA_CACHE/frequent_report_cache
 
-RUTA=`dirname $0`
-TEMPORAL=`mktemp /tmp/chuleta.XXXXX`
-TEMPORAL2=`mktemp /tmp/chuleta.XXXXX`
+RUTA=$(dirname $0)
+TEMPORAL=$(mktemp /tmp/chuleta.XXXXX)
+TEMPORAL2=$(mktemp /tmp/chuleta.XXXXX)
 OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
-if [ -n "`printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit'`" ];then	
-	LISTA_PALABRAS="`echo $LISTA_PALABRAS|sed 's/--edit//g'`"
+if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit')" ];then	
+	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--edit//g')"
 	COMANDO="editar"
 fi
 
@@ -74,8 +74,8 @@ function editar {
 
 function menu {
 	echo
-	TEMP=`mktemp /tmp/chuleta.XXXXX`
-	COUNT=`wc -l < $1`
+	TEMP=$(mktemp /tmp/chuleta.XXXXX)
+	COUNT=$(wc -l < $1)
 	cat $1 >> "$TEMP"
 	colour=$(test $COLOUR = "YES" && echo "-c" || echo "")
 	test -f ${MENUCACHE} && rm ${MENUCACHE}
@@ -87,7 +87,7 @@ function menu {
 	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
 		OPCION=$respuesta
 		if [ $OPCION -ge 1 -a $OPCION -le $COUNT ];then
-			OPCION=`sed "${respuesta}q;d" "$1"`
+			OPCION=$(sed "${respuesta}q;d" "$1")
 			echo
 			$RUTA/ct.sh -n $respuesta -d $OPCION $(test $COLOUR = "YES" && echo "-c" || echo "")
 			$COMANDO $OPCION
@@ -97,7 +97,7 @@ function menu {
 
 function reporte {
 	echo
-	TEMP=`mktemp /tmp/chuleta.XXXXX`
+	TEMP=$(mktemp /tmp/chuleta.XXXXX)
 	cat $1 >> "$TEMP"
 	$RUTA/./fmt2.sh -r < "$TEMP"
 	echo
@@ -190,11 +190,11 @@ else
 	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
 fi
 
-CANT_RESULTADOS=`cat $TEMPORAL | wc -l`
+CANT_RESULTADOS=$(cat $TEMPORAL | wc -l)
 
 if [ $CANT_RESULTADOS -eq 1 ]; then
 	$RUTA/ct.sh -n 1 -d $(cat $TEMPORAL) $(test $COLOUR = "YES" && echo "-c" || echo "")
-	$COMANDO `cat "$TEMPORAL"`
+	$COMANDO $(cat "$TEMPORAL")
 elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
 	menu "$TEMPORAL"
 elif [ $CANT_RESULTADOS -gt $MAX_MENU_LENGTH ];then

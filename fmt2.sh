@@ -11,7 +11,7 @@ function exit_handler {
 set -eo pipefail
 
 set -u
-RUTA=`dirname $0`
+RUTA=$(dirname $0)
 COUNT=0
 COLOUR=0
 REPORT=0

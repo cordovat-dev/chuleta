@@ -25,9 +25,9 @@ ARCHIVO_TOPICOS=$RUTA_CACHE/lista_topicos
 ARCHIVO_RUTAS_TOPICOS=$RUTA_CACHE/lista_rutas_topicos
 ARCHIVO_TOPICOS_REPETIDOS=$RUTA_CACHE/lista_topicos_repetidos
 ARCHIVO_LISTA_COMPLETA=$RUTA_CACHE/lista_comp
-TEMP=`mktemp /tmp/chuleta.XXXXX`
-TEMP2=`mktemp /tmp/chuleta.XXXXX`
-TEMP3=`mktemp -d /tmp/chuleta.XXXXX`
+TEMP=$(mktemp /tmp/chuleta.XXXXX)
+TEMP2=$(mktemp /tmp/chuleta.XXXXX)
+TEMP3=$(mktemp -d /tmp/chuleta.XXXXX)
 
 # 1. searches all chuletas in the db, 
 # 2. removes the basename, 

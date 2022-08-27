@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-RUTA=`dirname $0`
+RUTA=$(dirname $0)
 
 COUNT=0
 DATA=""
