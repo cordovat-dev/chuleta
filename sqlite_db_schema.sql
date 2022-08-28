@@ -54,3 +54,15 @@ from
 order by
         t1.count desc
 /* v_totals(main_topic,count,pc) */;
+CREATE VIEW v_totals_g as
+select
+        t1.main_topic,
+        t1.count,
+        t1.pc,
+                case when pc < 2 then '-'
+                else printf('%.*c', t1.pc/2, '=') end bar
+from v_totals t1
+order by
+        t1.count desc
+/* v_totals_g(main_topic,count,pc,bar) */;
+

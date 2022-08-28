@@ -131,8 +131,9 @@ elif [ "$TERMINO" = "--quick-update" ];then
 	update quick
 elif [ "$TERMINO" = "--totals" ];then
 	echo
-	sqlite3 ${CHULETADB} ".mode csv" ".separator ' '" "select main_topic, count, pc from v_totals;"|\
-	awk '{printf "%s: %s %2s%s\n", $1, $2, $3, "%"}'|sed 's/[^0-9]0%/-/'| column -t
+	sqlite3 ${CHULETADB} ".mode csv" ".separator ' '" "select main_topic, count, pc, bar from v_totals_g"|\
+	awk '{printf "%s: %s %2s%s %s\n", $1, $2, $3, "%", $4}'|sed 's/[^0-9]0%/-/'|\
+	sed 's/\-$//g'|column -t
 	echo
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	echo $(sqlite3 ${CHULETADB} "select count(*) from chuleta;") chuletas

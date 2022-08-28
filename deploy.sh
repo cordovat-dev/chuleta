@@ -12,6 +12,22 @@ CONFIG_FILE=$RUTA_CONF/chu.conf
 CHULETADB=$RUTA_CACHE/chuletas.db
 FREQUENTDB=$RUTA_CACHE/frequent.db
 
+if ! command -v ssqlite3 &> /dev/null; then
+cat <<EOF
+
+Sqlite3 could not be found
+Please install sqlite3 in order to install
+and use Chuleta.
+EOF
+    exit 1
+fi
+
+if [   || echo <<EOF
+	sqlite3 is not installed in this system.
+	Please install sqlite3 to be able to installed
+	and use Chuleta
+EOF
+
 if [ $MINGW == "YES" ];then
 	set +e
 	net session > /dev/null 2>&1
