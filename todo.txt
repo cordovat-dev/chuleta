@@ -1,2 +1,1 @@
 
-- print msg when user searches a string that starts with -- but is not a valid flag

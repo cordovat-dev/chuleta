@@ -187,6 +187,8 @@ elif [ "$TERMINO" = "--random" ];then
 	CHULETA=$(sqlite3 ${CHULETADB} "select path from chuleta order by random() limit 1;")
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
+elif [[ "$TERMINO" =~ -- ]]; then
+		echo "Bad flag"
 else
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
