@@ -1,8 +1,23 @@
+function notfound {
+cat <<EOF
+
+  FATAL: Can't find '$1'
+
+  Run chu --update or --chu --quick-update
+  This will solve the issue if file was renamed,
+  moved, or deleted.
+EOF
+}
+
 function abrir {
 	CHULETA="$BASE_DIR/$1"
 	set +u
 	RNDCHU="$2"
 	set -u
+	if [ ! -f $CHULETA ];then
+		   notfound $1
+		   exit 1
+	fi
 	LONGITUD=$(wc -l < $CHULETA)
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
 		echo "  opening in editor or viewer..."
