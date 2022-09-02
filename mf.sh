@@ -1,3 +1,20 @@
+function usage {
+cat <<EOF
+	Usage:
+	chu [search_terms]
+	chu search_terms --edit
+	chu --cached
+	chu [--cached] n
+	chu --update
+	chu --quick-update
+	chu --frequent
+	chu --random
+	chu --terms
+	chu --totals
+	chu --topics
+	chu --show_config
+EOF
+}
 function notfound {
 cat <<EOF
 

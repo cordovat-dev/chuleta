@@ -114,7 +114,7 @@ elif [ "$TERMINO" = "--random" ];then
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
 elif [[ "$TERMINO" =~ -- ]]; then
-		echo "Bad flag"
+		usage
 else
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
