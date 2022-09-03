@@ -24,6 +24,7 @@ MAX_MENU_LENGTH=${MAX_MENU_LENGTH:-12}
 MINGW=${MINGW:-YES}
 COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
+PREFER_LESS=${PREFER_LESS:-YES}
 # if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	TERMINO="--cached"

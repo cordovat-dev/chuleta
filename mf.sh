@@ -46,8 +46,12 @@ function abrir {
 	fi
 	LONGITUD=$(wc -l < $CHULETA)
 	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
-		echo "  opening in editor or viewer..."
-		$OPEN_COMMAND "$CHULETA"
+		if [ $PREFER_LESS = "YES" ];then
+			less "$CHULETA"
+		else
+			echo "  opening in editor or viewer..."
+			$OPEN_COMMAND "$CHULETA"
+		fi
 	else
 		echo
 		cat "$CHULETA"
