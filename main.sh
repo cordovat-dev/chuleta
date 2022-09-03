@@ -14,7 +14,8 @@ function exit_handler {
 
 TERMINO="$1"
 set -euo pipefail
-source ~/.config/chu/chu.conf
+CONFIG_FILE=~/.config/chu/chu.conf
+source $CONFIG_FILE
 # variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH, MINGW, COLOUR
 NO_OLD_DB_WRN=${NO_OLD_DB_WRN:-0}
 MAX_CAT_LENGTH=${MAX_CAT_LENGTH:-20}
@@ -113,6 +114,8 @@ elif [ "$TERMINO" = "--random" ];then
 	CHULETA=$(sqlite3 ${CHULETADB} "select path from chuleta order by random() limit 1;")
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
+elif [ "$TERMINO" = "--config" ];then
+	config $CONFIG_FILE
 elif [[ "$TERMINO" =~ -- ]]; then
 		usage
 else

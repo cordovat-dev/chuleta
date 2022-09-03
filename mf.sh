@@ -1,3 +1,12 @@
+function config {
+	BEFORE=$CONFIG_FILE.$(date +%Y%m%d%H%M%S)
+	cp $CONFIG_FILE $BEFORE
+	echo "Editing $CONFIG_FILE..."
+	$EDITOR $CONFIG_FILE
+	diff $BEFORE $CONFIG_FILE
+	rm $BEFORE
+}
+
 function usage {
 cat <<EOF
 	Usage:
