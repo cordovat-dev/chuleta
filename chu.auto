@@ -10,7 +10,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	fi
-	parms_unitarios="--update --totals --topics --terms --frequent --show_config --random --quick-update"
+	parms_unitarios="--update --totals --topics --terms --frequent --show_config --random --quick-update --config"
 
 	if [ -n "$(grep -w -- "${prev}" $ARCHTOPS)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
@@ -20,7 +20,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	else
-		op1="--update --totals --topics --terms --edit --frequent --show_config --cached --random --quick-update $(cat $ARCHLT)"
+		op1="$parms_unitarios --edit $(cat $ARCHLT)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
 	fi

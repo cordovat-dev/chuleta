@@ -35,7 +35,7 @@ TEMP_BACKUP=$(mktemp -d /tmp/chuleta.XXXXX)
 # 4. removes everything but the basename
 # 5. creates a sorted unique list
 # RESULT: a list of all topics
-sqlite3 "${CHULETADB}" "select path from v_chuleta_ap;"|\
+sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;"|\
 grep -o "^/.*\/"|\
 sed 's/.$//g'|\
 grep -o '[^/]*$'|\
@@ -48,7 +48,7 @@ sort -u > $TEMP_TOPICOS
 # 5. splits using slash and prints the last field, then all fields
 # 6. creates a sorted unique list
 # RESULT: a list of topics/suptopics and their corresponding folder
-sqlite3 "${CHULETADB}" "select path from v_chuleta_ap;"|\
+sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;"|\
 grep -o "^/.*/"|\
 sed -r 's#/$##g'|\
 sort -u|\
@@ -77,11 +77,11 @@ fi
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
 	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
-	sqlite3 "${CHULETADB}" "select path from v_chuleta_ap where path like '$ruta_topico/%chuleta_%';"|\
+	sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap where abs_path like '$ruta_topico/%chuleta_%';"|\
 	awk -v RTO="$ruta_topico" -f $RUTA_SCRIPT/glst.awk > $RUTA_CACHE/lista_$line
 done
 
-sqlite3 "${CHULETADB}" "select path from v_chuleta_ap;" |\
+sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;" |\
 awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  "${ARCHIVO_LISTA_COMPLETA}"
 
 exit 0

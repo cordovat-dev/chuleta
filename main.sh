@@ -14,7 +14,8 @@ function exit_handler {
 
 TERMINO="$1"
 set -euo pipefail
-source ~/.config/chu/chu.conf
+CONFIG_FILE=~/.config/chu/chu.conf
+source $CONFIG_FILE
 # variables read from conf file: NO_OLD_DB_WRN, MAX_CAT_LENGTH, BASE_DIR, MAX_MENU_LENGTH, MINGW, COLOUR
 NO_OLD_DB_WRN=${NO_OLD_DB_WRN:-0}
 MAX_CAT_LENGTH=${MAX_CAT_LENGTH:-20}
@@ -23,6 +24,7 @@ MAX_MENU_LENGTH=${MAX_MENU_LENGTH:-12}
 MINGW=${MINGW:-YES}
 COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
+PREFER_LESS=${PREFER_LESS:-YES}
 # if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	TERMINO="--cached"
@@ -49,81 +51,7 @@ if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit')" ];then
 	COMANDO="editar"
 fi
 
-function abrir {
-	CHULETA="$BASE_DIR/$1"
-	set +u
-	RNDCHU="$2"
-	set -u
-	LONGITUD=$(wc -l < $CHULETA)
-	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
-		echo "  opening in editor or viewer..."
-		$OPEN_COMMAND "$CHULETA"
-	else
-		echo
-		cat "$CHULETA"
-	fi
-	if [ "$RNDCHU" != "--random" ]; then
-		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"
-	fi
-}
-
-function editar {
-	echo "  opening in editor ..."
-	$OPEN_COMMAND $BASE_DIR/$1
-}
-
-function menu {
-	echo
-	TEMP=$(mktemp /tmp/chuleta.XXXXX)
-	COUNT=$(wc -l < $1)
-	cat $1 >> "$TEMP"
-	colour=$(test $COLOUR = "YES" && echo "-c" || echo "")
-	test -f ${MENUCACHE} && rm ${MENUCACHE}
-	test -f ${MENUCACHE_NC} && rm ${MENUCACHE_NC}
-	$RUTA/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
-
-	echo
-	read -p "  ?  " respuesta
-	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
-		OPCION=$respuesta
-		if [ $OPCION -ge 1 -a $OPCION -le $COUNT ];then
-			OPCION=$(sed "${respuesta}q;d" "$1")
-			echo
-			$RUTA/ct.sh -n $respuesta -d $OPCION $(test $COLOUR = "YES" && echo "-c" || echo "")
-			$COMANDO $OPCION
-		fi
-	fi
-}
-
-function reporte {
-	echo
-	TEMP=$(mktemp /tmp/chuleta.XXXXX)
-	cat $1 >> "$TEMP"
-	$RUTA/./fmt2.sh -r < "$TEMP"
-	echo
-}
-
-function  update() {
-	local autocomp=""
-	set +u
-	autocomp="$1"
-	set -u
-	echo "Backing up database"
-	echo "Updating database"
-	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
-	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
-	$RUTA/sqls.sh -b "$BASE_DIR" -d "${CHULETADB}" -w $NUM_DAYS_OLD
-	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
-	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
-	if [ "$autocomp" != "quick" ];then
-		echo "Generating autocompletion"
-		$RUTA/gac.sh $BASE_DIR
-	else
-		sleep 1
-	fi
-	echo Done.
-	exit 0
-}
+source $RUTA/mf.sh
 
 if [ "$TERMINO" = "--update" ];then
 	update
@@ -180,12 +108,17 @@ elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
 	echo
 	cat ~/.config/chu/chu.conf
+	sqlite3 ${CHULETADB} "select key||'='||datetime(value,'localtime') from settings where key = 'LAST_UPDATED';"
 	exit 0
 elif [ "$TERMINO" = "--random" ];then
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	CHULETA=$(sqlite3 ${CHULETADB} "select path from chuleta order by random() limit 1;")
 	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
 	$COMANDO $CHULETA "--random"
+elif [ "$TERMINO" = "--config" ];then
+	config $CONFIG_FILE
+elif [[ "$TERMINO" =~ -- ]]; then
+		usage
 else
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL

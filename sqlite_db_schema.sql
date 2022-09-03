@@ -9,14 +9,13 @@ CREATE TABLE settings(
 CREATE VIEW v_chuleta_ap as
 select
         c.id,
-        s.value||'/'||c.path path
+		c.path rel_path,
+        s.value||'/'||c.path abs_path
 from
         chuleta c,
         (select value from settings where key = 'BASE_DIR') s
 order by
-        c.id
-/* v_chuleta_ap(id,path) */
-/* v_chuleta_ap(id,path) */;
+        c.id;
 CREATE VIEW v_old_db_msg as
 select
 	'Database is '||cast(d.age as int)||' days old. Please run chu --update .' msg
