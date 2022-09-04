@@ -1,1 +1,3 @@
+x add last updated autocompletion to the db
+- validate unitary flags are not acompanied by extra stuff
 

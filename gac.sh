@@ -83,5 +83,5 @@ done
 
 sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;" |\
 awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  "${ARCHIVO_LISTA_COMPLETA}"
-
+sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('LAST_UPDATED_AC',CURRENT_TIMESTAMP);"
 exit 0

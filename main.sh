@@ -108,7 +108,7 @@ elif [ "$TERMINO" = "--show_config" ];then
 	echo ~/.config/chu/chu.conf
 	echo
 	cat ~/.config/chu/chu.conf
-	sqlite3 ${CHULETADB} "select key||'='||datetime(value,'localtime') from settings where key = 'LAST_UPDATED';"
+	sqlite3 ${CHULETADB} "select key||'='||datetime(value,'localtime') from settings where key in ('LAST_UPDATED','LAST_UPDATED_AC');"
 	exit 0
 elif [ "$TERMINO" = "--random" ];then
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
