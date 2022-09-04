@@ -1,3 +1,5 @@
 x add last updated autocompletion to the db
 - validate unitary flags are not acompanied by extra stuff
+x change --show_config to --show-config
+- man page
 

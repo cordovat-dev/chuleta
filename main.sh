@@ -104,7 +104,7 @@ elif [ "$TERMINO" = "--frequent" ];then
 		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
 	fi
 	exit 0
-elif [ "$TERMINO" = "--show_config" ];then
+elif [ "$TERMINO" = "--show-config" ];then
 	echo ~/.config/chu/chu.conf
 	echo
 	cat ~/.config/chu/chu.conf
