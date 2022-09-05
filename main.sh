@@ -117,8 +117,10 @@ elif [ "$TERMINO" = "--random" ];then
 	$COMANDO $CHULETA "--random"
 elif [ "$TERMINO" = "--config" ];then
 	config $CONFIG_FILE
+elif [ "$TERMINO" = "--help" ];then
+	usage
 elif [[ "$TERMINO" =~ -- ]]; then
-		usage
+	usage
 else
 	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
 	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL

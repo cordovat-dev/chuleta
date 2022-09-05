@@ -10,7 +10,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	fi
-	parms_unitarios="--update --totals --topics --terms --frequent --show-config --random --quick-update --config"
+	parms_unitarios="--update --totals --topics --terms --frequent --show-config --random --quick-update --config --help"
 
 	if [ -n "$(grep -w -- "${prev}" $ARCHTOPS)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"

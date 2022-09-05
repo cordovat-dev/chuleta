@@ -22,6 +22,7 @@ cat <<EOF
 	chu --totals
 	chu --topics
 	chu --show-config
+	chu --help
 EOF
 }
 function notfound {
