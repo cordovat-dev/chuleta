@@ -11,7 +11,8 @@ function usage {
 cat <<EOF
 	Usage:
 	chu [search_terms]
-	chu search_terms --edit
+	chu search_terms --editar
+	chu search_terms --clipboard
 	chu --cached
 	chu [--cached] n
 	chu --update
@@ -56,6 +57,7 @@ function abrir {
 	else
 		echo
 		cat "$CHULETA"
+		test $COPYTOCLIP -eq 1 && cat "${CHULETA}" > /dev/clipboard && echo "...copied to clipboard"
 	fi
 	if [ "$RNDCHU" != "--random" ]; then
 		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"

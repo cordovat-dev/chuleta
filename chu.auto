@@ -20,7 +20,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	else
-		op1="$parms_unitarios --edit $(cat $ARCHLT)"
+		op1="$parms_unitarios --edit --clipboard $(cat $ARCHLT)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
 	fi

@@ -32,6 +32,7 @@ if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 fi
 LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
+COPYTOCLIP=0
 RUTA_CACHE=~/.cache/chu
 RUTA_LOGS=~/.cache/chu.logs
 FREQUENTDB=$RUTA_CACHE/frequent.db
@@ -49,6 +50,11 @@ SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit')" ];then
 	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--edit//g')"
 	COMANDO="editar"
+fi
+
+if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--clipboard')" ];then
+	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--clipboard//g')"
+	COPYTOCLIP=1
 fi
 
 source $RUTA/mf.sh
