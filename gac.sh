@@ -35,11 +35,18 @@ TEMP_BACKUP=$(mktemp -d /tmp/chuleta.XXXXX)
 # 4. removes everything but the basename
 # 5. creates a sorted unique list
 # RESULT: a list of all topics
+start=$(date +%s)
+echo -n "...processing (sub)topics"
+
 sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;"|\
 grep -o "^/.*\/"|\
 sed 's/.$//g'|\
 grep -o '[^/]*$'|\
 sort -u > $TEMP_TOPICOS
+
+end=$(date +%s)
+runtime=$((end-start))
+echo " ${runtime}s"
 
 # 1. searches all chuletas in the db,
 # 2. removes the basename,
@@ -48,6 +55,9 @@ sort -u > $TEMP_TOPICOS
 # 5. splits using slash and prints the last field, then all fields
 # 6. creates a sorted unique list
 # RESULT: a list of topics/suptopics and their corresponding folder
+start=$(date +%s)
+echo -n "...mapping folders"
+
 sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;"|\
 grep -o "^/.*/"|\
 sed -r 's#/$##g'|\
@@ -55,11 +65,23 @@ sort -u|\
 awk 'BEGIN {FS="/"; OFS="\t"}{print $NF, $0}'|\
 sort -u > $TEMP_RUTAS_TOPICOS
 
+end=$(date +%s)
+runtime=$((end-start))
+echo " ${runtime}s"
+
+start=$(date +%s)
+echo -n "...backing up"
+
 cp -pr $RUTA_CACHE/* ${TEMP_BACKUP}/
 rm $RUTA_CACHE/*
 
 cp $TEMP_TOPICOS $ARCHIVO_TOPICOS
 cp ${TEMP_RUTAS_TOPICOS} $ARCHIVO_RUTAS_TOPICOS
+
+end=$(date +%s)
+runtime=$((end-start))
+echo " ${runtime}s"
+
 
 if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];then
 	echo
@@ -71,8 +93,20 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	echo
 	salir 1
 else
+	start=$(date +%s)
+	echo -n "...recovering backups"
+
 	find ${TEMP_BACKUP}/ -type f ! -iname "lista_*" -exec cp -pr {} $RUTA_CACHE/ \;
+
+	end=$(date +%s)
+	runtime=$((end-start))
+	echo " ${runtime}s"
+	
 fi
+
+
+start=$(date +%s)
+echo -n "...autocompletion lists"
 
 for line in $(cat $ARCHIVO_TOPICOS);do
 	busqueda="^$line	"
@@ -80,6 +114,10 @@ for line in $(cat $ARCHIVO_TOPICOS);do
 	sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap where abs_path like '$ruta_topico/%chuleta_%';"|\
 	awk -v RTO="$ruta_topico" -f $RUTA_SCRIPT/glst.awk > $RUTA_CACHE/lista_$line
 done
+
+end=$(date +%s)
+runtime=$((end-start))
+echo " ${runtime}s"
 
 sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;" |\
 awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  "${ARCHIVO_LISTA_COMPLETA}"
