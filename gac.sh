@@ -69,19 +69,10 @@ end=$(date +%s)
 runtime=$((end-start))
 echo " ${runtime}s"
 
-start=$(date +%s)
-echo -n "...backing up"
-
-cp -pr $RUTA_CACHE/* ${TEMP_BACKUP}/
-rm $RUTA_CACHE/*
+mv $RUTA_CACHE/lista_* ${TEMP_BACKUP}/
 
 cp $TEMP_TOPICOS $ARCHIVO_TOPICOS
 cp ${TEMP_RUTAS_TOPICOS} $ARCHIVO_RUTAS_TOPICOS
-
-end=$(date +%s)
-runtime=$((end-start))
-echo " ${runtime}s"
-
 
 if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];then
 	echo
@@ -92,16 +83,6 @@ if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];
 	cp -pr ${TEMP_BACKUP}/* $RUTA_CACHE/
 	echo
 	salir 1
-else
-	start=$(date +%s)
-	echo -n "...recovering backups"
-
-	find ${TEMP_BACKUP}/ -type f ! -iname "lista_*" -exec cp -pr {} $RUTA_CACHE/ \;
-
-	end=$(date +%s)
-	runtime=$((end-start))
-	echo " ${runtime}s"
-	
 fi
 
 

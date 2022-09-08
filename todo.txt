@@ -4,6 +4,4 @@ x change --show_config to --show-config
 - man page
 - when opening in editor due to exceeding MAX_CAT_LENGTH, open a copy instead of original
 x give more info during update cache
-- move backups to a separate folder
-
 
