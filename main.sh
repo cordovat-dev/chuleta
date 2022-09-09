@@ -26,10 +26,6 @@ COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
 PREFER_LESS=${PREFER_LESS:-YES}
 # if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
-if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
-	TERMINO="--cached"
-	set -- "--cached" "$1"
-fi
 LISTA_PALABRAS="${@:1}"
 COMANDO="abrir"
 COPYTOCLIP=0
@@ -54,7 +50,13 @@ fi
 
 if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--clipboard')" ];then
 	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--clipboard//g')"
+	set -- $LISTA_PALABRAS
 	COPYTOCLIP=1
+fi
+
+if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
+	TERMINO="--cached"
+	set -- "--cached" "$1"
 fi
 
 source $RUTA/mf.sh
