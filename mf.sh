@@ -14,7 +14,7 @@ cat <<EOF
 	chu search_terms --editar
 	chu search_terms --clipboard
 	chu --cached
-	chu [--cached] n
+	chu [--cached] n [--clipboard]
 	chu --update
 	chu --quick-update
 	chu --frequent
@@ -57,7 +57,11 @@ function abrir {
 	else
 		echo
 		cat "$CHULETA"
-		test $COPYTOCLIP -eq 1 && cat "${CHULETA}" > /dev/clipboard && printf "\n%s\n" "...copied to clipboard"
+		if [ $COPYTOCLIP -eq 1 ] && [ "$MINGW" = "YES" ];then
+			cat "${CHULETA}" > /dev/clipboard
+			echo
+			echo "...copied to clipboard"
+		fi
 	fi
 	if [ "$RNDCHU" != "--random" ]; then
 		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"

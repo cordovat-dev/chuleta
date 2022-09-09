@@ -4,7 +4,8 @@ x change --show_config to --show-config
 - man page
 - when opening in editor due to exceeding MAX_CAT_LENGTH, open a copy instead of original
 x give more info during update cache
-- disable clipboard copy if not mingw64/Cygwin until able to test on native Linux
+x disable clipboard copy if not mingw64/Cygwin until able to test on native Linux
 x manage what happens if both --clipboard and --cached (implicit or explicit) is used
+- change bash-specific == operator to =
 
 
