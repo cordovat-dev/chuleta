@@ -69,7 +69,9 @@ end=$(date +%s)
 runtime=$((end-start))
 echo " ${runtime}s"
 
+set +e
 mv $RUTA_CACHE/lista_* ${TEMP_BACKUP}/
+set -e
 
 cp $TEMP_TOPICOS $ARCHIVO_TOPICOS
 cp ${TEMP_RUTAS_TOPICOS} $ARCHIVO_RUTAS_TOPICOS
