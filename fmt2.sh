@@ -43,7 +43,7 @@ if [ $REPORT -ne 1 ]; then
 	echo
 fi
 if [ -n "$NOCOLOR_FILE" ];then
-	echo -n "" > ${NOCOLOR_FILE}
+	echo -n "" > "${NOCOLOR_FILE}"
 fi
 	
 while read line
@@ -60,16 +60,16 @@ do
 	else
 		printf "  %-4s%s\n" $COUNT $line
 	fi
-done > $TEMP
+done > "$TEMP"
 
 if [ $COLOUR -eq 1 ]; then
-	$SCRIPT_DIR/ac.sed $TEMP
+	"$SCRIPT_DIR"/ac.sed "$TEMP"
 else
-	cat $TEMP
+	cat "$TEMP"
 fi
 
 if [ -n "$NOCOLOR_FILE" ];then
-	cp $TEMP ${NOCOLOR_FILE}
+	cp "$TEMP" "${NOCOLOR_FILE}"
 fi;
 
 if [ $REPORT -eq 1 ]; then

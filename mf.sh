@@ -1,10 +1,10 @@
 function config {
-	BEFORE=$CONFIG_FILE.$(date +%Y%m%d%H%M%S)
-	cp $CONFIG_FILE $BEFORE
+	BEFORE="$CONFIG_FILE.$(date +%Y%m%d%H%M%S)"
+	cp "$CONFIG_FILE" "$BEFORE"
 	echo "Editing $CONFIG_FILE..."
-	$EDITOR $CONFIG_FILE
-	diff $BEFORE $CONFIG_FILE
-	rm $BEFORE
+	$EDITOR "$CONFIG_FILE"
+	diff "$BEFORE" "$CONFIG_FILE"
+	rm "$BEFORE"
 }
 
 function usage {
@@ -26,6 +26,7 @@ cat <<EOF
 	chu --help
 EOF
 }
+
 function notfound {
 cat <<EOF
 
@@ -38,15 +39,15 @@ EOF
 }
 
 function abrir {
-	CHULETA="$BASE_DIR/$1"
+	CHULETA="$BASE_DIR"/"$1"
 	set +u
 	RNDCHU="$2"
 	set -u
-	if [ ! -f $CHULETA ];then
+	if [ ! -f "$CHULETA" ];then
 		   notfound $1
 		   exit 1
 	fi
-	LENGTH=$(wc -l < $CHULETA)
+	LENGTH=$(wc -l < "$CHULETA")
 	if [ $LENGTH -gt $MAX_CAT_LENGTH ];then
 		if [ $PREFER_LESS = "YES" ];then
 			less "$CHULETA"
@@ -70,18 +71,18 @@ function abrir {
 
 function editar {
 	echo "  opening in editor ..."
-	$OPEN_COMMAND $BASE_DIR/$1
+	$OPEN_COMMAND "$BASE_DIR"/"$1"
 }
 
 function menu {
 	echo
-	TEMP=$(mktemp /tmp/chuleta.XXXXX)
+	TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 	COUNT=$(wc -l < $1)
 	cat $1 >> "$TEMP"
 	colour=$(test $COLOUR = "YES" && echo "-c" || echo "")
-	test -f ${MENUCACHE} && rm ${MENUCACHE}
-	test -f ${MENUCACHE_NC} && rm ${MENUCACHE_NC}
-	$SCRIPT_DIR/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
+	test -f "${MENUCACHE}" && rm "${MENUCACHE}"
+	test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
+	"$SCRIPT_DIR"/./fmt2.sh $colour -f "${MENUCACHE_NC}" < "$TEMP" | tee "${MENUCACHE}"
 
 	echo
 	read -p "  ?  " respuesta
@@ -90,8 +91,8 @@ function menu {
 		if [ $OPTION -ge 1 -a $OPTION -le $COUNT ];then
 			OPTION=$(sed "${respuesta}q;d" "$1")
 			echo
-			$SCRIPT_DIR/ct.sh -n $respuesta -d $OPTION $(test $COLOUR = "YES" && echo "-c" || echo "")
-			$COMMAND $OPTION
+			"$SCRIPT_DIR"/ct.sh -n $respuesta -d $OPTION $(test $COLOUR = "YES" && echo "-c" || echo "")
+			$COMMAND "$OPTION"
 		fi
 	fi
 }
@@ -100,7 +101,7 @@ function reporte {
 	echo
 	TEMP=$(mktemp /tmp/chuleta.XXXXX)
 	cat $1 >> "$TEMP"
-	$SCRIPT_DIR/./fmt2.sh -r < "$TEMP"
+	"$SCRIPT_DIR"/./fmt2.sh -r < "$TEMP"
 	echo
 }
 
@@ -118,7 +119,7 @@ function update() {
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
 	if [ "$autocomp" != "quick" ];then
 		echo "Generating autocompletion"
-		$SCRIPT_DIR/gac.sh $BASE_DIR
+		"$SCRIPT_DIR"/gac.sh "$BASE_DIR"
 	else
 		sleep 1
 	fi

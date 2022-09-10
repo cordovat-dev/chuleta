@@ -7,9 +7,9 @@ BACKUPNAME=""
 CACHE_DIR=~/.cache/chu
 LOGS_DIR=~/.cache/chu.logs
 RUTA_CONF=~/.config/chu
-CONFIG_FILE=$RUTA_CONF/chu.conf
-CHULETADB=$CACHE_DIR/chuletas.db
-FREQUENTDB=$CACHE_DIR/frequent.db
+CONFIG_FILE="$RUTA_CONF"/chu.conf
+CHULETADB="$CACHE_DIR"/chuletas.db
+FREQUENTDB="$CACHE_DIR"/frequent.db
 
 if ! command -v sqlite3 &> /dev/null; then
 cat <<EOF
@@ -55,15 +55,15 @@ if [ ! -d "${RUTA_CONF}" ];then
 	mkdir "${RUTA_CONF}"
 fi
 if [ ! -f "${CONFIG_FILE}" ];then
-	cp $SCRIPT_DIR/chu.conf "${RUTA_CONF}/"
+	cp "$SCRIPT_DIR"/chu.conf "${RUTA_CONF}/"
 	echo MINGW=$MINGW >> "${CONFIG_FILE}"
 	echo "...Please edit ${CONFIG_FILE} file."
 fi
 
 if [ $MINGW == "YES" ];then
-	cp -f $SCRIPT_DIR/chu.auto /usr/share/bash-completion/completions/chu
+	cp -f "$SCRIPT_DIR"/chu.auto /usr/share/bash-completion/completions/chu
 else
-	sudo cp -f $SCRIPT_DIR/chu.auto /etc/bash_completion.d/
+	sudo cp -f "$SCRIPT_DIR"/chu.auto /etc/bash_completion.d/
 fi
 
 echo "... Please run chu --update before using the utility."
