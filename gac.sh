@@ -4,9 +4,9 @@ trap exit_handler EXIT
 
 function exit_handler {
 	set +u
-	test -n "${TEMP_TOPICOS}" && test -f "${TEMP_TOPICOS}" && rm "${TEMP_TOPICOS}"
-	test -n "${TEMP_RUTAS_TOPICOS}" && test -f "${TEMP_RUTAS_TOPICOS}" && rm "${TEMP_RUTAS_TOPICOS}"
-	test -n "${TEMP_BACKUP}" && [[ "${TEMP_BACKUP}" =~ ^\/tmp\/.* ]] && test -d "${TEMP_BACKUP}" && rm -rf "${TEMP_BACKUP}"
+	test -n "${TOPICS_TEMP}" && test -f "${TOPICS_TEMP}" && rm "${TOPICS_TEMP}"
+	test -n "${TOPICS_DIR_TEMP}" && test -f "${TOPICS_DIR_TEMP}" && rm "${TOPICS_DIR_TEMP}"
+	test -n "${BACKUP_DIR_TEMP}" && [[ "${BACKUP_DIR_TEMP}" =~ ^\/tmp\/.* ]] && test -d "${BACKUP_DIR_TEMP}" && rm -rf "${BACKUP_DIR_TEMP}"
 	exit $1
 }
 
@@ -18,16 +18,16 @@ test $NO_OLD_DB_WRN -eq 1 || MAX_DB_AGE="--max-database-age -1"
 
 BASE_DIR=$1
 NAMEDIRBASE=$(basename $BASE_DIR)
-RUTA_SCRIPT=$(dirname $0)
-RUTA_CACHE=~/.cache/chu
-CHULETADB=$RUTA_CACHE/chuletas.db
-ARCHIVO_TOPICOS=$RUTA_CACHE/lista_topicos
-ARCHIVO_RUTAS_TOPICOS=$RUTA_CACHE/lista_rutas_topicos
-ARCHIVO_TOPICOS_REPETIDOS=$RUTA_CACHE/lista_topicos_repetidos
-ARCHIVO_LISTA_COMPLETA=$RUTA_CACHE/lista_comp
-TEMP_TOPICOS=$(mktemp /tmp/chuleta.XXXXX)
-TEMP_RUTAS_TOPICOS=$(mktemp /tmp/chuleta.XXXXX)
-TEMP_BACKUP=$(mktemp -d /tmp/chuleta.XXXXX)
+SCRIPT_DIR=$(dirname $0)
+CACHE_DIR=~/.cache/chu
+CHULETADB=$CACHE_DIR/chuletas.db
+TOPICS_FILE=$CACHE_DIR/lista_topicos
+TOPICS_DIRS_FILE=$CACHE_DIR/lista_rutas_topicos
+DUPLICATE_TOPICS_FILE=$CACHE_DIR/lista_topicos_repetidos
+COMP_LIST_FILE=$CACHE_DIR/lista_comp
+TOPICS_TEMP=$(mktemp /tmp/chuleta.XXXXX)
+TOPICS_DIR_TEMP=$(mktemp /tmp/chuleta.XXXXX)
+BACKUP_DIR_TEMP=$(mktemp -d /tmp/chuleta.XXXXX)
 
 # 1. searches all chuletas in the db,
 # 2. removes the basename,
@@ -42,7 +42,7 @@ sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;"|\
 grep -o "^/.*\/"|\
 sed 's/.$//g'|\
 grep -o '[^/]*$'|\
-sort -u > $TEMP_TOPICOS
+sort -u > $TOPICS_TEMP
 
 end=$(date +%s)
 runtime=$((end-start))
@@ -63,26 +63,26 @@ grep -o "^/.*/"|\
 sed -r 's#/$##g'|\
 sort -u|\
 awk 'BEGIN {FS="/"; OFS="\t"}{print $NF, $0}'|\
-sort -u > $TEMP_RUTAS_TOPICOS
+sort -u > $TOPICS_DIR_TEMP
 
 end=$(date +%s)
 runtime=$((end-start))
 echo " ${runtime}s"
 
 set +e
-mv $RUTA_CACHE/lista_* ${TEMP_BACKUP}/
+mv $CACHE_DIR/lista_* ${BACKUP_DIR_TEMP}/
 set -e
 
-cp $TEMP_TOPICOS $ARCHIVO_TOPICOS
-cp ${TEMP_RUTAS_TOPICOS} $ARCHIVO_RUTAS_TOPICOS
+cp $TOPICS_TEMP $TOPICS_FILE
+cp ${TOPICS_DIR_TEMP} $TOPICS_DIRS_FILE
 
-if [ $(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];then
+if [ $(cat $TOPICS_DIRS_FILE |cut -f 1|uniq -c|grep -vn "1"|wc -l) -gt 0 ];then
 	echo
 	echo Duplicated topics found. Can''t update autocomplete data:
 	echo
-	x="$(cat $ARCHIVO_RUTAS_TOPICOS |cut -f 1|uniq -c|grep -v "1"|awk '{print $2}')"
+	x="$(cat $TOPICS_DIRS_FILE |cut -f 1|uniq -c|grep -v "1"|awk '{print $2}')"
 	find $BASE_DIR -type d -iname "$x"
-	cp -pr ${TEMP_BACKUP}/* $RUTA_CACHE/
+	cp -pr ${BACKUP_DIR_TEMP}/* $CACHE_DIR/
 	echo
 	salir 1
 fi
@@ -91,11 +91,11 @@ fi
 start=$(date +%s)
 echo -n "...autocompletion lists"
 
-for line in $(cat $ARCHIVO_TOPICOS);do
-	busqueda="^$line	"
-	ruta_topico=$(egrep "$busqueda" $ARCHIVO_RUTAS_TOPICOS |cut -f 2)
-	sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap where abs_path like '$ruta_topico/%chuleta_%';"|\
-	awk -v RTO="$ruta_topico" -f $RUTA_SCRIPT/glst.awk > $RUTA_CACHE/lista_$line
+for line in $(cat $TOPICS_FILE);do
+	search_line="^$line	"
+	topic_path=$(egrep "$search_line" $TOPICS_DIRS_FILE |cut -f 2)
+	sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap where abs_path like '$topic_path/%chuleta_%';"|\
+	awk -v RTO="$topic_path" -f $SCRIPT_DIR/glst.awk > $CACHE_DIR/lista_$line
 done
 
 end=$(date +%s)
@@ -103,6 +103,6 @@ runtime=$((end-start))
 echo " ${runtime}s"
 
 sqlite3 "${CHULETADB}" "select abs_path from v_chuleta_ap;" |\
-awk -v RTO="$BASE_DIR" -f $RUTA_SCRIPT/glst.awk >  "${ARCHIVO_LISTA_COMPLETA}"
+awk -v RTO="$BASE_DIR" -f $SCRIPT_DIR/glst.awk >  "${COMP_LIST_FILE}"
 sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('LAST_UPDATED_AC',CURRENT_TIMESTAMP);"
 exit 0

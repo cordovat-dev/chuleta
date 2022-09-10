@@ -4,15 +4,15 @@ trap exit_handler EXIT
 
 function exit_handler {
 	set +u
-	test -n "${TEMPORAL2}" && test -f "${TEMPORAL2}" && rm "${TEMPORAL2}"
-	test -n "${TEMPORAL}" && test -f "${TEMPORAL}" && rm "${TEMPORAL}"
+	test -n "${TEMPORARY2}" && test -f "${TEMPORARY2}" && rm "${TEMPORARY2}"
+	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
 	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
 
 	exit $1
 }
 
-TERMINO="$1"
+flag="$1"
 set -euo pipefail
 CONFIG_FILE=~/.config/chu/chu.conf
 source $CONFIG_FILE
@@ -26,55 +26,55 @@ COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
 PREFER_LESS=${PREFER_LESS:-YES}
 # if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
-LISTA_PALABRAS="${@:1}"
-COMANDO="abrir"
+WORD_LIST="${@:1}"
+COMMAND="abrir"
 COPYTOCLIP=0
-RUTA_CACHE=~/.cache/chu
-RUTA_LOGS=~/.cache/chu.logs
-FREQUENTDB=$RUTA_CACHE/frequent.db
-CHULETADB=$RUTA_CACHE/chuletas.db
-MENUCACHE=$RUTA_CACHE/menu$PPID
+CACHE_DIR=~/.cache/chu
+LOGS_DIR=~/.cache/chu.logs
+FREQUENTDB=$CACHE_DIR/frequent.db
+CHULETADB=$CACHE_DIR/chuletas.db
+MENUCACHE=$CACHE_DIR/menu$PPID
 MENUCACHE_NC=${MENUCACHE}_nc
-REPORT_CACHE_FILE=$RUTA_CACHE/frequent_report_cache
+REPORT_CACHE_FILE=$CACHE_DIR/frequent_report_cache
 
-RUTA=$(dirname $0)
-TEMPORAL=$(mktemp /tmp/chuleta.XXXXX)
-TEMPORAL2=$(mktemp /tmp/chuleta.XXXXX)
+SCRIPT_DIR=$(dirname $0)
+TEMPORARY=$(mktemp /tmp/chuleta.XXXXX)
+TEMPORARY2=$(mktemp /tmp/chuleta.XXXXX)
 OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
-if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--edit')" ];then
-	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--edit//g')"
-	COMANDO="editar"
+if [ -n "$(printf "%s\n" "$WORD_LIST"|fgrep -e '--edit')" ];then
+	WORD_LIST="$(echo $WORD_LIST|sed 's/--edit//g')"
+	COMMAND="editar"
 fi
 
-if [ -n "$(printf "%s\n" "$LISTA_PALABRAS"|fgrep -e '--clipboard')" ];then
-	LISTA_PALABRAS="$(echo $LISTA_PALABRAS|sed 's/--clipboard//g')"
-	set -- $LISTA_PALABRAS
+if [ -n "$(printf "%s\n" "$WORD_LIST"|fgrep -e '--clipboard')" ];then
+	WORD_LIST="$(echo $WORD_LIST|sed 's/--clipboard//g')"
+	set -- $WORD_LIST
 	COPYTOCLIP=1
 fi
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
-	TERMINO="--cached"
+	flag="--cached"
 	set -- "--cached" "$1"
 fi
 
-source $RUTA/mf.sh
+source $SCRIPT_DIR/mf.sh
 
-if [ "$TERMINO" = "--update" ];then
+if [ "$flag" = "--update" ];then
 	update
-elif [ "$TERMINO" = "--quick-update" ];then
+elif [ "$flag" = "--quick-update" ];then
 	update quick
-elif [ "$TERMINO" = "--totals" ];then
+elif [ "$flag" = "--totals" ];then
 	echo
 	sqlite3 ${CHULETADB} ".mode csv" ".separator ' '" "select main_topic, count, pc, bar from v_totals_g"|\
 	awk '{printf "%s: %s %2s%s %s\n", $1, $2, $3, "%", $4}'|sed 's/[^0-9]0%/-/'|\
 	sed 's/\-$//g'|column -t
 	echo
-	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
+	$SCRIPT_DIR/co.sh -w $NO_OLD_DB_WRN -c $CACHE_DIR
 	echo $(sqlite3 ${CHULETADB} "select count(*) from chuleta;") chuletas
 	exit 0
-elif [ "$TERMINO" = "--topics" ];then
+elif [ "$flag" = "--topics" ];then
 	cd ${BASE_DIR}
 	if [ $MINGW == "YES" ];then
 		tree.com //a . | tail -n +3
@@ -84,70 +84,70 @@ elif [ "$TERMINO" = "--topics" ];then
 		cd -
 	fi
 	exit 0
-elif [ "$TERMINO" = "--terms" ];then
-	cat $RUTA_CACHE/lista_comp
+elif [ "$flag" = "--terms" ];then
+	cat $CACHE_DIR/lista_comp
 	exit 0
-elif [ "$TERMINO" = "--cached" ];then
+elif [ "$flag" = "--cached" ];then
 	set +u
 	LINENUM="$2"
 	set -u
 	if [ -f ${MENUCACHE_NC} ];then
 		if [[ $LINENUM =~ [0-9]+ ]];then
-			FILEPATH=$(grep " $2 " ${MENUCACHE_NC}|awk '{print $2}')
-			if [ -n $FILEPATH ];then
-				$RUTA/ct.sh -n $LINENUM -d $FILEPATH $(test $COLOUR = "YES" && echo "-c" || echo "")
+			FILEDIR=$(grep " $2 " ${MENUCACHE_NC}|awk '{print $2}')
+			if [ -n $FILEDIR ];then
+				$SCRIPT_DIR/ct.sh -n $LINENUM -d $FILEDIR $(test $COLOUR = "YES" && echo "-c" || echo "")
 				echo
-				$COMANDO $FILEPATH
+				$COMMAND $FILEDIR
 			fi
 		else
 			cat ${MENUCACHE}
 		fi
 	fi
-elif [ "$TERMINO" = "--frequent" ];then
-	if [ $(sqlite3 $RUTA_CACHE/frequent.db "select count(*) from  v_log_summary;") -eq 0 ];then
+elif [ "$flag" = "--frequent" ];then
+	if [ $(sqlite3 $CACHE_DIR/frequent.db "select count(*) from  v_log_summary;") -eq 0 ];then
 		echo "Not enough info(2)"
 	else
 		TEMP1=$(mktemp /tmp/chuleta.XXXXX)
 		sqlite3 ${FREQUENTDB} ".separator ' '" "select count, path from v_log_summary;" > "$TEMP1"
-		$RUTA/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
+		$SCRIPT_DIR/tops.sh $(test $COLOUR = "YES" && echo "-c" || echo "") -f "$TEMP1"
 	fi
 	exit 0
-elif [ "$TERMINO" = "--show-config" ];then
+elif [ "$flag" = "--show-config" ];then
 	echo ~/.config/chu/chu.conf
 	echo
 	cat ~/.config/chu/chu.conf
 	sqlite3 ${CHULETADB} "select key||'='||datetime(value,'localtime') from settings where key in ('LAST_UPDATED','LAST_UPDATED_AC');"
 	exit 0
-elif [ "$TERMINO" = "--random" ];then
-	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
+elif [ "$flag" = "--random" ];then
+	$SCRIPT_DIR/co.sh -w $NO_OLD_DB_WRN -c $CACHE_DIR
 	CHULETA=$(sqlite3 ${CHULETADB} "select path from chuleta order by random() limit 1;")
-	$RUTA/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
-	$COMANDO $CHULETA "--random"
-elif [ "$TERMINO" = "--config" ];then
+	$SCRIPT_DIR/ct.sh -n "!" -d $CHULETA $(test $COLOUR = "YES" && echo "-c" || echo "")
+	$COMMAND $CHULETA "--random"
+elif [ "$flag" = "--config" ];then
 	config $CONFIG_FILE
-elif [ "$TERMINO" = "--help" ];then
+elif [ "$flag" = "--help" ];then
 	usage
-elif [[ "$TERMINO" =~ -- ]]; then
+elif [[ "$flag" =~ -- ]]; then
 	usage
 else
-	$RUTA/co.sh -w $NO_OLD_DB_WRN -c $RUTA_CACHE
-	sqlite3 ${CHULETADB} "$($RUTA/gs.sh $LISTA_PALABRAS)" > $TEMPORAL
+	$SCRIPT_DIR/co.sh -w $NO_OLD_DB_WRN -c $CACHE_DIR
+	sqlite3 ${CHULETADB} "$($SCRIPT_DIR/gs.sh $WORD_LIST)" > $TEMPORARY
 fi
 
-CANT_RESULTADOS=$(cat $TEMPORAL | wc -l)
+RESULT_COUNT=$(cat $TEMPORARY | wc -l)
 
-if [ $CANT_RESULTADOS -eq 1 ]; then
-	$RUTA/ct.sh -n 1 -d $(cat $TEMPORAL) $(test $COLOUR = "YES" && echo "-c" || echo "")
-	$COMANDO $(cat "$TEMPORAL")
-elif [ $CANT_RESULTADOS -gt 0 -a $CANT_RESULTADOS -le $MAX_MENU_LENGTH ]; then
-	menu "$TEMPORAL"
-elif [ $CANT_RESULTADOS -gt $MAX_MENU_LENGTH ];then
-	reporte "$TEMPORAL"
+if [ $RESULT_COUNT -eq 1 ]; then
+	$SCRIPT_DIR/ct.sh -n 1 -d $(cat $TEMPORARY) $(test $COLOUR = "YES" && echo "-c" || echo "")
+	$COMMAND $(cat "$TEMPORARY")
+elif [ $RESULT_COUNT -gt 0 -a $RESULT_COUNT -le $MAX_MENU_LENGTH ]; then
+	menu "$TEMPORARY"
+elif [ $RESULT_COUNT -gt $MAX_MENU_LENGTH ];then
+	reporte "$TEMPORARY"
 fi
 
 set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
-find $RUTA_CACHE -iname "menu*" -mmin +240 -delete &>/dev/null
+find $CACHE_DIR -iname "menu*" -mmin +240 -delete &>/dev/null
 
-(nohup $RUTA/cob.sh -c $RUTA_CACHE -l $RUTA_LOGS > $(mktemp /tmp/chuleta.nohup.XXXXX)) 2>/dev/null &
+(nohup $SCRIPT_DIR/cob.sh -c $CACHE_DIR -l $LOGS_DIR > $(mktemp /tmp/chuleta.nohup.XXXXX)) 2>/dev/null &
 exit 0

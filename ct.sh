@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-RUTA=$(dirname $0)
+SCRIPT_DIR=$(dirname $0)
 
 COUNT=0
 DATA=""
@@ -22,6 +22,6 @@ if [ $COLOUR -eq 0 ];then
 	exit 0
 fi
 
-printf "  %-4s%s\n" $COUNT $DATA | $RUTA/ac.sed
+printf "  %-4s%s\n" $COUNT $DATA | $SCRIPT_DIR/ac.sed
 
 exit 0

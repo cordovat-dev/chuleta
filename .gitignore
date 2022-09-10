@@ -10,5 +10,6 @@
 !sqlite_db_schema.sql
 !sqlite_frequent_db_schema.sql
 !notes.txt
+!unit_tests.txt
 test.sh
 test2.sh

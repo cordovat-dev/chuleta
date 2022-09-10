@@ -4,35 +4,35 @@ trap exit_handler EXIT
 
 function exit_handler {
 	set +u
-	test -n "${TEMPORAL}" && test -f "${TEMPORAL}" && rm "${TEMPORAL}"
+	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
 	exit $1
 }
 
-RUTA_CACHE=""
-RUTA_LOGS=""
-TEMPORAL=$(mktemp /tmp/chuleta.XXXXX)
+CACHE_DIR=""
+LOGS_DIR=""
+TEMPORARY=$(mktemp /tmp/chuleta.XXXXX)
 set -euo pipefail
 
 while getopts c:l: flag
 do
     case "${flag}" in
-        c) RUTA_CACHE=${OPTARG};;
-		l) RUTA_LOGS=${OPTARG};;
+        c) CACHE_DIR=${OPTARG};;
+		l) LOGS_DIR=${OPTARG};;
     esac
 done
 
-test -z $RUTA_CACHE && exit 1
-test -z $RUTA_LOGS && exit 1
+test -z $CACHE_DIR && exit 1
+test -z $LOGS_DIR && exit 1
 
 sleep 2
 
-cd $RUTA_CACHE
+cd $CACHE_DIR
 
-find . -iname "chuletas.db.*" -mtime +30 -print0 > $TEMPORAL
-test $(cat $TEMPORAL|wc -w) -gt 0 && \
-tar -czvf backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T $TEMPORAL
+find . -iname "chuletas.db.*" -mtime +30 -print0 > $TEMPORARY
+test $(cat $TEMPORARY|wc -w) -gt 0 && \
+tar -czvf backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T $TEMPORARY
 
-find . -iname "frequent.db.*" -mtime +30 -print0 > $TEMPORAL
-test $(cat $TEMPORAL|wc -w) -gt 0 && \
-tar -czvf backup.frequent.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T $TEMPORAL
+find . -iname "frequent.db.*" -mtime +30 -print0 > $TEMPORARY
+test $(cat $TEMPORARY|wc -w) -gt 0 && \
+tar -czvf backup.frequent.tar.gz.$(date +%Y%m%d%H%M%S) --remove-files --null -T $TEMPORARY
 
