@@ -33,18 +33,19 @@ function print_step {
 
 
 set -euo pipefail
-stable_branch=mingw64
-new_branch=quote_filenames
+stable_branch=$1
+new_branch=$2
+
 program_dir=~/chuleta/chuleta
 base_data_dir=~/.cache
 respuesta=""
 
 if [ -d "$base_data_dir"/chu.back.test ]; then
-	echo "Last test left base data dir in an uncomplete state"
+	echo "(1) Last test left base data dir in an uncomplete state"
 	exit 1
 fi
 if [ ! -d "$base_data_dir"/chu ];then
-	echo "Last test left base data dir in an uncomplete state"
+	echo "(2) Last test left base data dir in an uncomplete state"
 	exit 1
 fi
 
@@ -56,6 +57,11 @@ test -d "$base_data_dir"/chu.back.2.2 && rm -rf  "$base_data_dir"/chu.back.2.2
 shopt -s expand_aliases
 source ~/.bash_profile
 
+cd $program_dir
+step="git rev-parse --verify $stable_branch"
+git rev-parse --verify $stable_branch
+step="git rev-parse --verify $new_branch"
+git rev-parse --verify $new_branch
 
 print_step "Test complete chuletas report"
 cd $program_dir
@@ -128,11 +134,17 @@ git co $new_branch
 chu --frequent > b.txt
 diff a.txt b.txt
 
+print_step "Test menu choosing"
+cd $program_dir
+git co $stable_branch
+printf "%s\n" 1| chu git merge branch > a.txt
+git co $new_branch
+printf "%s\n" 1| chu git merge branch > b.txt
+diff a.txt b.txt
+
 ##################################
 
 print_step "All tests passed"
 
-cd $base_data_dir
-mv chu.back.test chu
 cd $program_dir
 
