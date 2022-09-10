@@ -118,6 +118,17 @@ set +e
 diff chu.back.1.1 chu.back.2.2
 set -e
 prompt_for_action "There should not be any difference except for database backups"
+mv chu.back.1.1 chu
+
+print_step "Test frequent on an empty history"
+cd $program_dir
+git co $stable_branch
+chu --frequent > a.txt
+git co $new_branch
+chu --frequent > b.txt
+diff a.txt b.txt
+
+##################################
 
 print_step "All tests passed"
 
