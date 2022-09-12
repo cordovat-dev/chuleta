@@ -48,6 +48,7 @@ function abrir {
 		   exit 1
 	fi
 	LENGTH=$(wc -l < "$CHULETA")
+	MAX_CAT_LENGTH=$(( $(tput lines ) - 3 - 3 ))
 	if [ $LENGTH -gt $MAX_CAT_LENGTH ];then
 		if [ $PREFER_LESS = "YES" ];then
 			less "$CHULETA"
