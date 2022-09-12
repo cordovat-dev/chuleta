@@ -21,7 +21,7 @@ EOF
     exit 1
 fi
 
-if [ $MINGW == "YES" ];then
+if [ "$MINGW" = "YES" ];then
 	set +e
 	net session > /dev/null 2>&1
 	if [ $? -ne 0 ];then
@@ -60,7 +60,7 @@ if [ ! -f "${CONFIG_FILE}" ];then
 	echo "...Please edit ${CONFIG_FILE} file."
 fi
 
-if [ $MINGW == "YES" ];then
+if [ "$MINGW" = "YES" ];then
 	cp -f "$SCRIPT_DIR"/chu.auto /usr/share/bash-completion/completions/chu
 else
 	sudo cp -f "$SCRIPT_DIR"/chu.auto /etc/bash_completion.d/

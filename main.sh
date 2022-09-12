@@ -39,8 +39,8 @@ REPORT_CACHE_FILE="$CACHE_DIR/frequent_report_cache"
 SCRIPT_DIR="$(dirname $0)"
 TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
-OPEN_COMMAND=$([[ $MINGW == "YES" ]] && echo start || echo gnome-open)
-SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
+OPEN_COMMAND=$([[ "$MINGW" = "YES" ]] && echo start || echo gnome-open)
+SUDO_COMMAND=$([[ "$MINGW" = "YES" ]] && echo -n "" || echo sudo)
 
 if [ -n "$(printf "%s\n" "$WORD_LIST"|fgrep -e '--edit')" ];then
 	WORD_LIST="$(echo $WORD_LIST|sed 's/--edit//g')"
@@ -76,7 +76,7 @@ elif [ "$flag" = "--totals" ];then
 	exit 0
 elif [ "$flag" = "--topics" ];then
 	cd "${BASE_DIR}"
-	if [ $MINGW == "YES" ];then
+	if [ "$MINGW" = "YES" ];then
 		tree.com //a . | tail -n +3
 		cd - > /dev/null
 	else
