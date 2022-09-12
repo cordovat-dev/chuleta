@@ -45,6 +45,7 @@ SUDO_COMMAND=$([[ $MINGW == "YES" ]] && echo -n "" || echo sudo)
 
 if [ -n "$(printf "%s\n" "$WORD_LIST"|fgrep -e '--edit')" ];then
 	WORD_LIST="$(echo $WORD_LIST|sed 's/--edit//g')"
+	set -- $WORD_LIST
 	COMMAND="editar"
 fi
 
