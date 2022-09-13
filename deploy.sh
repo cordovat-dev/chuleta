@@ -1,18 +1,17 @@
 #!/bin/bash
 set -euo pipefail
 
-DIR=$(dirname "$0")
+SCRIPT_DIR=$(dirname "$0")
 MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
-RUTA=$(dirname $0)
 BACKUPNAME=""
-RUTA_CACHE=~/.cache/chu
-RUTA_LOGS=~/.cache/chu.logs
+CACHE_DIR=~/.cache/chu
+LOGS_DIR=~/.cache/chu.logs
 RUTA_CONF=~/.config/chu
-CONFIG_FILE=$RUTA_CONF/chu.conf
-CHULETADB=$RUTA_CACHE/chuletas.db
-FREQUENTDB=$RUTA_CACHE/frequent.db
+CONFIG_FILE="$RUTA_CONF"/chu.conf
+CHULETADB="$CACHE_DIR"/chuletas.db
+FREQUENTDB="$CACHE_DIR"/frequent.db
 
-if ! command -v ssqlite3 &> /dev/null; then
+if ! command -v sqlite3 &> /dev/null; then
 cat <<EOF
 
 Sqlite3 could not be found
@@ -22,13 +21,7 @@ EOF
     exit 1
 fi
 
-if [   || echo <<EOF
-	sqlite3 is not installed in this system.
-	Please install sqlite3 to be able to installed
-	and use Chuleta
-EOF
-
-if [ $MINGW == "YES" ];then
+if [ "$MINGW" = "YES" ];then
 	set +e
 	net session > /dev/null 2>&1
 	if [ $? -ne 0 ];then
@@ -38,8 +31,8 @@ if [ $MINGW == "YES" ];then
 	set -e
 fi
 
-if [ ! -d "${RUTA_CACHE}" ];then
-	mkdir "${RUTA_CACHE}"
+if [ ! -d "${CACHE_DIR}" ];then
+	mkdir "${CACHE_DIR}"
 fi
 
 if [ -f "${CHULETADB}" ];then
@@ -47,30 +40,30 @@ if [ -f "${CHULETADB}" ];then
 	mv "${CHULETADB}" "$BACKUPNAME"
 	echo "Old chuletas.db moved to $BACKUPNAME"
 fi
-sqlite3 "${CHULETADB}" ".read "$RUTA/sqlite_db_schema.sql
+sqlite3 "${CHULETADB}" ".read "$SCRIPT_DIR/sqlite_db_schema.sql
 if [ -f "${FREQUENTDB}" ];then
 	BACKUPNAME="$(echo ${FREQUENTDB}.$(date +%Y%m%d%H%M%S))"
 	mv "${FREQUENTDB}" "$BACKUPNAME"
 	echo "Old frequent.db moved to $BACKUPNAME"
 fi
-sqlite3 "${FREQUENTDB}" ".read "$RUTA/sqlite_frequent_db_schema.sql
+sqlite3 "${FREQUENTDB}" ".read "$SCRIPT_DIR/sqlite_frequent_db_schema.sql
 	
-if [ ! -d "${RUTA_LOGS}" ];then
-	mkdir "${RUTA_LOGS}"
+if [ ! -d "${LOGS_DIR}" ];then
+	mkdir "${LOGS_DIR}"
 fi
 if [ ! -d "${RUTA_CONF}" ];then
 	mkdir "${RUTA_CONF}"
 fi
 if [ ! -f "${CONFIG_FILE}" ];then
-	cp $DIR/chu.conf "${RUTA_CONF}/"
+	cp "$SCRIPT_DIR"/chu.conf "${RUTA_CONF}/"
 	echo MINGW=$MINGW >> "${CONFIG_FILE}"
 	echo "...Please edit ${CONFIG_FILE} file."
 fi
 
-if [ $MINGW == "YES" ];then
-	cp -f $DIR/chu.auto /usr/share/bash-completion/completions/chu
+if [ "$MINGW" = "YES" ];then
+	cp -f "$SCRIPT_DIR"/chu.auto /usr/share/bash-completion/completions/chu
 else
-	sudo cp -f $DIR/chu.auto /etc/bash_completion.d/
+	sudo cp -f "$SCRIPT_DIR"/chu.auto /etc/bash_completion.d/
 fi
 
 echo "... Please run chu --update before using the utility."

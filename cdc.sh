@@ -13,14 +13,14 @@ function exit_handler {
 }
 
 set -euo pipefail
-RUTA_CACHE=~/.cache/chu
+CACHE_DIR=~/.cache/chu
 BASE_DIR=~/chuleta/chuleta-data
 TEMPDATA=$(mktemp /tmp/chuleta.XXXXX)
 TEMPRESULTDATA=$(mktemp /tmp/chuleta.XXXXX)
 TEMPRESULTDATA2=$(mktemp /tmp/chuleta.XXXXX)
 TEMPSCRIPT=$(mktemp /tmp/chuleta.XXXXX)
 TEMPSED=$(mktemp /tmp/chuleta.XXXXX)
-FREQUENTDB=$RUTA_CACHE/frequent.db
+FREQUENTDB=$CACHE_DIR/frequent.db
 EXCODE=0
 BACKUPTABLE="frequent_log_$(date +%Y%m%d%H%M%S)"
 

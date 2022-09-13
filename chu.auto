@@ -4,23 +4,23 @@ _chu()
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
-	ARCHLT=$(echo ~/.cache/chu/lista_comp)
-	ARCHTOPS=$(echo ~/.cache/chu/lista_topicos)
-	if [ ! -f "${ARCHLT}" ] || [ ! -f "${ARCHTOPS}" ]; then
+	ACLISTFILE=$(echo ~/.cache/chu/lista_comp)
+	TOPICSFILE=$(echo ~/.cache/chu/lista_topicos)
+	if [ ! -f "${ACLISTFILE}" ] || [ ! -f "${TOPICSFILE}" ]; then
 		COMPREPLY=
 		return 0
 	fi
-	parms_unitarios="--update --totals --topics --terms --frequent --show_config --random --quick-update --config"
+	unitary_parms="--update --totals --topics --terms --frequent --show-config --random --quick-update --config --help"
 
-	if [ -n "$(grep -w -- "${prev}" $ARCHTOPS)" ]; then
+	if [ -n "$(grep -w -- "${prev}" $TOPICSFILE)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
-	elif [ -n "$(grep -w -- "${prev}" <(printf "%s\n" "$parms_unitarios"))"  ]; then
+	elif [ -n "$(grep -w -- "${prev}" <(printf "%s\n" "$unitary_parms"))"  ]; then
 		COMPREPLY=
 		return 0
 	else
-		op1="$parms_unitarios --edit $(cat $ARCHLT)"
+		op1="$unitary_parms --edit --clipboard $(cat $ACLISTFILE)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
 	fi

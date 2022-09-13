@@ -10,8 +10,8 @@ function exit_handler {
 
 set -euo pipefail
 
-ARCHIVO=""
-RUTA=$(dirname $0)
+FILE=""
+SCRIPT_DIR=$(dirname $0)
 TEMP=$(mktemp /tmp/chuleta.XXXXX)
 
 COLOUR=0
@@ -20,11 +20,11 @@ while getopts f:c flag
 do
     case "${flag}" in
 		c) COLOUR=1;;
-		f) ARCHIVO=${OPTARG};;
+		f) FILE=${OPTARG};;
     esac
 done
 
-test -z $ARCHIVO && exit 1
+test -z $FILE && exit 1
 
 arr[0]="You should consider trying to learn the following by heart:"
 arr[1]="It's about time you memorize the following:"
@@ -45,5 +45,5 @@ ${arr[$rand]}
 
 EOF
 
-$RUTA/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $ARCHIVO >> $TEMP
+$SCRIPT_DIR/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $FILE >> $TEMP
 cat $TEMP

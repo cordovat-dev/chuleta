@@ -11,7 +11,7 @@ function exit_handler {
 set -eo pipefail
 
 set -u
-RUTA=$(dirname $0)
+SCRIPT_DIR=$(dirname $0)
 COUNT=0
 COLOUR=0
 REPORT=0
@@ -43,33 +43,33 @@ if [ $REPORT -ne 1 ]; then
 	echo
 fi
 if [ -n "$NOCOLOR_FILE" ];then
-	echo -n "" > ${NOCOLOR_FILE}
+	echo -n "" > "${NOCOLOR_FILE}"
 fi
 	
-while read linea
+while read line
 do
 	if [ $HASNUMBERS -eq 1 ];then
-		   lineatemp=$linea
-		   COUNT=$(awk '{print $1}' <(echo $lineatemp))
-		   linea=$(awk '{print $2}' <(echo $lineatemp))
+		   templine=$line
+		   COUNT=$(awk '{print $1}' <(echo $templine))
+		   line=$(awk '{print $2}' <(echo $templine))
 	else
 		   COUNT=$(( $COUNT + 1 ))
 	fi
 	if [ $REPORT -eq 1 ]; then
-		printf "  %s\n" $linea
+		printf "  %s\n" $line
 	else
-		printf "  %-4s%s\n" $COUNT $linea
+		printf "  %-4s%s\n" $COUNT $line
 	fi
-done > $TEMP
+done > "$TEMP"
 
 if [ $COLOUR -eq 1 ]; then
-	$RUTA/ac.sed $TEMP
+	"$SCRIPT_DIR"/ac.sed "$TEMP"
 else
-	cat $TEMP
+	cat "$TEMP"
 fi
 
 if [ -n "$NOCOLOR_FILE" ];then
-	cp $TEMP ${NOCOLOR_FILE}
+	cp "$TEMP" "${NOCOLOR_FILE}"
 fi;
 
 if [ $REPORT -eq 1 ]; then

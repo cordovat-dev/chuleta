@@ -1,19 +1,20 @@
 function config {
-	BEFORE=$CONFIG_FILE.$(date +%Y%m%d%H%M%S)
-	cp $CONFIG_FILE $BEFORE
+	BEFORE="$CONFIG_FILE.$(date +%Y%m%d%H%M%S)"
+	cp "$CONFIG_FILE" "$BEFORE"
 	echo "Editing $CONFIG_FILE..."
-	$EDITOR $CONFIG_FILE
-	diff $BEFORE $CONFIG_FILE
-	rm $BEFORE
+	$EDITOR "$CONFIG_FILE"
+	diff "$BEFORE" "$CONFIG_FILE"
+	rm "$BEFORE"
 }
 
 function usage {
 cat <<EOF
 	Usage:
 	chu [search_terms]
-	chu search_terms --edit
+	chu search_terms --editar
+	chu search_terms --clipboard
 	chu --cached
-	chu [--cached] n
+	chu [--cached] n [--clipboard]
 	chu --update
 	chu --quick-update
 	chu --frequent
@@ -21,9 +22,11 @@ cat <<EOF
 	chu --terms
 	chu --totals
 	chu --topics
-	chu --show_config
+	chu --show-config
+	chu --help
 EOF
 }
+
 function notfound {
 cat <<EOF
 
@@ -36,16 +39,17 @@ EOF
 }
 
 function abrir {
-	CHULETA="$BASE_DIR/$1"
+	CHULETA="$BASE_DIR"/"$1"
 	set +u
 	RNDCHU="$2"
 	set -u
-	if [ ! -f $CHULETA ];then
+	if [ ! -f "$CHULETA" ];then
 		   notfound $1
 		   exit 1
 	fi
-	LONGITUD=$(wc -l < $CHULETA)
-	if [ $LONGITUD -gt $MAX_CAT_LENGTH ];then
+	LENGTH=$(wc -l < "$CHULETA")
+	MAX_CAT_LENGTH=$(( $(tput lines ) - 3 - 3 ))
+	if [ $LENGTH -gt $MAX_CAT_LENGTH ];then
 		if [ $PREFER_LESS = "YES" ];then
 			less "$CHULETA"
 		else
@@ -55,6 +59,11 @@ function abrir {
 	else
 		echo
 		cat "$CHULETA"
+		if [ $COPYTOCLIP -eq 1 ] && [ "$MINGW" = "YES" ];then
+			cat "${CHULETA}" > /dev/clipboard
+			echo
+			echo "...copied to clipboard"
+		fi
 	fi
 	if [ "$RNDCHU" != "--random" ]; then
 		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"
@@ -63,28 +72,28 @@ function abrir {
 
 function editar {
 	echo "  opening in editor ..."
-	$OPEN_COMMAND $BASE_DIR/$1
+	$OPEN_COMMAND "$BASE_DIR"/"$1"
 }
 
 function menu {
 	echo
-	TEMP=$(mktemp /tmp/chuleta.XXXXX)
+	TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 	COUNT=$(wc -l < $1)
 	cat $1 >> "$TEMP"
 	colour=$(test $COLOUR = "YES" && echo "-c" || echo "")
-	test -f ${MENUCACHE} && rm ${MENUCACHE}
-	test -f ${MENUCACHE_NC} && rm ${MENUCACHE_NC}
-	$RUTA/./fmt2.sh $colour -f ${MENUCACHE_NC} < "$TEMP" | tee ${MENUCACHE}
+	test -f "${MENUCACHE}" && rm "${MENUCACHE}"
+	test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
+	"$SCRIPT_DIR"/./fmt2.sh $colour -f "${MENUCACHE_NC}" < "$TEMP" | tee "${MENUCACHE}"
 
 	echo
 	read -p "  ?  " respuesta
 	if [[ $respuesta =~ ^-?[0-9]+$ ]];then
-		OPCION=$respuesta
-		if [ $OPCION -ge 1 -a $OPCION -le $COUNT ];then
-			OPCION=$(sed "${respuesta}q;d" "$1")
+		OPTION=$respuesta
+		if [ $OPTION -ge 1 -a $OPTION -le $COUNT ];then
+			OPTION=$(sed "${respuesta}q;d" "$1")
 			echo
-			$RUTA/ct.sh -n $respuesta -d $OPCION $(test $COLOUR = "YES" && echo "-c" || echo "")
-			$COMANDO $OPCION
+			"$SCRIPT_DIR"/ct.sh -n $respuesta -d $OPTION $(test $COLOUR = "YES" && echo "-c" || echo "")
+			$COMMAND "$OPTION"
 		fi
 	fi
 }
@@ -93,11 +102,11 @@ function reporte {
 	echo
 	TEMP=$(mktemp /tmp/chuleta.XXXXX)
 	cat $1 >> "$TEMP"
-	$RUTA/./fmt2.sh -r < "$TEMP"
+	"$SCRIPT_DIR"/./fmt2.sh -r < "$TEMP"
 	echo
 }
 
-function  update() {
+function update() {
 	local autocomp=""
 	set +u
 	autocomp="$1"
@@ -106,12 +115,12 @@ function  update() {
 	echo "Updating database"
 	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
 	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
-	$RUTA/sqls.sh -b "$BASE_DIR" -d "${CHULETADB}" -w $NUM_DAYS_OLD
+	$SCRIPT_DIR/sqls.sh -b "$BASE_DIR" -d "${CHULETADB}" -w $NUM_DAYS_OLD
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
 	if [ "$autocomp" != "quick" ];then
 		echo "Generating autocompletion"
-		$RUTA/gac.sh $BASE_DIR
+		"$SCRIPT_DIR"/gac.sh "$BASE_DIR"
 	else
 		sleep 1
 	fi
