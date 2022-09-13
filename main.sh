@@ -69,7 +69,7 @@ elif [ "$flag" = "--totals" ];then
 	echo
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ' '" "select main_topic, count, pc, bar from v_totals_g"|\
 	awk '{printf "%s: %s %2s%s %s\n", $1, $2, $3, "%", $4}'|sed 's/[^0-9]0%/-/'|\
-	sed 's/\-$//g'|column -t
+	sed 's/\-$//g'|column -R 2,3 -t
 	echo
 	"$SCRIPT_DIR"/co.sh -w $NO_OLD_DB_WRN -c "$CACHE_DIR"
 	echo $(sqlite3 "${CHULETADB}" "select count(*) from chuleta;") chuletas
