@@ -20,7 +20,7 @@ cat <<EOF
 	chu --frequent
 	chu --random
 	chu --terms
-	chu --totals
+	chu --stats
 	chu --topics
 	chu --show-config
 	chu --help

@@ -65,7 +65,7 @@ if [ "$flag" = "--update" ];then
 	update
 elif [ "$flag" = "--quick-update" ];then
 	update quick
-elif [ "$flag" = "--totals" ];then
+elif [ "$flag" = "--stats" ];then
 	echo
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ' '" "select main_topic, count, pc, bar from v_totals_g"|\
 	awk '{printf "%s: %s %2s%s %s\n", $1, $2, $3, "%", $4}'|sed 's/[^0-9]0%/-/'|\
