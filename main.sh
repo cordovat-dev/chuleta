@@ -45,12 +45,14 @@ SUDO_COMMAND=$([[ "$MINGW" = "YES" ]] && echo -n "" || echo sudo)
 if [ -n "$(printf "%s\n" "$WORD_LIST"|fgrep -e '--edit')" ];then
 	WORD_LIST="$(echo $WORD_LIST|sed 's/--edit//g')"
 	set -- $WORD_LIST
+	flag=""
 	COMMAND="editar"
 fi
 
 if [ -n "$(printf "%s\n" "$WORD_LIST"|fgrep -e '--clipboard')" ];then
 	WORD_LIST="$(echo $WORD_LIST|sed 's/--clipboard//g')"
 	set -- $WORD_LIST
+	flag=""
 	COPYTOCLIP=1
 fi
 
