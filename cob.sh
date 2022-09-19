@@ -40,3 +40,4 @@ if [ ! -f compress_frequent_backup ] || [[ $(find compress_frequent_backup -mtim
 fi
 
 find . -iname "backup.*.tar.gz.*" -mtime +30 -delete
+find /tmp/ -maxdepth 1 -iname "chuleta.nohup.*" -mmin +30 -delete
