@@ -29,7 +29,6 @@ WORD_LIST="${@:1}"
 COMMAND="abrir"
 COPYTOCLIP=0
 CACHE_DIR=~/.cache/chu
-LOGS_DIR=~/.cache/chu.logs
 FREQUENTDB="$CACHE_DIR/frequent.db"
 CHULETADB="$CACHE_DIR/chuletas.db"
 MENUCACHE="$CACHE_DIR/menu$PPID"
@@ -151,5 +150,5 @@ set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
 find "$CACHE_DIR" -iname "menu*" -mmin +240 -delete &>/dev/null
 
-(nohup "$SCRIPT_DIR"/cob.sh -c "$CACHE_DIR" -l "$LOGS_DIR" > $(mktemp /tmp/chuleta.nohup.XXXXX)) 2>/dev/null &
+(nohup "$SCRIPT_DIR"/cob.sh -c "$CACHE_DIR" > $(mktemp /tmp/chuleta.nohup.XXXXX)) 2>/dev/null &
 exit 0

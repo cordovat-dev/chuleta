@@ -5,7 +5,6 @@ SCRIPT_DIR=$(dirname "$0")
 MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
 BACKUPNAME=""
 CACHE_DIR=~/.cache/chu
-LOGS_DIR=~/.cache/chu.logs
 RUTA_CONF=~/.config/chu
 CONFIG_FILE="$RUTA_CONF"/chu.conf
 CHULETADB="$CACHE_DIR"/chuletas.db
@@ -48,9 +47,6 @@ if [ -f "${FREQUENTDB}" ];then
 fi
 sqlite3 "${FREQUENTDB}" ".read "$SCRIPT_DIR/sqlite_frequent_db_schema.sql
 	
-if [ ! -d "${LOGS_DIR}" ];then
-	mkdir "${LOGS_DIR}"
-fi
 if [ ! -d "${RUTA_CONF}" ];then
 	mkdir "${RUTA_CONF}"
 fi
