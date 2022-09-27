@@ -35,46 +35,46 @@ do
     esac
 done
 
-if [ $HASNUMBERS -eq 1 ];then
+if [ ${HASNUMBERS} -eq 1 ];then
 	HEADERCOL1="N"
 fi
-if [ $REPORT -ne 1 ]; then
-	printf "  %-4s%s\n" "$HEADERCOL1" $TITLE
+if [ ${REPORT} -ne 1 ]; then
+	printf "  %-4s%s\n" "${HEADERCOL1}" ${TITLE}
 	echo
 fi
-if [ -n "$NOCOLOR_FILE" ];then
+if [ -n "${NOCOLOR_FILE}" ];then
 	echo -n "" > "${NOCOLOR_FILE}"
 fi
 	
 while read line
 do
-	if [ $HASNUMBERS -eq 1 ];then
-		   templine=$line
-		   COUNT=$(awk '{print $1}' <(echo $templine))
-		   line=$(awk '{print $2}' <(echo $templine))
+	if [ ${HASNUMBERS} -eq 1 ];then
+		   templine=${line}
+		   COUNT=$(awk '{print $1}' <(echo ${templine}))
+		   line=$(awk '{print $2}' <(echo ${templine}))
 	else
-		   COUNT=$(( $COUNT + 1 ))
+		   COUNT=$(( ${COUNT} + 1 ))
 	fi
-	if [ $REPORT -eq 1 ]; then
-		printf "  %s\n" $line
+	if [ ${REPORT} -eq 1 ]; then
+		printf "  %s\n" ${line}
 	else
-		printf "  %-4s%s\n" $COUNT $line
+		printf "  %-4s%s\n" ${COUNT} ${line}
 	fi
-done > "$TEMP"
+done > "${TEMP}"
 
-if [ $COLOUR -eq 1 ]; then
-	"$SCRIPT_DIR"/ac.sed "$TEMP"
+if [ ${COLOUR} -eq 1 ]; then
+	"${SCRIPT_DIR}"/ac.sed "${TEMP}"
 else
-	cat "$TEMP"
+	cat "${TEMP}"
 fi
 
-if [ -n "$NOCOLOR_FILE" ];then
-	cp "$TEMP" "${NOCOLOR_FILE}"
+if [ -n "${NOCOLOR_FILE}" ];then
+	cp "${TEMP}" "${NOCOLOR_FILE}"
 fi;
 
-if [ $REPORT -eq 1 ]; then
+if [ ${REPORT} -eq 1 ]; then
 	echo
-	echo "  $COUNT $LEGEND"
+	echo "  ${COUNT} ${LEGEND}"
 fi
 
 
