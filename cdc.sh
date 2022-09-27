@@ -20,7 +20,7 @@ TEMPRESULTDATA=$(mktemp /tmp/chuleta.XXXXX)
 TEMPRESULTDATA2=$(mktemp /tmp/chuleta.XXXXX)
 TEMPSCRIPT=$(mktemp /tmp/chuleta.XXXXX)
 TEMPSED=$(mktemp /tmp/chuleta.XXXXX)
-FREQUENTDB=$CACHE_DIR/frequent.db
+FREQUENTDB=${CACHE_DIR}/frequent.db
 EXCODE=0
 BACKUPTABLE="frequent_log_$(date +%Y%m%d%H%M%S)"
 
@@ -35,7 +35,7 @@ select 'Exporting '||(select count(*) from frequent_log)||' rows';
 select * from frequent_log;
 EOF
 
-cd $BASE_DIR
+cd ${BASE_DIR}
 
 git diff --name-status -C $(git rev-list HEAD|tail -1)..HEAD|grep "^R"|awk '{printf("s#%s#%s#g\n",$2,$3)}' > ${TEMPSED}
 sed -Ef ${TEMPSED} ${TEMPDATA} > ${TEMPRESULTDATA}

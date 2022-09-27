@@ -19,11 +19,11 @@ do
     esac
 done
 
-test -z $CACHE_DIR && exit 1
+test -z ${CACHE_DIR} && exit 1
 
 sleep 2
 
-cd $CACHE_DIR
+cd ${CACHE_DIR}
 
 compressed_file=backup.chuletas.tar.gz.$(date +%Y%m%d%H%M%S)
 if [ ! -f compress_chuletas_backup ] || [[ $(find compress_chuletas_backup -mtime +7 -print) ]];then
