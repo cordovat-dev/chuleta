@@ -24,7 +24,7 @@ do
     esac
 done
 
-test -z $FILE && exit 1
+test -z ${FILE} && exit 1
 
 arr[0]="You should consider trying to learn the following by heart:"
 arr[1]="It's about time you memorize the following:"
@@ -37,13 +37,13 @@ arr[7]="I guess you already know these topics without looking them up:"
 arr[8]="Do these ones ring a bell?:"
 arr[9]="You will have to use some mnemonic to learn some of these:"
 arr[10]="You should know better:"
-rand=$[$RANDOM % ${#arr[@]}]
+rand=$[${RANDOM} % ${#arr[@]}]
 
-cat <<EOF > $TEMP
+cat <<EOF > ${TEMP}
 
-${arr[$rand]}
+${arr[${rand}]}
 
 EOF
 
-$SCRIPT_DIR/./fmt2.sh $(test $COLOUR = 1 && echo "-c" || echo "") -n < $FILE >> $TEMP
-cat $TEMP
+${SCRIPT_DIR}/./fmt2.sh $(test ${COLOUR} = 1 && echo "-c" || echo "") -n < ${FILE} >> ${TEMP}
+cat ${TEMP}
