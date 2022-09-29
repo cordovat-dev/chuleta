@@ -148,7 +148,7 @@ fi
 
 set +e
 find /tmp/chuleta.* -mtime +1 -delete &>/dev/null
-find "${CACHE_DIR"}" -iname "menu*" -mmin +240 -delete &>/dev/null
+find "${CACHE_DIR}" -iname "menu*" -mmin +240 -delete &>/dev/null
 
 (nohup "${SCRIPT_DIR}"/cob.sh -c "${CACHE_DIR"}" > $(mktemp /tmp/chuleta.nohup.XXXXX)) 2>/dev/null &
 exit 0
