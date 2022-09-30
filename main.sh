@@ -33,7 +33,6 @@ FREQUENTDB="${CACHE_DIR}/frequent.db"
 CHULETADB="${CACHE_DIR}/chuletas.db"
 MENUCACHE="${CACHE_DIR}/menu${PPID}"
 MENUCACHE_NC="${MENUCACHE}_nc"
-REPORT_CACHE_FILE="${CACHE_DIR}/frequent_report_cache"
 
 SCRIPT_DIR="$(dirname $0)"
 TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
