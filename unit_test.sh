@@ -63,15 +63,6 @@ git rev-parse --verify ${stable_branch}
 step="git rev-parse --verify ${new_branch}"
 git rev-parse --verify ${new_branch}
 
-print_step "Test stats"
-cd ${program_dir}
-git co ${stable_branch}
-chu --stats > a.txt
-git co ${new_branch}
-chu --stats > b.txt
-diff a.txt b.txt
-exit 0
-
 print_step "Test complete chuletas report"
 cd ${program_dir}
 git co ${stable_branch}
@@ -151,7 +142,13 @@ git co ${new_branch}
 printf "%s\n" 1| chu git merge branch > b.txt
 diff a.txt b.txt
 
-
+print_step "Test stats"
+cd ${program_dir}
+git co ${stable_branch}
+chu --stats > a.txt
+git co ${new_branch}
+chu --stats > b.txt
+diff a.txt b.txt
 
 ##################################
 
