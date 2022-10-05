@@ -7,5 +7,8 @@ x give more info during update cache
 x disable clipboard copy if not mingw64/Cygwin until able to test on native Linux
 x manage what happens if both --clipboard and --cached (implicit or explicit) is used
 x change bash-specific == operator to =
+x allow --edit to appear in any position along the search terms, not only at the end
+x run compression of backups only after N days, so several files are actually packed into a single tar file
+x delete old nohup files in tmp
 
 

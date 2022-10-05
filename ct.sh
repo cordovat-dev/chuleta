@@ -17,11 +17,11 @@ do
     esac
 done
 
-if [ $COLOUR -eq 0 ];then
-	printf "  %-4s%s\n" $COUNT $DATA
+if [ ${COLOUR} -eq 0 ];then
+	printf "  %-4s%s\n" ${COUNT} ${DATA}
 	exit 0
 fi
 
-printf "  %-4s%s\n" $COUNT $DATA | $SCRIPT_DIR/ac.sed
+printf "  %-4s%s\n" ${COUNT} ${DATA} | ${SCRIPT_DIR}/ac.sed
 
 exit 0
