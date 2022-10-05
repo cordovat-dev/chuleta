@@ -3,8 +3,13 @@ function config {
 	cp "${CONFIG_FILE}" "${BEFORE}"
 	echo "Editing ${CONFIG_FILE}..."
 	${EDITOR} "${CONFIG_FILE}"
+	set +e
 	diff "${BEFORE}" "${CONFIG_FILE}"
+	set -e
 	rm "${BEFORE}"
+	source "${CONFIG_FILE}"
+	sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('BASE_DIR','${BASE_DIR:-~/chuleta/chuleta-data}');"
+	sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('NUM_DAYS_OLD',${NUM_DAYS_OLD:-8});"
 }
 
 function usage {
@@ -23,6 +28,7 @@ cat <<EOF
 	chu --stats
 	chu --topics
 	chu --show-config
+	chu --config
 	chu --help
 EOF
 }
