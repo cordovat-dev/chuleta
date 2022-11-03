@@ -10,5 +10,17 @@ x change bash-specific == operator to =
 x allow --edit to appear in any position along the search terms, not only at the end
 x run compression of backups only after N days, so several files are actually packed into a single tar file
 x delete old nohup files in tmp
-
+- add short flags, suggested:
+	--clipboard	-c
+	--frequent    	-f
+	--random       	-r
+	--terms		-t
+	--config      	-C
+	--help        	-h
+	--show-config  	-s
+	--topics	-T
+	--edit        	-e
+	--quick-update 	-q
+	--stats        	-S
+	--update	-u	
 
