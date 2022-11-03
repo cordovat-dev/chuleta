@@ -28,20 +28,8 @@ while true; do
     -c|--clipboard)
 		COPYTOCLIP=1
         ;;
-    --frequent)
-		flag="--frequent"
-        ;;
-    --terms)
-		flag="--terms"
-        ;;
-    --topics)
-		flag="--topics"
-        ;;
-    --cached)
-		flag="--cached"
-        ;;
-    --stats)
-		flag="--stats"
+    --frequent|--terms|--topics|--cached|--stats)
+		flag="$1"
         ;;
     -r|--random)
 		flag="--random"
