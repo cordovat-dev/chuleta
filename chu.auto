@@ -10,7 +10,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	fi
-	unitary_parms="--update --stats --topics --terms --frequent --show-config --random --quick-update --config --help"
+	unitary_parms="-u --update --stats --topics --terms --frequent -s --show-config -r --random -q --quick-update -C --config -h --help"
 
 	if [ -n "$(grep -w -- "${prev}" $TOPICSFILE)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
@@ -20,7 +20,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	else
-		op1="$unitary_parms --edit --clipboard $(cat $ACLISTFILE)"
+		op1="$unitary_parms -e --edit -c --clipboard $(cat $ACLISTFILE)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
 	fi
