@@ -16,20 +16,20 @@ function usage {
 cat <<EOF
 	Usage:
 	chu [search_terms]
-	chu search_terms --editar
-	chu search_terms --clipboard
+	chu search_terms -e|--editar
+	chu search_terms -c|--clipboard
 	chu --cached
-	chu [--cached] n [--clipboard]
-	chu --update
-	chu --quick-update
+	chu [--cached] n [-c|--clipboard]
+	chu -u|--update
+	chu -q|--quick-update
 	chu --frequent
-	chu --random
+	chu -r|--random
 	chu --terms
 	chu --stats
 	chu --topics
-	chu --show-config
-	chu --config
-	chu --help
+	chu -s|--show-config
+	chu -C|--config
+	chu -h|--help
 EOF
 }
 
