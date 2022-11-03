@@ -16,7 +16,7 @@ set -euo pipefail
 parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard -- "$@")
 
 eval set -- $parmtemp
-echo "1: $@"
+#echo "1: $@"
 
 COMMAND="abrir"
 COPYTOCLIP=0
@@ -71,13 +71,13 @@ while true; do
     esac
     shift
 done
-echo %%%%%%%%%%%%%%%%%%
+#echo %%%%%%%%%%%%%%%%%%
 WORD_LIST="$@"
-echo "COPYTOCLIP: $COPYTOCLIP"
-echo "COMMAND: $COMMAND"
-echo "flag: $flag"
-echo "WORD_LIST: $WORD_LIST"
-exit 0
+#echo "COPYTOCLIP: $COPYTOCLIP"
+#echo "COMMAND: $COMMAND"
+#echo "flag: $flag"
+#echo "WORD_LIST: $WORD_LIST"
+#exit 0
 
 CONFIG_FILE=~/.config/chu/chu.conf
 source ${CONFIG_FILE}
