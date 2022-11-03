@@ -13,7 +13,7 @@ function exit_handler {
 }
 
 set -euo pipefail
-parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard -- "$@")
+parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached -- "$@")
 
 eval set -- $parmtemp
 #echo "1: $@"

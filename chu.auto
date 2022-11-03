@@ -10,7 +10,7 @@ _chu()
 		COMPREPLY=
 		return 0
 	fi
-	unitary_parms="-u --update --stats --topics --terms --frequent -s --show-config -r --random -q --quick-update -C --config -h --help"
+	unitary_parms="-u --update --stats --topics --terms --frequent -s --show-config -r --random -q --quick-update -C --config -h --help --cached"
 
 	if [ -n "$(grep -w -- "${prev}" $TOPICSFILE)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
