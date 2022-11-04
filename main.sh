@@ -13,10 +13,19 @@ function exit_handler {
 }
 
 set -euo pipefail
-parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached -- "$@")
 
-eval set -- $parmtemp
-#echo "1: $@"
+set +e
+parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached -- "$@" 2> /dev/null )
+
+if [ $? -eq 0 ];then
+	eval set -- $parmtemp
+else
+	echo
+	echo "	Unknown option!"
+	echo
+	set -- "--help" "--"
+fi
+set -e
 
 COMMAND="abrir"
 COPYTOCLIP=0
@@ -59,13 +68,8 @@ while true; do
     esac
     shift
 done
-#echo %%%%%%%%%%%%%%%%%%
+
 WORD_LIST="$@"
-#echo "COPYTOCLIP: $COPYTOCLIP"
-#echo "COMMAND: $COMMAND"
-#echo "flag: $flag"
-#echo "WORD_LIST: $WORD_LIST"
-#exit 0
 
 CONFIG_FILE=~/.config/chu/chu.conf
 source ${CONFIG_FILE}
