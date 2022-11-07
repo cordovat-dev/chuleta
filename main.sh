@@ -12,8 +12,65 @@ function exit_handler {
 	exit $1
 }
 
-flag="$1"
 set -euo pipefail
+
+set +e
+parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached -- "$@" 2> /dev/null )
+
+if [ $? -eq 0 ];then
+	eval set -- $parmtemp
+else
+	echo
+	echo "	Unknown option!"
+	echo
+	set -- "--help" "--"
+fi
+set -e
+
+COMMAND="abrir"
+COPYTOCLIP=0
+flag=""
+WORD_LIST=""
+
+while true; do
+    case "$1" in
+    -c|--clipboard)
+		COPYTOCLIP=1
+        ;;
+    --frequent|--terms|--topics|--cached|--stats)
+		flag="$1"
+        ;;
+    -r|--random)
+		flag="--random"
+        ;;
+    -C|--config)
+		flag="--config"
+        ;;
+    -h|--help)
+		flag="--help"
+        ;;
+    -s|--show-config)
+		flag="--show-config"
+        ;;
+    -e|--edit)
+		COMMAND="editar"
+        ;;
+    -q|--quick-update)
+		flag="--quick-update"
+        ;;
+    -u|--update)
+		flag="--update"
+        ;;
+    --)
+        shift
+        break
+        ;;
+    esac
+    shift
+done
+
+WORD_LIST="$@"
+
 CONFIG_FILE=~/.config/chu/chu.conf
 source ${CONFIG_FILE}
 # variables read from conf file: NO_OLD_DB_WRN, BASE_DIR, MAX_MENU_LENGTH, MINGW, COLOUR
@@ -25,9 +82,6 @@ COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
 PREFER_LESS=${PREFER_LESS:-YES}
 # if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
-WORD_LIST="${@:1}"
-COMMAND="abrir"
-COPYTOCLIP=0
 CACHE_DIR=~/.cache/chu
 FREQUENTDB="${CACHE_DIR}/frequent.db"
 CHULETADB="${CACHE_DIR}/chuletas.db"
@@ -39,20 +93,6 @@ TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
-
-if [ -n "$(printf "%s\n" "${WORD_LIST}"|fgrep -e '--edit')" ];then
-	WORD_LIST="$(echo ${WORD_LIST}|sed 's/--edit//g')"
-	set -- ${WORD_LIST}
-	flag=""
-	COMMAND="editar"
-fi
-
-if [ -n "$(printf "%s\n" "${WORD_LIST}"|fgrep -e '--clipboard')" ];then
-	WORD_LIST="$(echo ${WORD_LIST}|sed 's/--clipboard//g')"
-	set -- ${WORD_LIST}
-	flag=""
-	COPYTOCLIP=1
-fi
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	flag="--cached"
