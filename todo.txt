@@ -12,3 +12,4 @@ x run compression of backups only after N days, so several files are actually pa
 x delete old nohup files in tmp
 x add short flags
 - option to print usage instead of all chuletas when no search term passed
+- fix issue with clipboard option and less
