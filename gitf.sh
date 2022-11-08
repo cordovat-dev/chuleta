@@ -1,13 +1,26 @@
 #!/bin/bash
 
-set -euxo pipefail
+trap exit_handler EXIT
 
+function exit_handler {
+	set +u
+	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"	
+	exit $1
+}
+
+set -euo pipefail
+
+TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 depodir=~/chuleta/chuleta-data
-masterbranch="prueba01"
-lastpoint="HEAD~10"
+masterbranch="master"
+lastpoint="HEAD~1"
 
 function ismaster {
-	[ "$(git symbolic-ref HEAD)" = "refs/heads/${masterbranch}" ] && echo 0 && echo 1
+	if [ "$(git symbolic-ref HEAD)" = "refs/heads/${masterbranch}" ]; then 
+		echo 0
+	else
+		echo 1
+	fi
 }
 
 function listchanges {
@@ -15,7 +28,11 @@ function listchanges {
 }
 
 function iswtclean {
-	[ $(git status -s|wc -l)  -eq 0 ] && echo 0 || echo 1
+	if [ $(git status -s|wc -l)  -eq 0 ]; then
+		echo 0
+	else
+		echo 1
+	fi
 }
 
 function filterDML {
@@ -28,6 +45,25 @@ EOF
 )
 }
 
+function readrepos {
+sqlite3 ~/.cache/chu/chuletas.db "select value from settings where key like 'GIT_REPO%' order by key;" > "${TEMP}"
+for s in $(cat "${TEMP}");do
+	depodir=$s
+	cd "${depodir}"
+	if [ "$(ismaster)" -eq 1  ]; then
+		echo "${masterbranch} is not the current branch in ${depodir}"
+		exit 1
+	fi
+	if [ "$(iswtclean)" -eq 1  ]; then 
+		echo "Working tree in ${depodir} is not clean"
+		exit 1
+	fi
+	listchanges|filterDML	
+done
+}
+
+readrepos 
+exit 0
 cd "${depodir}"
 [ $(ismaster) -eq 1  ] && echo "${masterbranch} is not the current branch" && exit 1
 [ $(iswtclean) -eq 1  ] && echo "Working tree is not clean" && exit 1
