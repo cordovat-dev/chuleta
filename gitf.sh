@@ -38,10 +38,8 @@ function iswtclean {
 
 function filterDML {
 awk -f <(cat - <<-"EOF"
-	BEGIN {print "BEGIN TRANSACTION;"}
 	$1 == "A" {printf ("insert into chuleta (path) values (\x27%s\x27);\n",$2) }
 	$1 == "D" {printf ("delete from chuleta where path = \x27%s\x27;\n",$2) }
-	END {print "END TRANSACTION;"}
 EOF
 )
 }
@@ -55,26 +53,24 @@ function addpreffix {
 }
 
 function readrepos {
-sqlite3 ~/.cache/chu/chuletas.db "select value from settings where key like 'GIT_REPO%' order by key;" > "${TEMP}"
-for s in $(cat "${TEMP}");do
-	depodir=$s
-	usedepobasename=1
-	cd "${depodir}"
-	if [ "$(ismaster)" -eq 1  ]; then
-		echo "${masterbranch} is not the current branch in ${depodir}"
-		exit 1
-	fi
-	if [ "$(iswtclean)" -eq 1  ]; then 
-		echo "Working tree in ${depodir} is not clean"
-		exit 1
-	fi
-	listchanges|filterDML|addpreffix
-done
+	sqlite3 ~/.cache/chu/chuletas.db "select value from settings where key like 'GIT_REPO%' order by key;" > "${TEMP}"
+	echo "BEGIN TRANSACTION;"
+	for s in $(cat "${TEMP}");do
+		depodir=$s
+		usedepobasename=1
+		cd "${depodir}"
+		if [ "$(ismaster)" -eq 1  ]; then
+			echo "${masterbranch} is not the current branch in ${depodir}"
+			exit 1
+		fi
+		if [ "$(iswtclean)" -eq 1  ]; then 
+			echo "Working tree in ${depodir} is not clean"
+			exit 1
+		fi
+		listchanges|filterDML|addpreffix
+	done
+	echo "END TRANSACTION;"
 }
 
 readrepos 
 exit 0
-cd "${depodir}"
-[ $(ismaster) -eq 1  ] && echo "${masterbranch} is not the current branch" && exit 1
-[ $(iswtclean) -eq 1  ] && echo "Working tree is not clean" && exit 1
-listchanges|filterDML
