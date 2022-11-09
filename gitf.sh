@@ -12,6 +12,7 @@ set -euo pipefail
 
 TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 depodir=~/chuleta/chuleta-data
+usedepobasename=0
 masterbranch="master"
 lastpoint="HEAD~1"
 
@@ -45,10 +46,19 @@ EOF
 )
 }
 
+function addpreffix {
+	preffix=""
+	if [ $usedepobasename -eq 1 ]; then
+		preffix=$(basename "${depodir}")/
+	fi
+	sed -e "s#('#('${preffix}#"
+}
+
 function readrepos {
 sqlite3 ~/.cache/chu/chuletas.db "select value from settings where key like 'GIT_REPO%' order by key;" > "${TEMP}"
 for s in $(cat "${TEMP}");do
 	depodir=$s
+	usedepobasename=1
 	cd "${depodir}"
 	if [ "$(ismaster)" -eq 1  ]; then
 		echo "${masterbranch} is not the current branch in ${depodir}"
@@ -58,7 +68,7 @@ for s in $(cat "${TEMP}");do
 		echo "Working tree in ${depodir} is not clean"
 		exit 1
 	fi
-	listchanges|filterDML	
+	listchanges|filterDML|addpreffix
 done
 }
 
