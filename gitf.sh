@@ -16,7 +16,8 @@ depodir=~/chuleta/chuleta-data
 depopreffix=""
 usedepobasename=0
 masterbranch="master"
-lastpoint="HEAD~1"
+lasttag="HEAD~1"
+updatetag="chu_update_$(date +%Y%m%d%H%M%S)"
 
 function ismaster {
 	if [ "$(git symbolic-ref HEAD)" = "refs/heads/${masterbranch}" ]; then 
@@ -27,7 +28,7 @@ function ismaster {
 }
 
 function listchanges {
-	git diff-tree --name-status -r ${lastpoint}..HEAD|egrep -v "^M"
+	git diff-tree --name-status -r ${lasttag}..HEAD|egrep -v "^M"
 }
 
 function iswtclean {
@@ -40,7 +41,10 @@ function iswtclean {
 
 function filterDML {
 awk -f <(cat - <<-"EOF"
-	$1 == "A" {printf ("insert or replace into chuleta (path) values (\x27%s\x27);\n",$2) }
+	$1 == "A" {
+		printf ("delete from chuleta where path = \x27%s\x27;\n",$2) 	
+		printf ("insert or replace into chuleta (path) values (\x27%s\x27);\n",$2) 
+	}
 	$1 == "D" {printf ("delete from chuleta where path = \x27%s\x27;\n",$2) }
 EOF
 )
@@ -52,6 +56,16 @@ function addpreffix {
 		preffix=$(basename "${depodir}")/
 	fi
 	sed -e "s#('#('${preffix}#"
+}
+
+function markrepos {
+	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "$TEMP2"
+	for s in $(cat "${TEMP2}");do
+		depodir=$(echo $s|awk -F: '{print $1}')
+		cd "${depodir}"
+		git tag "${updatetag}"
+		[[ "${lasttag}" =~ ^chu_update_[0-9]{14} ]] && git tad -d "${lasttag}"
+	done
 }
 
 function getrepos {
@@ -83,6 +97,7 @@ function readrepo {
 }
 
 getrepos
+markrepos
 exit 0
 readrepos 
 exit 0

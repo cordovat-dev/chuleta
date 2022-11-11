@@ -12,3 +12,4 @@ git diff-tree --name-status -r HEAD~1..HEAD
 
 
 now we have to deal with duplicating paths in db
+commit name or date?
