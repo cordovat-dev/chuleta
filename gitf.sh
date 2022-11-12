@@ -4,15 +4,21 @@ trap exit_handler EXIT
 
 function exit_handler {
 	set +u
-	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"	
+	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
+	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
+	test -n "${TEMPCHANGES}" && test -f "${TEMPCHANGES}" && rm "${TEMPCHANGES}"	
+	test -n "${TEMPSCRIPT}" && test -f "${TEMPSCRIPT}" && rm "${TEMPSCRIPT}"	
 	echo $1
 	exit $1
 }
 
 set -euo pipefail
 
+somechange=0
 TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
+TEMPCHANGES="$(mktemp /tmp/chuleta.XXXXX)"
+TEMPSCRIPT="$(mktemp /tmp/chuleta.XXXXX)"
 depodir=~/chuleta/chuleta-data
 depopreffix=""
 usedepobasename=0
@@ -74,7 +80,6 @@ function markrepos {
 
 function getrepos {
 	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "$TEMP2"
-	echo "BEGIN TRANSACTION;"
 	for s in $(cat "${TEMP2}");do
 		depodir=$(echo $s|awk -F: '{print $1}')
 		usedepobasename=$(echo $s|awk -F: '{print $2}')
@@ -82,7 +87,9 @@ function getrepos {
 		[ $usedepobasename -eq 1 ] && depopreffix=$(basename "${depodir}/")
 		readrepo "$depodir" "$depopreffix"
 	done
-	echo "END TRANSACTION;"
+	if [ $somechange -eq 0 ];then
+		echo "No changes found"
+	fi
 }
 
 function readrepo {
@@ -97,11 +104,22 @@ function readrepo {
 		echo "Working tree in ${depodir} is not clean"
 		exit 1
 	fi
-	listchanges|filterDML|addpreffix "${preffix}"
+	listchanges > "${TEMPCHANGES}"
+	if [ $(cat "${TEMPCHANGES}"|wc -l) -eq 0 ];then
+		echo "No changes found in ${directory}"
+	else
+		cat "${TEMPCHANGES}"|filterDML|addpreffix "${preffix}" > "${TEMPSCRIPT}"
+		somechange=1
+	fi
 }
 
 getrepos
-markrepos
+if [ $somechange -eq 1 ];then
+	echo "BEGIN TRANSACTION;"
+	cat "${TEMPSCRIPT}"
+	echo "END TRANSACTION;"	
+	markrepos
+fi
 exit 0
 readrepos 
 exit 0
