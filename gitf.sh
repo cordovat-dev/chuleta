@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/bin/bash 
 
 trap exit_handler EXIT
 
 function exit_handler {
 	set +u
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"	
+	echo $1
 	exit $1
 }
 
@@ -16,7 +17,7 @@ depodir=~/chuleta/chuleta-data
 depopreffix=""
 usedepobasename=0
 masterbranch="master"
-lasttag="HEAD~1"
+lasttag=$(sqlite3 ~/.cache/chu/chuletas.db "select value from settings where key = 'LAST_GIT_TAG';")
 updatetag="chu_update_$(date +%Y%m%d%H%M%S)"
 
 function ismaster {
@@ -28,7 +29,9 @@ function ismaster {
 }
 
 function listchanges {
+	set +e
 	git diff-tree --name-status -r ${lasttag}..HEAD|egrep -v "^M"
+	set -e
 }
 
 function iswtclean {
@@ -64,7 +67,8 @@ function markrepos {
 		depodir=$(echo $s|awk -F: '{print $1}')
 		cd "${depodir}"
 		git tag "${updatetag}"
-		[[ "${lasttag}" =~ ^chu_update_[0-9]{14} ]] && git tad -d "${lasttag}"
+		[[ "${lasttag}" =~ ^chu_update_[0-9]{14} ]] && git tag -d "${lasttag}"
+		sqlite3 ~/.cache/chu/chuletas.db "insert or replace into settings values ('LAST_GIT_TAG','${updatetag}');"
 	done
 }
 

@@ -112,6 +112,10 @@ function reporte {
 	echo
 }
 
+function fullupdate {
+	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -w ${NUM_DAYS_OLD}
+}
+
 function update() {
 	local autocomp=""
 	set +u
@@ -121,7 +125,12 @@ function update() {
 	echo "Updating database"
 	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
 	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
-	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -w ${NUM_DAYS_OLD}
+	if [ "${GIT_INTEGRATION}" = "NO" ];then
+		fullupdate
+	else
+		echo "Pending implementation of git integration"
+		exit 0
+	fi
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
 	if [ "${autocomp}" != "quick" ];then

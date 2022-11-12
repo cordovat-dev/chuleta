@@ -12,4 +12,9 @@ git diff-tree --name-status -r HEAD~1..HEAD
 
 
 now we have to deal with duplicating paths in db
+	answer: delete before insert
 commit name or date?
+	answer: usa tags instead
+check if any DML was genereted (any changes found)
+
+
