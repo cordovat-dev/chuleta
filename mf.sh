@@ -118,6 +118,7 @@ function fullupdate {
 
 function update() {
 	local autocomp=""
+	local tag=""
 	set +u
 	autocomp="$1"
 	set -u
@@ -125,11 +126,18 @@ function update() {
 	echo "Updating database"
 	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
 	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
-	if [ "${GIT_INTEGRATION}" = "NO" ];then
-		fullupdate
-	else
-		echo "Pending implementation of git integration"
+	if [ "${GIT_INTEGRATION}" = "YES" ];then
+		tag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
+		if [[ "${tag}" =~ ^chu_update_[0-9]{14} ]]; then
+			echo "Calling git-based update (not implemented yet)"
+		else
+			echo "Running full update to initialize git-based updates"
+			fullupdate
+			echo "Tag update not implemented yet"
+		fi
 		exit 0
+	else
+		fullupdate	
 	fi
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
