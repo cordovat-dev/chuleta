@@ -15,6 +15,8 @@ function exit_handler {
 
 set -euo pipefail
 
+CACHE_DIR=~/.cache/chu
+CHULETADB="${CACHE_DIR}/chuletas.db"
 somechange=0
 TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
@@ -25,7 +27,7 @@ depodir=~/chuleta/chuleta-data
 depopreffix=""
 usedepobasename=0
 masterbranch="master"
-lasttag=$(sqlite3 ~/.cache/chu/chuletas.db "select value from settings where key = 'LAST_GIT_TAG';")
+lasttag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
 updatetag="chu_update_$(date +%Y%m%d%H%M%S)"
 
 function ismaster {
@@ -87,18 +89,18 @@ function addpreffix {
 }
 
 function markrepos {
-	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
+	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		depodir=$(echo $s|awk -F: '{print $1}')
 		cd "${depodir}"
 		git tag "${updatetag}"
 		[[ "${lasttag}" =~ ^chu_update_[0-9]{14} ]] && git tag -d "${lasttag}"
-		sqlite3 ~/.cache/chu/chuletas.db "insert or replace into settings values ('LAST_GIT_TAG','${updatetag}');"
+		sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG','${updatetag}');"
 	done
 }
 
 function getrepos {
-	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
+	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		depodir=$(echo $s|awk -F: '{print $1}')
 		usedepobasename=$(echo $s|awk -F: '{print $2}')
