@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 trap exit_handler EXIT
 
@@ -8,6 +8,7 @@ function exit_handler {
 	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
 	test -n "${TEMPCHANGES}" && test -f "${TEMPCHANGES}" && rm "${TEMPCHANGES}"	
 	test -n "${TEMPSCRIPT}" && test -f "${TEMPSCRIPT}" && rm "${TEMPSCRIPT}"	
+	test -n "${TEMPDIFFTREE}" && test -f "${TEMPDIFFTREE}" && rm "${TEMPDIFFTREE}"	
 	echo $1
 	exit $1
 }
@@ -19,6 +20,7 @@ TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPCHANGES="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPSCRIPT="$(mktemp /tmp/chuleta.XXXXX)"
+TEMPDIFFTREE="$(mktemp /tmp/chuleta.XXXXX)"
 depodir=~/chuleta/chuleta-data
 depopreffix=""
 usedepobasename=0
@@ -35,9 +37,26 @@ function ismaster {
 }
 
 function listchanges {
+	local result=1
 	set +e
-	git diff-tree --name-status -r ${lasttag}..HEAD|egrep -v "^M"
+	git diff-tree --name-status -r ${lasttag}..HEAD 2>/dev/null > "${TEMPDIFFTREE}"
+	result=$?
 	set -e
+	if [ $result -eq 0 ];then
+		set +e
+		egrep -v "^M" "${TEMPDIFFTREE}"
+		set -e
+	else
+		echo >&2
+		echo >&2 "FATAL!!!"
+		echo >&2 "Repo in folder ${depodir} doesn't contain tag ${lasttag}"
+		echo >&2
+		echo >&2 "Possible solutions:"
+		echo >&2 "Solution 1: tag one commit repo with ${lasttag}"
+		echo >&2 "Solution 2: set GIT_INTEGRATION to NO to make a full update"
+		echo >&2 "Solution 3: set LAST_GIT_TAG to null in DB settings table to make a full update"
+		exit 1
+	fi
 }
 
 function iswtclean {
@@ -68,7 +87,7 @@ function addpreffix {
 }
 
 function markrepos {
-	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "$TEMP2"
+	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		depodir=$(echo $s|awk -F: '{print $1}')
 		cd "${depodir}"
@@ -79,7 +98,7 @@ function markrepos {
 }
 
 function getrepos {
-	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "$TEMP2"
+	sqlite3 ~/.cache/chu/chuletas.db ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		depodir=$(echo $s|awk -F: '{print $1}')
 		usedepobasename=$(echo $s|awk -F: '{print $2}')

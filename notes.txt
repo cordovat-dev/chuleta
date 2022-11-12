@@ -18,6 +18,7 @@ commit name or date?
 check if any DML was genereted (any changes found)
 	answer: redirect to a temp file and check whether some change was found
 manage if any repo is missing the last tag
+	answer: catch error, suggest solutions and abort
 manage if GIT_INTEGRATION but no LAST_GIT_TAG value in DB (this calls for a full update before starting using git integration)
 
 
