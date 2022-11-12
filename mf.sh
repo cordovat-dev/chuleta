@@ -116,6 +116,27 @@ function fullupdate {
 	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -w ${NUM_DAYS_OLD}
 }
 
+function initgitupdates {
+	local repos_configured=0
+	local giterr=0
+	local depodir=""
+	local tag="chu_update_$(date +%Y%m%d%H%M%S)"
+	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
+	for s in $(cat "${TEMP2}");do
+		depodir=$(echo $s|awk -F: '{print $1}')
+		echo "Not implemented"
+		# to implement: check whether folder exist and is indead a git repo
+	done
+	if [ $somechange -eq 0 ];then
+		echo "No repos configured. You must configure at least one git repo by adding a line "
+		echo "like this in config file: GIT_REPO1=path_to_repo_with_no_trailing_slash"
+		exit 1
+	fi
+	# to implement: add first tag to db settings table so the next update will be
+	# git-based starting from changes introduced in the repos after that tag
+	# note: all repos share the same tag-name to simplify configuration
+}
+
 function update() {
 	local autocomp=""
 	local tag=""
@@ -134,6 +155,7 @@ function update() {
 			echo "Running full update to initialize git-based updates"
 			fullupdate
 			echo "Tag update not implemented yet"
+			# stub is initgitupdates
 		fi
 		exit 0
 	else
