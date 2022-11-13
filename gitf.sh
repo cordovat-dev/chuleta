@@ -23,6 +23,7 @@ TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPCHANGES="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPSCRIPT="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPDIFFTREE="$(mktemp /tmp/chuleta.XXXXX)"
+SCRIPT_DIR="$(dirname $0)"
 repodir=~/chuleta/chuleta-data
 repopreffix=""
 usedepobasename=0
@@ -94,8 +95,9 @@ function markrepos {
 		repodir=$(echo $s|awk -F: '{print $1}')
 		cd "${repodir}"
 		git tag "${updatetag}"
-		[[ "${lasttag}" =~ ^chu_update_[0-9]{14} ]] && git tag -d "${lasttag}"
 		sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG','${updatetag}');"
+		# delete all tags except the current one
+		"${SCRIPT_DIR}/cgt.sh" "${repodir}" "${updatetag}"
 	done
 }
 

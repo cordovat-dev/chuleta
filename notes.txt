@@ -22,6 +22,9 @@ manage if any repo is missing the last tag
 manage if GIT_INTEGRATION but no LAST_GIT_TAG value in DB (this calls for a full update before starting using git integration)
 	answer: call a full update and inform the user, update populate LAST_GIT_TAG (pending implementation)
 create a function to delete all tags except the current one
+	answer: done
+show git related db settings in show config
+add functionality to config repos from config file (pass values to db like BASE_DIR)
 
 
 

@@ -147,6 +147,7 @@ function initgitupdates {
 		# abort if either not a folder or not a git repo
 		cd "${repodir}"
 		git tag ${tag} HEAD
+		"${SCRIPT_DIR}/cgt.sh" "${repodir}" "${tag}"
 		somechange=1
 	done
 	if [ $somechange -eq 0 ];then
