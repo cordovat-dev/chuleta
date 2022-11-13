@@ -8,6 +8,7 @@ function exit_handler {
 	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
 	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
+	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
 
 	exit $1
 }
@@ -92,6 +93,7 @@ MENUCACHE_NC="${MENUCACHE}_nc"
 SCRIPT_DIR="$(dirname $0)"
 TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
+TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
 

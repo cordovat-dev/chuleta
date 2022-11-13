@@ -21,6 +21,7 @@ manage if any repo is missing the last tag
 	answer: catch error, suggest solutions and abort
 manage if GIT_INTEGRATION but no LAST_GIT_TAG value in DB (this calls for a full update before starting using git integration)
 	answer: call a full update and inform the user, update populate LAST_GIT_TAG (pending implementation)
+create a function to delete all tags except the current one
 
 
 

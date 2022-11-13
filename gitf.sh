@@ -109,7 +109,7 @@ function getrepos {
 		readrepo "$depodir" "$depopreffix"
 	done
 	if [ $somechange -eq 0 ];then
-		echo "No changes found"
+		echo "No changes found in any of the repos"
 	fi
 }
 
@@ -140,6 +140,7 @@ if [ $somechange -eq 1 ];then
 	cat "${TEMPSCRIPT}"
 	echo "END TRANSACTION;"	
 	markrepos
+	echo "Actual uptade not implemented yet"
 fi
 exit 0
 readrepos 
