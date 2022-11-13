@@ -23,8 +23,8 @@ TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPCHANGES="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPSCRIPT="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPDIFFTREE="$(mktemp /tmp/chuleta.XXXXX)"
-depodir=~/chuleta/chuleta-data
-depopreffix=""
+repodir=~/chuleta/chuleta-data
+repopreffix=""
 usedepobasename=0
 masterbranch="master"
 lasttag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
@@ -51,7 +51,7 @@ function listchanges {
 	else
 		echo >&2
 		echo >&2 "FATAL!!!"
-		echo >&2 "Repo in folder ${depodir} doesn't contain tag ${lasttag}"
+		echo >&2 "Repo in folder ${repodir} doesn't contain tag ${lasttag}"
 		echo >&2
 		echo >&2 "Possible solutions:"
 		echo >&2 "Solution 1: tag one commit repo with ${lasttag}"
@@ -83,7 +83,7 @@ EOF
 function addpreffix {
 	local preffix="${1}"
 	if [ $usedepobasename -eq 1 ]; then
-		preffix=$(basename "${depodir}")/
+		preffix=$(basename "${repodir}")/
 	fi
 	sed -e "s#('#('${preffix}#"
 }
@@ -91,8 +91,8 @@ function addpreffix {
 function markrepos {
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
-		depodir=$(echo $s|awk -F: '{print $1}')
-		cd "${depodir}"
+		repodir=$(echo $s|awk -F: '{print $1}')
+		cd "${repodir}"
 		git tag "${updatetag}"
 		[[ "${lasttag}" =~ ^chu_update_[0-9]{14} ]] && git tag -d "${lasttag}"
 		sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG','${updatetag}');"
@@ -102,11 +102,11 @@ function markrepos {
 function getrepos {
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
-		depodir=$(echo $s|awk -F: '{print $1}')
+		repodir=$(echo $s|awk -F: '{print $1}')
 		usedepobasename=$(echo $s|awk -F: '{print $2}')
-		depopreffix=""
-		[ $usedepobasename -eq 1 ] && depopreffix=$(basename "${depodir}/")
-		readrepo "$depodir" "$depopreffix"
+		repopreffix=""
+		[ $usedepobasename -eq 1 ] && repopreffix=$(basename "${repodir}/")
+		readrepo "$repodir" "$repopreffix"
 	done
 	if [ $somechange -eq 0 ];then
 		echo "No changes found in any of the repos"
@@ -118,11 +118,11 @@ function readrepo {
 	local preffix="${2:-}"
 	cd "${directory}"
 	if [ "$(ismaster)" -eq 1  ]; then
-		echo "${masterbranch} is not the current branch in ${depodir}"
+		echo "${masterbranch} is not the current branch in ${repodir}"
 		exit 1
 	fi
 	if [ "$(iswtclean)" -eq 1  ]; then 
-		echo "Working tree in ${depodir} is not clean"
+		echo "Working tree in ${repodir} is not clean"
 		exit 1
 	fi
 	listchanges > "${TEMPCHANGES}"
