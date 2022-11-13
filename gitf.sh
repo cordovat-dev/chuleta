@@ -138,11 +138,13 @@ function readrepo {
 
 getrepos
 if [ $somechange -eq 1 ];then
+	sqlite3 "${CHULETADB}" ".mode line" "select count(*) before from chuleta;" 
 	echo "BEGIN TRANSACTION;"
 	cat "${TEMPSCRIPT}"
 	echo "END TRANSACTION;"	
 	markrepos
 	echo "Actual uptade not implemented yet"
+	sqlite3 "${CHULETADB}" ".mode line" "select count(*) after from chuleta;" 
 fi
 exit 0
 readrepos 

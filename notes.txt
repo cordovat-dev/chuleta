@@ -25,7 +25,7 @@ create a function to delete all tags except the current one
 	answer: done
 show git related db settings in show config
 add functionality to config repos from config file (pass values to db like BASE_DIR)
-
-
+print before, processing and after also during git-based updates (b,a ready, but processing needs a little work
+backup also on git-based updates
 
 
