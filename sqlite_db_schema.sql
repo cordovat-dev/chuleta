@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "chuleta" (
                 id INTEGER PRIMARY KEY NOT NULL DEFAULT ROWID,
-        "path"  TEXT NOT NULL
+        "path"  TEXT NOT NULL,
+        constraint chuleta_u unique(path)
 );
 CREATE TABLE settings(
         key text primary key not null,
