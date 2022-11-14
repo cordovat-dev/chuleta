@@ -8,8 +8,7 @@ function config {
 	set -e
 	rm "${BEFORE}"
 	source "${CONFIG_FILE}"
-	sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('BASE_DIR','${BASE_DIR:-~/chuleta/chuleta-data}');"
-	sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('NUM_DAYS_OLD',${NUM_DAYS_OLD:-8});"
+	"${SCRIPT_DIR}"/udbs.sh -c "${CONFIG_FILE}" -d "${CHULETADB}"
 }
 
 function usage {
