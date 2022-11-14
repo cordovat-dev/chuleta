@@ -141,6 +141,7 @@ if [ $somechange -eq 1 ];then
 	echo ".echo on" > "${TEMP}"
 	echo "BEGIN TRANSACTION;" >> "${TEMP}"
 	cat "${TEMPSCRIPT}" >> "${TEMP}"
+	echo "insert or replace into settings(key,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);" >> "${TEMP}"
 	echo "END TRANSACTION;" >> "${TEMP}"
 	echo ".quit" >> "${TEMP}"
 	mv "${TEMP}" "${TEMPSCRIPT}"
