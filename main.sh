@@ -157,9 +157,11 @@ elif [ "${flag}" = "--frequent" ];then
 	exit 0
 elif [ "${flag}" = "--show-config" ];then
 	echo "${CONFIG_FILE}"
-	echo
 	cat "${CONFIG_FILE}"
+	echo
+	echo "Database"
 	sqlite3 "${CHULETADB}" "select key||'='||datetime(value,'localtime') from settings where key in ('LAST_UPDATED','LAST_UPDATED_AC');"
+	sqlite3 "${CHULETADB}" "select key||'='||value from settings where key like '%GIT%';"
 	exit 0
 elif [ "${flag}" = "--random" ];then
 	"${SCRIPT_DIR}"/co.sh -w ${NO_OLD_DB_WRN} -c ${CACHE_DIR}
