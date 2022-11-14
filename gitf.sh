@@ -124,8 +124,7 @@ function readrepo {
 		exit 1
 	fi
 	if [ "$(iswtclean)" -eq 1  ]; then 
-		echo "Working tree in ${repodir} is not clean"
-		exit 1
+		echo >&2 "Working tree in ${repodir} is not clean"
 	fi
 	listchanges > "${TEMPCHANGES}"
 	if [ $(cat "${TEMPCHANGES}"|wc -l) -eq 0 ];then

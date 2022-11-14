@@ -31,6 +31,10 @@ backup also on git-based updates
 paths are duplicated when actually run
 	answer: seems adding an unique constraint solved it, also no PK violation (somehow expected)!
 write db changes to a log
+do not backup if no change was made, in order to save space (or delete backup when no change)
+not fail if working directory is not clean, perhaps just a warning
+	answer: now it's just a warning
+when should file-and-db-scoped variables be updated in the db? right now sqls.sh
 
 
 
