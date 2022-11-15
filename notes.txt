@@ -1,15 +1,4 @@
-if no repos in config file, do an old-style update
-for every repo in config file
-	cd into repo
-	if current branch is not master, then fail
-	if master branch is not clean, then fail
-	get the list of changes (only A and D) between since last save point (commit hash in config file)
-	convert the list into a script of DMLs with an explicit transaction
-	run DML script
-	
-	
-git diff-tree --name-status -r HEAD~1..HEAD	
-
+done:
 
 now we have to deal with duplicating paths in db
 	answer: delete before insert
@@ -24,17 +13,25 @@ manage if GIT_INTEGRATION but no LAST_GIT_TAG value in DB (this calls for a full
 create a function to delete all tags except the current one
 	answer: done
 show git related db settings in show config
+	answer: done
 add functionality to config repos from config file (pass values to db like BASE_DIR)
-print before, processing and after also during git-based updates (b,a ready, but processing needs a little work
+	answer: done
 backup also on git-based updates
 	answer: no change necessary
 paths are duplicated when actually run
 	answer: seems adding an unique constraint solved it, also no PK violation (somehow expected)!
-write db changes to a log
-do not backup if no change was made, in order to save space (or delete backup when no change)
 not fail if working directory is not clean, perhaps just a warning
 	answer: now it's just a warning
 when should file-and-db-scoped variables be updated in the db? right now sqls.sh
+	answer: on config and nowhere else
+catch when a repo folder doesn't exist in gitf
+	done
+
+pending:
+
+- print before, processing and after also during git-based updates (b,a ready, but processing needs a little work
+- do not backup if no change was made, in order to save space (or delete backup when no change)
+- write db changes to a log
 
 
 

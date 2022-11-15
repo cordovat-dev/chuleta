@@ -118,6 +118,10 @@ function getrepos {
 function readrepo {
 	local directory="${1}"
 	local preffix="${2:-}"
+	if [ ! -d "${directory}" ];then
+		echo "${directory} folder not found"
+		exit 1
+	fi
 	cd "${directory}"
 	if [ "$(ismaster)" -eq 1  ]; then
 		echo "${masterbranch} is not the current branch in ${repodir}"
