@@ -39,11 +39,11 @@ awk -F= -f <(cat - <<-"EOF"
 	/NUM_DAYS_OLD/ {
 		printf ("insert or replace into settings (key,value) values (\x27%s\x27,\x27%s\x27);\n",$1,$2) 
 	}
-	/BASE_DIR/ {
-		printf ("insert or replace into settings (key,value) values (\x27%s\x27,\x27%s\x27);\n",$1,$2) 
-	}
 EOF
-)	
+)
+source ${configfile}
+local bdir=$(echo ${BASE_DIR})
+echo "insert or replace into settings (key,value) values ('BASE_DIR','${bdir}');"
 echo "END TRANSACTION;"
 }
 
