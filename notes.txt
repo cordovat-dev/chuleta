@@ -26,6 +26,8 @@ when should file-and-db-scoped variables be updated in the db? right now sqls.sh
 	answer: on config and nowhere else
 catch when a repo folder doesn't exist in gitf
 	done
+if changing from normal to git-based updates, clear LAST_GIT_TAG setting to force initual full update
+       done
 
 pending:
 

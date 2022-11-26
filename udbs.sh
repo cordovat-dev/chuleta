@@ -32,6 +32,10 @@ echo "BEGIN TRANSACTION;"
 # these ones are deleted to prevent gaps in numbers
 echo "delete from settings where key like 'GIT_REPO%';"
 echo "delete from settings where key like 'PREF_GIT_REPO2%';"
+source ${configfile}
+if [ "${GIT_INTEGRATION:-NO}" != "YES" ];then
+       echo "delete from settings where key = 'LAST_GIT_TAG';"
+fi
 awk -F= -f <(cat - <<-"EOF"
 	/GIT_REPO[0-9]+/ {
 		printf ("insert or replace into settings (key,value) values (\x27%s\x27,\x27%s\x27);\n",$1,$2) 
@@ -41,7 +45,6 @@ awk -F= -f <(cat - <<-"EOF"
 	}
 EOF
 )
-source ${configfile}
 local bdir=$(echo ${BASE_DIR})
 echo "insert or replace into settings (key,value) values ('BASE_DIR','${bdir}');"
 echo "END TRANSACTION;"
