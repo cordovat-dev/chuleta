@@ -9,21 +9,22 @@ CREATE TABLE settings(
 );
 CREATE VIEW v_old_db_msg as
 select
-	'Database is '||cast(d.age as int)||' days old. Please run chu --update .' msg
+        'Database is '||cast(d.age as int)||' days old. Please run chu --update .' msg
 from
         (
-                select
-                        (julianday(CURRENT_TIMESTAMP) - julianday(value)) >=
-                        (select value from settings where key='NUM_DAYS_OLD') old,
-                        (julianday(CURRENT_TIMESTAMP) - julianday(value)) age
-                from
-                        settings
-                where
-                        key = 'LAST_UPDATED'
+			select
+				(julianday(CURRENT_TIMESTAMP) - julianday(value)) >=
+				cast((select value from settings where key='NUM_DAYS_OLD') as int) old,
+				(julianday(CURRENT_TIMESTAMP) - julianday(value)) age
+			from
+				settings
+			where
+				key = 'LAST_UPDATED'
         ) d
         join (
                 select 1 old
-        ) m on (d.old = m.old)
+        ) m on (d.old = m.old);
+
 /* v_old_db_msg(msg) */
 /* v_old_db_msg(msg) */;
 CREATE VIEW v_totals as 
