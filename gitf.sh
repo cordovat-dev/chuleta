@@ -145,7 +145,6 @@ if [ $somechange -eq 1 ];then
 	echo ".echo on" > "${TEMP}"
 	echo "BEGIN TRANSACTION;" >> "${TEMP}"
 	cat "${TEMPSCRIPT}" >> "${TEMP}"
-	echo "insert or replace into settings(key,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);" >> "${TEMP}"
 	echo "END TRANSACTION;" >> "${TEMP}"
 	echo ".quit" >> "${TEMP}"
 	mv "${TEMP}" "${TEMPSCRIPT}"
@@ -153,5 +152,6 @@ if [ $somechange -eq 1 ];then
 	markrepos
 	sqlite3 "${CHULETADB}" ".mode line" "select count(*) after from chuleta;" 
 fi
+sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);"
 exit 0
 
