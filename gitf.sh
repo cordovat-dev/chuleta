@@ -9,7 +9,6 @@ function exit_handler {
 	test -n "${TEMPCHANGES}" && test -f "${TEMPCHANGES}" && rm "${TEMPCHANGES}"	
 	test -n "${TEMPSCRIPT}" && test -f "${TEMPSCRIPT}" && rm "${TEMPSCRIPT}"	
 	test -n "${TEMPDIFFTREE}" && test -f "${TEMPDIFFTREE}" && rm "${TEMPDIFFTREE}"	
-	echo $1
 	exit $1
 }
 
