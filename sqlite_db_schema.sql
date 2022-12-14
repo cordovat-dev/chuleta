@@ -76,3 +76,9 @@ on (p.key = 'PREF_'||r.key)
 where
 	r.key like 'GIT_REPO%'
 /* v_git_repos("key",path,use_preffix) */;
+create view v_settings_report as
+select keyval from (
+	select key||'='||datetime(value,'localtime') keyval from settings where key in ('LAST_UPDATED','LAST_UPDATED_AC')
+	union
+	select key||'='||value keyval from settings where key not in ('LAST_UPDATED','LAST_UPDATED_AC')
+) order by keyval;
