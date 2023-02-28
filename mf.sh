@@ -8,8 +8,7 @@ function config {
 	set -e
 	rm "${BEFORE}"
 	source "${CONFIG_FILE}"
-	sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('BASE_DIR','${BASE_DIR:-~/chuleta/chuleta-data}');"
-	sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('NUM_DAYS_OLD',${NUM_DAYS_OLD:-8});"
+	"${SCRIPT_DIR}"/udbs.sh -c "${CONFIG_FILE}" -d "${CHULETADB}"
 }
 
 function usage {
@@ -112,8 +111,55 @@ function reporte {
 	echo
 }
 
+function fullupdate {
+	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -w ${NUM_DAYS_OLD}
+}
+
+function checkgitrepo {
+	local result=0
+	if [ ! -d "$1" ] ;then
+		echo "Folder ${1} not found."
+		exit 1
+	fi	
+	cd "${1}"
+	set +e
+	git st &>/dev/null
+	result=$?
+	set -e
+
+	if [ $result -ne 0 ];then
+		echo "Folder ${1} is not a git repository" 
+		exit 1
+	fi
+}
+
+
+function initgitupdates {
+	local repos_configured=0
+	local giterr=0
+	local repodir=""
+	local tag="chu_update_$(date +%Y%m%d%H%M%S)"
+	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
+	for s in $(cat "${TEMP2}");do
+		repodir=$(echo $s|awk -F: '{print $1}')
+		checkgitrepo "${repodir}"
+		# abort if either not a folder or not a git repo
+		cd "${repodir}"
+		git tag ${tag} HEAD
+		"${SCRIPT_DIR}/cgt.sh" "${repodir}" "${tag}"
+		somechange=1
+	done
+	if [ $somechange -eq 0 ];then
+		echo "No repos configured. You must configure at least one git repo by adding a line "
+		echo "like this in config file: GIT_REPO1=path_to_repo_with_no_trailing_slash"
+		exit 1
+	fi
+	sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG','${tag}');"
+}
+
 function update() {
 	local autocomp=""
+	local tag=""
 	set +u
 	autocomp="$1"
 	set -u
@@ -121,7 +167,20 @@ function update() {
 	echo "Updating database"
 	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
 	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
-	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -w ${NUM_DAYS_OLD}
+	if [ "${GIT_INTEGRATION}" = "YES" ];then
+		tag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
+		if [[ "${tag}" =~ ^chu_update_[0-9]{14} ]]; then
+			echo "Running git-based update"
+			"${SCRIPT_DIR}/gitf.sh"
+		else
+			echo "Running full update to initialize git-based updates"
+			fullupdate
+			echo "Tagging last update commits"
+			initgitupdates
+		fi
+	else
+		fullupdate	
+	fi
 	test -n "${MENUCACHE}" && test -f "${MENUCACHE}" && rm "${MENUCACHE}"
 	test -n "${MENUCACHE_NC}" && test -f "${MENUCACHE_NC}" && rm "${MENUCACHE_NC}"
 	if [ "${autocomp}" != "quick" ];then

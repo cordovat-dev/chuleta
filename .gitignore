@@ -11,5 +11,6 @@
 !sqlite_frequent_db_schema.sql
 !notes.txt
 !unit_tests.txt
+!git_based_todo.txt
 test.sh
 test2.sh

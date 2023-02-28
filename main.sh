@@ -8,6 +8,7 @@ function exit_handler {
 	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
 	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
+	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
 
 	exit $1
 }
@@ -81,6 +82,7 @@ MINGW=${MINGW:-YES}
 COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD=${NUM_DAYS_OLD:-8}
 PREFER_LESS=${PREFER_LESS:-YES}
+GIT_INTEGRATION=${GIT_INTEGRATION:-NO}
 # if env var NO_OLD_DB_WRN is set to 1, then age of database is ignored
 CACHE_DIR=~/.cache/chu
 FREQUENTDB="${CACHE_DIR}/frequent.db"
@@ -91,6 +93,7 @@ MENUCACHE_NC="${MENUCACHE}_nc"
 SCRIPT_DIR="$(dirname $0)"
 TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
+TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo gnome-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
 
@@ -153,10 +156,11 @@ elif [ "${flag}" = "--frequent" ];then
 	fi
 	exit 0
 elif [ "${flag}" = "--show-config" ];then
-	echo "${CONFIG_FILE}"
+	echo "-- Config file [ ${CONFIG_FILE} ] --"
+	cat "${CONFIG_FILE}"|sort 
 	echo
-	cat "${CONFIG_FILE}"
-	sqlite3 "${CHULETADB}" "select key||'='||datetime(value,'localtime') from settings where key in ('LAST_UPDATED','LAST_UPDATED_AC');"
+	echo "-- Database [ ${CHULETADB} ] --"
+	sqlite3 "${CHULETADB}" "select * from v_settings_report;"
 	exit 0
 elif [ "${flag}" = "--random" ];then
 	"${SCRIPT_DIR}"/co.sh -w ${NO_OLD_DB_WRN} -c ${CACHE_DIR}
