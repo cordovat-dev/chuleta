@@ -104,7 +104,7 @@ function getrepos {
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		repodir=$(echo $s|awk -F: '{print $1}')
-		usedepobasename=$(echo $s|awk -F: '{print $2}')
+		usedepobasename=$(echo $s|awk -F: '{printf "%d", $2}')
 		repopreffix=""
 		[ $usedepobasename -eq 1 ] && repopreffix=$(basename "${repodir}/")
 		readrepo "$repodir" "$repopreffix"

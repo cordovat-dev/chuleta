@@ -139,6 +139,7 @@ function initgitupdates {
 	local giterr=0
 	local repodir=""
 	local tag="chu_update_$(date +%Y%m%d%H%M%S)"
+	local somechange=0
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		repodir=$(echo $s|awk -F: '{print $1}')

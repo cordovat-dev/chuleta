@@ -69,7 +69,7 @@ order by
         c.id
 /* v_chuleta_ap(id,rel_path,abs_path) */;
 CREATE VIEW v_git_repos as
-select r.key, r.value path, ifnull(p.value,0) use_preffix
+select r.key, r.value path, cast(ifnull(p.value,0) as int) use_preffix
 from settings r
 left joIn (select key,value from settings where key like 'PREF_GIT_REPO%') p
 on (p.key = 'PREF_'||r.key)
