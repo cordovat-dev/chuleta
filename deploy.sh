@@ -62,4 +62,8 @@ else
 	sudo cp -f "${SCRIPT_DIR}"/chu.auto /etc/bash_completion.d/
 fi
 
+echo "Setting file permissions"
+cd ${SCRIPT_DIR}
+chmod 750 *.sh *.awk *.sed
+echo "... Please run chu --config before using the utility."
 echo "... Please run chu --update before using the utility."
