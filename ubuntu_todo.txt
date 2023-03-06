@@ -1,0 +1,16 @@
+x EDITOR variable not initialized
+x files with wrong permissions (solve this in deploy)
+x insert of commented lines in config database
+x \r inserted into the valie of database settings because config file comes from windows
+x one has to run config immediatly after deploy
+x add gawk as a required dependency
+
+
+Several fixes to run on Ubuntu after extensive development in Mingw64. See details.
+
+- File permissions
+- Fix: awk printed \r when parsing sqlite output making gitf to fail
+- Fix: unbind variable 
+- Added a cast to int in v_git_repos view just in case
+
+

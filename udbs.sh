@@ -5,6 +5,7 @@ trap exit_handler EXIT
 function exit_handler {
 	set +u
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
+	test -n "${TEMPCONFILE}" && test -f "${TEMPCONFILE}" && rm "${TEMPCONFILE}"
 	exit $1
 }
 
@@ -25,6 +26,8 @@ test -z ${configfile} && exit 1
 test -z ${dbfile} && exit 1
 
 TEMP="$(mktemp /tmp/chuleta.XXXXX)"
+TEMPCONFILE="$(mktemp /tmp/chuleta.XXXXX)"
+egrep -v "^#" "${configfile}" > "${TEMPCONFILE}"
 
 function generateDML {
 echo ".echo on"
@@ -32,11 +35,11 @@ echo "BEGIN TRANSACTION;"
 # these ones are deleted to PREVENT GAPS IN NUMBERS
 echo "delete from settings where key like 'GIT_REPO%';"
 echo "delete from settings where key like 'PREF_GIT_REPO2%';"
-source ${configfile}
+source ${TEMPCONFILE}
 if [ "${GIT_INTEGRATION:-NO}" != "YES" ];then
        echo "delete from settings where key = 'LAST_GIT_TAG';"
 else
-awk -F= -f <(cat - <<-"EOF"
+gawk -F= -f <(cat - <<-"EOF"
 	/GIT_REPO[0-9]+/ {
 		printf ("insert or replace into settings (key,value) values (\x27%s\x27,\x27%s\x27);\n",$1,$2) 
 	}
@@ -50,5 +53,5 @@ echo "insert or replace into settings (key,value) values ('NUM_DAYS_OLD','${NUM_
 echo "END TRANSACTION;"
 }
 
-cat "${configfile}" | generateDML > "${TEMP}"
+cat "${TEMPCONFILE}" | generateDML > "${TEMP}"
 sqlite3 "${dbfile}" ".read "${TEMP}
