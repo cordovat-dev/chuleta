@@ -4,13 +4,15 @@ x insert of commented lines in config database
 x \r inserted into the valie of database settings because config file comes from windows
 x one has to run config immediatly after deploy
 x add gawk as a required dependency
-
+- create a separate script to check dependencies with separated MINGW and non/MINGW sections
 
 Several fixes to run on Ubuntu after extensive development in Mingw64. See details.
 
-- File permissions
+- File permissionsx
 - Fix: awk printed \r when parsing sqlite output making gitf to fail
 - Fix: unbind variable 
 - Added a cast to int in v_git_repos view just in case
+- create a separate script to check dependencies with separated MINGW and non/MINGW sections
+
 
 

@@ -31,6 +31,26 @@ EOF
     exit 1
 fi
 
+if ! command -v tree &> /dev/null; then
+cat <<EOF
+
+tree could not be found
+Please install tree in order to install
+and use Chuleta.
+EOF
+    exit 1
+fi
+
+if ! command -v xdg-open &> /dev/null; then
+cat <<EOF
+
+xdg-open could not be found
+Please install tree in order to install
+and use Chuleta.
+EOF
+    exit 1
+fi
+
 if [ "${MINGW}" = "YES" ];then
 	set +e
 	net session > /dev/null 2>&1
