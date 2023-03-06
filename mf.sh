@@ -1,6 +1,6 @@
 function config {
 	if [ -z ${EDITOR+x} ]; then
-			echo EDITOR environment variable must be sqlite3
+			echo EDITOR environment variable must be set
 			exit 1
 	fi
 	BEFORE="${CONFIG_FILE}.$(date +%Y%m%d%H%M%S)"
