@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(dirname "$0")
+ALIAS_PATH=$(readlink -e ${SCRIPT_DIR})
 MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
 BACKUPNAME=""
 CACHE_DIR=~/.cache/chu
@@ -72,8 +73,28 @@ else
 	sudo cp -f "${SCRIPT_DIR}"/chu.auto /etc/bash_completion.d/
 fi
 
-echo "Setting file permissions"
+echo
+echo "Setting file permissions..."
+echo "Done"
+echo
 cd ${SCRIPT_DIR}
 chmod 750 *.sh *.awk *.sed
-echo "... Please run chu --config before using the utility."
-echo "... Please run chu --update before using the utility."
+
+cat <<EOF
+Please do this steps before using the utility"
+
+1. Add this alias to .bashrc
+
+alias chu='${ALIAS_PATH}/main.sh'
+source .bashrc
+
+2. Edit the config file adding at least the path 
+to the chuletas folder to BASE_DIR
+
+chu --config
+
+3. Populate the database
+
+chu --update
+
+EOF
