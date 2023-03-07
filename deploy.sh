@@ -95,10 +95,10 @@ fi
 
 echo
 echo "Setting file permissions..."
-echo "Done"
-echo
 cd ${SCRIPT_DIR}
 chmod 750 *.sh *.awk *.sed
+echo "Done"
+echo
 
 cat <<EOF
 Please do this steps before using the utility"
