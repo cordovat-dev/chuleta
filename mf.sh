@@ -127,7 +127,7 @@ function checkgitrepo {
 	fi	
 	cd "${1}"
 	set +e
-	git st &>/dev/null
+	git status &>/dev/null
 	result=$?
 	set -e
 
