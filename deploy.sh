@@ -5,8 +5,14 @@ SCRIPT_DIR=$(dirname "$0")
 ALIAS_PATH=$(readlink -e ${SCRIPT_DIR})
 MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
 BACKUPNAME=""
-CACHE_DIR=~/.cache/chu
-RUTA_CONF=~/.config/chu
+source "${SCRIPT_DIR}/chu.conf"
+CACHE_DIR="${INSTAL_DIR}/.cache/chu"
+#CACHE_DIR=~/.cache/chu
+RUTA_CONF=${INSTAL_DIR}/.config/chu
+echo "CACHE_DIR: $CACHE_DIR"
+echo "RUTA_CONF: $RUTA_CONF"
+exit 0
+#RUTA_CONF=~/.config/chu
 CONFIG_FILE="${RUTA_CONF}"/chu.conf
 CHULETADB="${CACHE_DIR}"/chuletas.db
 FREQUENTDB="${CACHE_DIR}"/frequent.db
@@ -60,7 +66,7 @@ if [ "${MINGW}" = "YES" ];then
 	fi
 	set -e
 fi
-
+# todo create INSTAL_DIR with sudo but only of install dir is different of ~
 if [ ! -d "${CACHE_DIR}" ];then
 	mkdir "${CACHE_DIR}"
 fi
