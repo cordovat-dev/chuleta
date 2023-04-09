@@ -142,7 +142,7 @@ function initgitupdates {
 	local repos_configured=0
 	local giterr=0
 	local repodir=""
-	local tag="chu_update_$(date +%Y%m%d%H%M%S)"
+	local tag="chu_${USER}_update_$(date +%Y%m%d%H%M%S)"
 	local somechange=0
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
@@ -174,7 +174,7 @@ function update() {
 	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
 	if [ "${GIT_INTEGRATION}" = "YES" ];then
 		tag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
-		if [[ "${tag}" =~ ^chu_update_[0-9]{14} ]]; then
+		if [[ "${tag}" =~ ^chu_${USER}_update_[0-9]{14} ]]; then
 			echo "Running git-based update"
 			"${SCRIPT_DIR}/gitf.sh"
 		else

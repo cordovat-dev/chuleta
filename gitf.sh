@@ -28,7 +28,7 @@ repopreffix=""
 usedepobasename=0
 masterbranch="master"
 lasttag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
-updatetag="chu_update_$(date +%Y%m%d%H%M%S)"
+updatetag="chu_${USER}_update_$(date +%Y%m%d%H%M%S)"
 
 function ismaster {
 	if [ "$(git symbolic-ref HEAD)" = "refs/heads/${masterbranch}" ]; then 
