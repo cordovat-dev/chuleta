@@ -65,26 +65,26 @@ git rev-parse --verify ${new_branch}
 
 print_step "Test complete chuletas report"
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 chu > a.txt
-git co ${new_branch}
+git checkout ${new_branch}
 chu > b.txt
 diff a.txt b.txt
 
 print_step "Test complete show config"
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 chu --show-config > a.txt
-git co ${new_branch}
+git checkout ${new_branch}
 chu --show-config > b.txt
 diff a.txt b.txt
 
 print_step "Test frequent"
 
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 chu --frequent > a.txt
-git co ${new_branch}
+git checkout ${new_branch}
 chu --frequent > b.txt
 set +e
 diff a.txt b.txt
@@ -95,12 +95,12 @@ print_step "Test deploy"
 cd ${base_data_dir}
 mv chu chu.back.test
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 prompt_for_action "Run deploy as admin and then answer"
 cd ${base_data_dir}
 mv chu chu.back.1
 cd ${program_dir}
-git co ${new_branch}
+git checkout ${new_branch}
 prompt_for_action "Run deploy as admin and then answer"
 cd ${base_data_dir}
 mv chu chu.back.2
@@ -110,12 +110,12 @@ print_step "Test update (must be run after test deploy)"
 rm -rf chu
 mv chu.back.1 chu
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 chu --update
 cd ${base_data_dir} 
 mv chu chu.back.1.1
 cd ${program_dir}
-git co ${new_branch}
+git checkout ${new_branch}
 cd ${base_data_dir}
 mv chu.back.2 chu
 chu --update
@@ -128,25 +128,25 @@ mv chu.back.1.1 chu
 
 print_step "Test frequent on an empty history"
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 chu --frequent > a.txt
-git co ${new_branch}
+git checkout ${new_branch}
 chu --frequent > b.txt
 diff a.txt b.txt
 
 print_step "Test menu choosing"
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 printf "%s\n" 1| chu git merge branch > a.txt
-git co ${new_branch}
+git checkout ${new_branch}
 printf "%s\n" 1| chu git merge branch > b.txt
 diff a.txt b.txt
 
 print_step "Test stats"
 cd ${program_dir}
-git co ${stable_branch}
+git checkout ${stable_branch}
 chu --stats > a.txt
-git co ${new_branch}
+git checkout ${new_branch}
 chu --stats > b.txt
 diff a.txt b.txt
 

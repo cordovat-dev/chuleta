@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(dirname "$0")
+ALIAS_PATH=$(readlink -e ${SCRIPT_DIR})
 MINGW=$([[ "$(uname -a)" =~ ^MINGW ]] && echo YES || echo NO)
 BACKUPNAME=""
 CACHE_DIR=~/.cache/chu
@@ -15,6 +16,16 @@ cat <<EOF
 
 Sqlite3 could not be found
 Please install sqlite3 in order to install
+and use Chuleta.
+EOF
+    exit 1
+fi
+
+if ! command -v gawk &> /dev/null; then
+cat <<EOF
+
+gawk could not be found
+Please install gawk in order to install
 and use Chuleta.
 EOF
     exit 1
@@ -62,4 +73,28 @@ else
 	sudo cp -f "${SCRIPT_DIR}"/chu.auto /etc/bash_completion.d/
 fi
 
-echo "... Please run chu --update before using the utility."
+echo
+echo "Setting file permissions..."
+cd ${SCRIPT_DIR}
+chmod 750 *.sh *.awk *.sed
+echo "Done"
+echo
+
+cat <<EOF
+Please do this steps before using the utility"
+
+1. Add this alias to .bashrc
+
+alias chu='${ALIAS_PATH}/main.sh'
+source .bashrc
+
+2. Edit the config file adding at least the path 
+to the chuletas folder to BASE_DIR
+
+chu --config
+
+3. Populate the database
+
+chu --update
+
+EOF

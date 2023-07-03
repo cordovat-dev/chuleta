@@ -94,7 +94,7 @@ SCRIPT_DIR="$(dirname $0)"
 TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
-OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo gnome-open)
+OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then

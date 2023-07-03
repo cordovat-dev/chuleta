@@ -1,4 +1,8 @@
 function config {
+	if [ -z ${EDITOR+x} ]; then
+			echo EDITOR environment variable must be set
+			exit 1
+	fi
 	BEFORE="${CONFIG_FILE}.$(date +%Y%m%d%H%M%S)"
 	cp "${CONFIG_FILE}" "${BEFORE}"
 	echo "Editing ${CONFIG_FILE}..."
@@ -123,7 +127,7 @@ function checkgitrepo {
 	fi	
 	cd "${1}"
 	set +e
-	git st &>/dev/null
+	git status &>/dev/null
 	result=$?
 	set -e
 
