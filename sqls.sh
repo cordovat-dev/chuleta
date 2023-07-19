@@ -48,6 +48,7 @@ echo ".mode line" >> ${SCRIPTTEMP}
 echo "select count(*) processing from tempimp;" >> ${SCRIPTTEMP}
 echo "insert into chuleta select null,path from tempimp;" >> ${SCRIPTTEMP}
 echo "select count(*) after from chuleta;" >> ${SCRIPTTEMP}
+echo "insert or replace into last_opened values (1,(select path from chuleta where id = 1));" >> ${SCRIPTTEMP}
 echo ".quit" >> ${SCRIPTTEMP}
 
 sqlite3 ${DB} ".read "${SCRIPTTEMP}
