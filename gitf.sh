@@ -152,5 +152,6 @@ if [ $somechange -eq 1 ];then
 	sqlite3 "${CHULETADB}" ".mode line" "select count(*) after from chuleta;" 
 fi
 sqlite3 "${CHULETADB}" "insert or replace into settings(key,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);"
+sqlite3 "${CHULETADB}" "insert or replace into last_opened values (1,(select path from chuleta where id = 1));"
 exit 0
 
