@@ -7,6 +7,12 @@ CREATE TABLE settings(
         key text primary key not null,
         value text
 );
+CREATE TABLE IF NOT EXISTS "last_opened" (
+                id INTEGER PRIMARY KEY NOT NULL DEFAULT ROWID,
+        "path"  TEXT NOT NULL,
+        constraint last_opened_c check(id =1)
+);
+
 CREATE VIEW v_old_db_msg as
 select
         'Database is '||cast(d.age as int)||' days old. Please run chu --update .' msg

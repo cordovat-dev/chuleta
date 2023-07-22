@@ -1,6 +1,12 @@
 #!/bin/bash
 
 set -euo pipefail
+
+if [ $# -eq 0 ]; then
+	echo -n "select path from last_opened where id = 1 and path is not null;"
+	exit 0
+fi
+
 COUNT=0
 echo -n "select path from chuleta"
 for ARG in $*; do
