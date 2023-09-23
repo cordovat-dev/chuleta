@@ -45,7 +45,17 @@ if ! command -v xdg-open &> /dev/null; then
 cat <<EOF
 
 xdg-open could not be found
-Please install tree in order to install
+Please install xdg-open in order to install
+and use Chuleta.
+EOF
+    exit 1
+fi
+
+if ! command -v xclip &> /dev/null; then
+cat <<EOF
+
+xclip could not be found
+Please install xclip in order to install
 and use Chuleta.
 EOF
     exit 1
