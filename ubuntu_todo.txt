@@ -14,6 +14,6 @@ Several fixes to run on Ubuntu after extensive development in Mingw64. See detai
 - Added a cast to int in v_git_repos view just in case
 - create a separate script to check dependencies with separated MINGW and non/MINGW sections
 - deploy to /var/lib, including scripts, chuletas, cache and config
-- add an option to clear LAST_GIT_TAG
+x add an option to clear LAST_GIT_TAG
 x test clipboard option
 

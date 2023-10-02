@@ -1,8 +1,8 @@
 #!/bin/bash
 
-trap exit_handler EXIT
+trap exit_handler_main EXIT
 
-function exit_handler {
+function exit_handler_main {
 	set +u
 	test -n "${TEMPORARY2}" && test -f "${TEMPORARY2}" && rm "${TEMPORARY2}"
 	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
@@ -99,6 +99,7 @@ TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
+declare -r NULLGITTAG="chu_update_99999999999999"
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	flag="--cached"
