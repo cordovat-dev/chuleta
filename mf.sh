@@ -72,7 +72,11 @@ function abrir {
 			cat "${CHULETA}" > /dev/clipboard
 			echo
 			echo "...copied to clipboard"
-		fi
+		elif [ ${COPYTOCLIP} -eq 1 ];then
+			cat "${CHULETA}" | xclip -selection c
+			echo
+			echo "...copied to clipboard"
+		fi		
 	fi
 	if [ "${RNDCHU}" != "--random" ]; then
 		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"
