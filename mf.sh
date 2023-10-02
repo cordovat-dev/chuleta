@@ -202,3 +202,7 @@ function update() {
 	echo Done.
 	exit 0
 }
+
+function clear-git-tags(){
+	echo "Clearing git tags"
+}

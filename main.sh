@@ -16,7 +16,7 @@ function exit_handler {
 set -euo pipefail
 
 set +e
-parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached -- "$@" 2> /dev/null )
+parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached,clear-git-tags -- "$@" 2> /dev/null )
 
 if [ $? -eq 0 ];then
 	eval set -- $parmtemp
@@ -62,6 +62,9 @@ while true; do
     -u|--update)
 		flag="--update"
         ;;
+    --clear-git-tags)
+		flag="--clear-git-tags"
+		;;
     --)
         shift
         break
@@ -169,10 +172,12 @@ elif [ "${flag}" = "--random" ];then
 	${COMMAND} "${CHULETA}" "--random"
 elif [ "${flag}" = "--config" ];then
 	config "${CONFIG_FILE}"
+elif [[ "${flag}" = "--clear-git-tags" ]];then
+	clear-git-tags
 elif [ "${flag}" = "--help" ];then
 	usage
 elif [[ "${flag}" =~ -- ]]; then
-	usage
+	usage	
 else
 	"${SCRIPT_DIR}"/co.sh -w ${NO_OLD_DB_WRN} -c "${CACHE_DIR}"
 	sqlite3 ${CHULETADB} "$(${SCRIPT_DIR}/gs.sh ${WORD_LIST})" > ${TEMPORARY}
