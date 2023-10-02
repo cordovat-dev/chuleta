@@ -19,7 +19,7 @@ function usage {
 cat <<EOF
 	Usage:
 	chu [search_terms]
-	chu search_terms -e|--editar
+	chu search_terms -e|--edit
 	chu search_terms -c|--clipboard
 	chu --cached
 	chu [--cached] n [-c|--clipboard]
