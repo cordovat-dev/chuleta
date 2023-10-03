@@ -33,6 +33,7 @@ cat <<EOF
 	chu -s|--show-config
 	chu -C|--config
 	chu -h|--help
+	chu --clear-git-tags
 EOF
 }
 
@@ -149,13 +150,22 @@ function initgitupdates {
 	local repodir=""
 	local tag="chu_update_$(date +%Y%m%d%H%M%S)"
 	local somechange=0
+
+	set +u
+	if [ -n "$1" ];then
+		tag="$1"
+	fi
+	set -u
+
 	sqlite3 "${CHULETADB}" ".mode csv" ".separator ':'" "select path,use_preffix from v_git_repos;" > "${TEMP2}"
 	for s in $(cat "${TEMP2}");do
 		repodir=$(echo $s|awk -F: '{print $1}')
 		checkgitrepo "${repodir}"
 		# abort if either not a folder or not a git repo
 		cd "${repodir}"
-		git tag ${tag} HEAD
+		if [ "$tag" != "$NULLGITTAG" ]; then
+			git tag ${tag} HEAD
+		fi
 		"${SCRIPT_DIR}/cgt.sh" "${repodir}" "${tag}"
 		somechange=1
 	done
@@ -164,7 +174,11 @@ function initgitupdates {
 		echo "like this in config file: GIT_REPO1=path_to_repo_with_no_trailing_slash"
 		exit 1
 	fi
-	sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG','${tag}');"
+	if [ "$tag" != "$NULLGITTAG" ]; then
+		sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG','${tag}');"
+	else
+		sqlite3 "${CHULETADB}" "insert or replace into settings values ('LAST_GIT_TAG',NULL);"
+	fi
 }
 
 function update() {
@@ -201,4 +215,9 @@ function update() {
 	fi
 	echo Done.
 	exit 0
+}
+
+function clear-git-tags() {
+	echo "Clearing git tags"
+	initgitupdates "$NULLGITTAG" 
 }

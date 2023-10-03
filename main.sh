@@ -1,8 +1,8 @@
 #!/bin/bash
 
-trap exit_handler EXIT
+trap exit_handler_main EXIT
 
-function exit_handler {
+function exit_handler_main {
 	set +u
 	test -n "${TEMPORARY2}" && test -f "${TEMPORARY2}" && rm "${TEMPORARY2}"
 	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
@@ -16,7 +16,7 @@ function exit_handler {
 set -euo pipefail
 
 set +e
-parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached -- "$@" 2> /dev/null )
+parmtemp=$(getopt -o crChsequ --long update,stats,topics,terms,frequent,show-config,random,quick-update,config,help,edit,clipboard,cached,clear-git-tags -- "$@" 2> /dev/null )
 
 if [ $? -eq 0 ];then
 	eval set -- $parmtemp
@@ -62,6 +62,9 @@ while true; do
     -u|--update)
 		flag="--update"
         ;;
+    --clear-git-tags)
+		flag="--clear-git-tags"
+		;;
     --)
         shift
         break
@@ -96,6 +99,7 @@ TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
+declare -r NULLGITTAG="chu_update_99999999999999"
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
 	flag="--cached"
@@ -169,10 +173,12 @@ elif [ "${flag}" = "--random" ];then
 	${COMMAND} "${CHULETA}" "--random"
 elif [ "${flag}" = "--config" ];then
 	config "${CONFIG_FILE}"
+elif [[ "${flag}" = "--clear-git-tags" ]];then
+	clear-git-tags
 elif [ "${flag}" = "--help" ];then
 	usage
 elif [[ "${flag}" =~ -- ]]; then
-	usage
+	usage	
 else
 	"${SCRIPT_DIR}"/co.sh -w ${NO_OLD_DB_WRN} -c "${CACHE_DIR}"
 	sqlite3 ${CHULETADB} "$(${SCRIPT_DIR}/gs.sh ${WORD_LIST})" > ${TEMPORARY}
