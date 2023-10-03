@@ -10,16 +10,20 @@ _chu()
 		COMPREPLY=
 		return 0
 	fi
-	unitary_parms="-u --update --stats --topics --terms --frequent -s --show-config -r --random -q --quick-update -C --config -h --help --cached"
+	unitary_parms="-u --update --stats --topics --terms --frequent -s --show-config -r --random -q --quick-update -C --config -h --help --cached --clear-git-tags"
 
+	# if previous parameter is a topic then add valid options from 
+	# the list of subtopics of that topic to completion reply
 	if [ -n "$(grep -w -- "${prev}" $TOPICSFILE)" ]; then
 		op1="$(cat ~/.cache/chu/lista_$prev)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
+		# if previous parameter is an unitary parm then do don't reply
 	elif [ -n "$(grep -w -- "${prev}" <(printf "%s\n" "$unitary_parms"))"  ]; then
 		COMPREPLY=
 		return 0
 	else
+		# if previous parameter is a non-unitary parameter
 		op1="$unitary_parms -e --edit -c --clipboard $(cat $ACLISTFILE)"
 		COMPREPLY=( $(compgen -W "${op1}" -- ${cur}) )
 		return 0
