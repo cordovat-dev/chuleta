@@ -1,16 +1,13 @@
-x add last updated autocompletion to the db
-- validate unitary flags are not acompanied by extra stuff
-x change --show_config to --show-config
 - man page
 - when opening in editor due to exceeding MAX_CAT_LENGTH, open a copy instead of original
-x give more info during update cache
-x disable clipboard copy if not mingw64/Cygwin until able to test on native Linux
-x manage what happens if both --clipboard and --cached (implicit or explicit) is used
-x change bash-specific == operator to =
-x allow --edit to appear in any position along the search terms, not only at the end
-x run compression of backups only after N days, so several files are actually packed into a single tar file
-x delete old nohup files in tmp
-x add short flags
 - option to print usage instead of all chuletas when no search term passed
 - fix issue with clipboard option and less
 - create a module to validate settings data types
+- create a separate script to check dependencies with separated MINGW and non/MINGW sections
+- deploy to /var/lib, including scripts, chuletas, cache and config
+
+pending?
+- print before, processing and after also during git-based updates (b,a ready, but processing needs a little work
+- do not backup if no change was made, in order to save space (or delete backup when no change)
+- write db changes to a log
+- validate unitary flags are not acompanied by extra stuff
