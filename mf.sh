@@ -64,7 +64,8 @@ function abrir {
 			less "${CHULETA}"
 		else
 			echo "  opening in editor or viewer..."
-			${OPEN_COMMAND} "${CHULETA}"
+			cp "${CHULETA}" "${TEMPDIR}/${CHULETA}"
+			${OPEN_COMMAND} "${TEMPDIR}/${CHULETA}"
 		fi
 	else
 		echo

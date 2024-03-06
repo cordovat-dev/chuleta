@@ -4,6 +4,7 @@ trap exit_handler_main EXIT
 
 function exit_handler_main {
 	set +u
+	test -n "${TEMPDIR}" && test -d "${TEMPDIR}" && rm -rf "${TEMPDIR}"
 	test -n "${TEMPORARY2}" && test -f "${TEMPORARY2}" && rm "${TEMPORARY2}"
 	test -n "${TEMPORARY}" && test -f "${TEMPORARY}" && rm "${TEMPORARY}"
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
@@ -96,6 +97,7 @@ MENUCACHE_NC="${MENUCACHE}_nc"
 SCRIPT_DIR="$(dirname $0)"
 TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
+TEMPDIR="$(mktemp -d /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
