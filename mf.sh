@@ -1,3 +1,17 @@
+function create_temp_dir {
+	# search temp dir in the DB
+	# if it exists in DB
+	# 	if it exists on disk
+	# 		assign the variable
+	# if it does not exist in DB
+	# 	create the folder
+	# 	register it in the DB
+	# 	report the variable
+	#
+	# In the final cleaning that is done when updating
+	# delete old temporary folders
+}
+
 function config {
 	if [ -z ${EDITOR+x} ]; then
 			echo EDITOR environment variable must be set
@@ -63,9 +77,16 @@ function abrir {
 		if [ ${PREFER_LESS} = "YES" ];then
 			less "${CHULETA}"
 		else
+			set -x
 			echo "  opening in editor or viewer..."
-			cp "${CHULETA}" "${TEMPDIR}/${CHULETA}"
-			${OPEN_COMMAND} "${TEMPDIR}/${CHULETA}"
+			cp "${CHULETA}" "${TEMPDIR}/$(basename ${CHULETA})"
+			${OPEN_COMMAND} "${TEMPDIR}/$(basename ${CHULETA})"
+
+			ls -l "${CHULETA}"
+			wc -l "${CHULETA}"
+			ls -l "${TEMPDIR}"
+			wc -l "${TEMPDIR}/$(basename ${CHULETA})"
+			set +x
 		fi
 	else
 		echo
