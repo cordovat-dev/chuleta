@@ -122,7 +122,7 @@ function reporte {
 }
 
 function fullupdate {
-	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -w ${NUM_DAYS_OLD}
+	${SCRIPT_DIR}/sqls.sh -b "${BASE_DIR}" -d "${CHULETADB}" -t "${FTSDB}" -w ${NUM_DAYS_OLD}
 }
 
 function checkgitrepo {
