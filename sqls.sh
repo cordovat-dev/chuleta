@@ -33,6 +33,7 @@ test -z ${NUM_DAYS_OLD} && exit 1
 
 DATATEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)
 SCRIPTTEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)
+SCRIPT_DIR=$(dirname $0)
 
 
 find ${BASE_DIR} -regextype sed \
@@ -43,6 +44,8 @@ echo "select 'Updating settings';" >> ${SCRIPTTEMP}
 echo -n "attach '" >> ${SCRIPTTEMP}
 echo -n ${FTSDB} >> ${SCRIPTTEMP}
 echo "' as ftsdb;" >> ${SCRIPTTEMP}
+echo "delete from ftsdb.chuleta_fts;" >> ${SCRIPTTEMP}
+cat "${SCRIPT_DIR}/chuleta_ins.trg" >> ${SCRIPTTEMP}
 echo "insert or replace into settings(key,value) values ('LAST_UPDATED',CURRENT_TIMESTAMP);" >> ${SCRIPTTEMP}
 echo "drop table if exists tempimp;" >> ${SCRIPTTEMP}
 echo "create temp table tempimp(path TEXT);" >> ${SCRIPTTEMP}
