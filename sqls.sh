@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 trap exit_handler EXIT
 
@@ -7,7 +7,6 @@ function exit_handler {
 	test -n "${DATATEMP}" && test -f "${DATATEMP}" && rm "${DATATEMP}"
 	test -n "${SCRIPTTEMP}" && test -f "${SCRIPTTEMP}" && rm "${SCRIPTTEMP}"
 	echo "ha fallado"
-	exit $1
 }
 
 set -euo pipefail
@@ -40,6 +39,7 @@ find ${BASE_DIR} -regextype sed \
 -regex "^.*[.a-z0-9/_-]*chuleta_[.a-z0-9/_-]*\.txt$"|\
 sed "s|${BASE_DIR}/||g" > ${DATATEMP}
 
+echo ".echo on" >> ${SCRIPTTEMP}
 echo "select 'Updating settings';" >> ${SCRIPTTEMP}
 echo -n "attach '" >> ${SCRIPTTEMP}
 echo -n ${FTSDB} >> ${SCRIPTTEMP}
@@ -60,7 +60,5 @@ echo "insert into chuleta select null,path from tempimp;" >> ${SCRIPTTEMP}
 echo "select count(*) after from chuleta;" >> ${SCRIPTTEMP}
 echo "insert or replace into last_opened values (1,(select path from chuleta where id = 1));" >> ${SCRIPTTEMP}
 echo ".quit" >> ${SCRIPTTEMP}
-
-cat ${SCRIPTTEMP}
 
 sqlite3 ${DB} ".read "${SCRIPTTEMP}
