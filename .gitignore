@@ -11,6 +11,7 @@
 !sqlite_frequent_db_schema.sql
 !chuletas_fts_db_schema.sql
 !chuleta_ins.trg
+!fts_todo.txt
 !notes.txt
 !unit_tests.txt
 !git_based_todo.txt

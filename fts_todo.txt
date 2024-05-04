@@ -1,0 +1,7 @@
+x Add content column to fts database
+x insert content of file into fts table
+x search using fts
+- manage empty search in fts (must show last opened)
+- make fts optional
+	- parametrized it
+	- make normal search default

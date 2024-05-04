@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -euo pipefail
 
@@ -9,15 +9,13 @@ set -euo pipefail
 
 COUNT=0
 echo -n "attach '/home/cordovat/.cache/chu/chuletas_fts.db' as ftsdb;"
-echo -n "select path from chuleta_fts"
+echo -n "select path from chuleta_fts where chuleta_fts match '"
 for ARG in $*; do
 	COUNT=$(( ${COUNT} + 1 ))
-	if [ ${COUNT} -eq 1 ];then
-		echo -n " where chuleta_fts "
-	fi
-	echo -n "match '${ARG}'"
+	echo -n "${ARG}"
 	if [ ${COUNT} -lt $# ]; then
 		echo -n " "
 	fi
 done
+echo -n "'"
 echo -n " order by id;"
