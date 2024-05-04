@@ -184,7 +184,7 @@ elif [[ "${flag}" =~ -- ]]; then
 	usage	
 else
 	"${SCRIPT_DIR}"/co.sh -w ${NO_OLD_DB_WRN} -c "${CACHE_DIR}"
-	sqlite3 ${CHULETADB} "$(${SCRIPT_DIR}/gs.sh ${WORD_LIST})" > ${TEMPORARY}
+	sqlite3 ${FTSDB} "$(${SCRIPT_DIR}/gs.sh ${WORD_LIST})" > ${TEMPORARY}
 fi
 
 RESULT_COUNT=$(cat "${TEMPORARY}" | wc -l)
