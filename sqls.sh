@@ -6,7 +6,6 @@ function exit_handler {
 	set +u
 	test -n "${DATATEMP}" && test -f "${DATATEMP}" && rm "${DATATEMP}"
 	test -n "${SCRIPTTEMP}" && test -f "${SCRIPTTEMP}" && rm "${SCRIPTTEMP}"
-	echo "ha fallado"
 }
 
 set -euo pipefail
