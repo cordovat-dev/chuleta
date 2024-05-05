@@ -1,11 +1,11 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
 
-#if [ $# -eq 0 ]; then
-#	echo -n "select path from last_opened where id = 1 and path is not null;"
-#	exit 0
-#fi
+if [ $# -eq 0 ]; then
+	echo -n "select path from last_opened where id = 1 and path is not null;"
+	exit 0
+fi
 
 COUNT=0
 echo -n "attach '/home/cordovat/.cache/chu/chuletas_fts.db' as ftsdb;"
