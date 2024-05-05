@@ -3,9 +3,9 @@ x insert content of file into fts table
 x search using fts
 x manage empty search in fts (must show last opened)
 x correct hard text when attaching fts db in gs
-- insert in fts db on git based update
-	- attach fts database
-	- declare temporary trigger
+x insert in fts db on git based update
+	x attach fts database
+	x declare temporary trigger
 - make fts optional
 	- parametrized it
 	- make normal search default
