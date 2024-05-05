@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 trap exit_handler EXIT
 
@@ -38,7 +38,7 @@ find ${BASE_DIR} -regextype sed \
 -regex "^.*[.a-z0-9/_-]*chuleta_[.a-z0-9/_-]*\.txt$"|\
 sed "s|${BASE_DIR}/||g" > ${DATATEMP}
 
-echo ".echo on" >> ${SCRIPTTEMP}
+#echo ".echo on" >> ${SCRIPTTEMP}
 echo "select 'Updating settings';" >> ${SCRIPTTEMP}
 echo -n "attach '" >> ${SCRIPTTEMP}
 echo -n ${FTSDB} >> ${SCRIPTTEMP}

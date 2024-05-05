@@ -6,6 +6,8 @@ x correct hard text when attaching fts db in gs
 x insert in fts db on git based update
 	x attach fts database
 	x declare temporary trigger
+x backup fts database
+- delete trigger
 - make fts optional
 	- parametrized it
 	- make normal search default

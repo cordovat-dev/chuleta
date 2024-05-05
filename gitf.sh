@@ -142,11 +142,11 @@ function readrepo {
 getrepos
 if [ $somechange -eq 1 ];then
 	sqlite3 "${CHULETADB}" ".mode line" "select count(*) before from chuleta;" 
-	echo ".echo on" >> "${TEMP}"
-	echo -n "attach '" >> "${TEMP}"
+	echo -n "attach '" > "${TEMP}"
 	echo -n ${FTSDB} >> "${TEMP}"
 	echo "' as ftsdb;" >> "${TEMP}"
 	cat "${SCRIPT_DIR}/chuleta_ins.trg" >> ${TEMP}	
+	echo ".echo on" >> "${TEMP}"
 	echo "BEGIN TRANSACTION;" >> "${TEMP}"
 	cat "${TEMPSCRIPT}" >> "${TEMP}"
 	echo "END TRANSACTION;" >> "${TEMP}"
