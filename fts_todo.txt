@@ -7,7 +7,7 @@ x insert in fts db on git based update
 	x attach fts database
 	x declare temporary trigger
 x backup fts database
-- delete trigger
+x delete trigger
 - make fts optional
 	- parametrized it
 	- make normal search default

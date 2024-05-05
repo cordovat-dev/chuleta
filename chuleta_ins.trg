@@ -10,3 +10,9 @@ begin
             new.path)
         );
 end;
+
+create temporary trigger chuleta_del after delete on chuleta 
+begin
+    delete from chuleta_fts where id = OLD.id;
+end;
+
