@@ -191,6 +191,7 @@ function update() {
 	echo "Updating database"
 	cp "${CHULETADB}" "${CHULETADB}.$(date +%Y%m%d%H%M%S)"
 	cp "${FREQUENTDB}" "${FREQUENTDB}.$(date +%Y%m%d%H%M%S)"
+	cp "${FTSDB}" "${FTSDB}.$(date +%Y%m%d%H%M%S)"
 	if [ "${GIT_INTEGRATION}" = "YES" ];then
 		tag=$(sqlite3 "${CHULETADB}" "select value from settings where key = 'LAST_GIT_TAG';")
 		if [[ "${tag}" =~ ^chu_update_[0-9]{14} ]]; then
