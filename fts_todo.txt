@@ -8,6 +8,7 @@ x insert in fts db on git based update
 	x declare temporary trigger
 x backup fts database
 x delete trigger
+x update fts table when updated file in git
 - make fts optional
 	- parametrized it
 	- make normal search default

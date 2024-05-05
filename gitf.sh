@@ -47,7 +47,8 @@ function listchanges {
 	set -e
 	if [ $result -eq 0 ];then
 		set +e
-		egrep -v "^M" "${TEMPDIFFTREE}"
+		#egrep -v "^M" "${TEMPDIFFTREE}"
+		cat "${TEMPDIFFTREE}"
 		set -e
 	else
 		echo >&2
@@ -77,6 +78,10 @@ awk -f <(cat - <<-"EOF"
 		printf ("insert or replace into chuleta (path) values (\x27%s\x27);\n",$2) 
 	}
 	$1 == "D" {printf ("delete from chuleta where path = \x27%s\x27;\n",$2) }
+	$1 == "M" {
+		printf ("delete from chuleta where path = \x27%s\x27;\n",$2) 	
+		printf ("insert or replace into chuleta (path) values (\x27%s\x27);\n",$2) 
+	}
 EOF
 )
 }
