@@ -1,0 +1,14 @@
+x Add content column to fts database
+x insert content of file into fts table
+x search using fts
+x manage empty search in fts (must show last opened)
+x correct hard text when attaching fts db in gs
+x insert in fts db on git based update
+	x attach fts database
+	x declare temporary trigger
+x backup fts database
+x delete trigger
+x update fts table when updated file in git
+- make fts optional
+	- parametrized it
+	- make normal search default

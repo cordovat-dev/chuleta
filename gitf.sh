@@ -16,6 +16,7 @@ set -euo pipefail
 
 CACHE_DIR=~/.cache/chu
 CHULETADB="${CACHE_DIR}/chuletas.db"
+FTSDB="${CACHE_DIR}/chuletas_fts.db"
 somechange=0
 TEMP="$(mktemp /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
@@ -46,7 +47,8 @@ function listchanges {
 	set -e
 	if [ $result -eq 0 ];then
 		set +e
-		egrep -v "^M" "${TEMPDIFFTREE}"
+		#egrep -v "^M" "${TEMPDIFFTREE}"
+		cat "${TEMPDIFFTREE}"
 		set -e
 	else
 		echo >&2
@@ -76,6 +78,10 @@ awk -f <(cat - <<-"EOF"
 		printf ("insert or replace into chuleta (path) values (\x27%s\x27);\n",$2) 
 	}
 	$1 == "D" {printf ("delete from chuleta where path = \x27%s\x27;\n",$2) }
+	$1 == "M" {
+		printf ("delete from chuleta where path = \x27%s\x27;\n",$2) 	
+		printf ("insert or replace into chuleta (path) values (\x27%s\x27);\n",$2) 
+	}
 EOF
 )
 }
@@ -141,7 +147,11 @@ function readrepo {
 getrepos
 if [ $somechange -eq 1 ];then
 	sqlite3 "${CHULETADB}" ".mode line" "select count(*) before from chuleta;" 
-	echo ".echo on" > "${TEMP}"
+	echo -n "attach '" > "${TEMP}"
+	echo -n ${FTSDB} >> "${TEMP}"
+	echo "' as ftsdb;" >> "${TEMP}"
+	cat "${SCRIPT_DIR}/chuleta_ins.trg" >> ${TEMP}	
+	echo ".echo on" >> "${TEMP}"
 	echo "BEGIN TRANSACTION;" >> "${TEMP}"
 	cat "${TEMPSCRIPT}" >> "${TEMP}"
 	echo "END TRANSACTION;" >> "${TEMP}"
