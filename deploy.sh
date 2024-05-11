@@ -10,6 +10,7 @@ RUTA_CONF=~/.config/chu
 CONFIG_FILE="${RUTA_CONF}"/chu.conf
 CHULETADB="${CACHE_DIR}"/chuletas.db
 FREQUENTDB="${CACHE_DIR}"/frequent.db
+FTSDB="${CACHE_DIR}/chuletas_fts.db"
 
 if ! command -v sqlite3 &> /dev/null; then
 cat <<EOF
@@ -81,12 +82,20 @@ if [ -f "${CHULETADB}" ];then
 	echo "Old chuletas.db moved to ${BACKUPNAME}"
 fi
 sqlite3 "${CHULETADB}" ".read "${SCRIPT_DIR}/sqlite_db_schema.sql
+
 if [ -f "${FREQUENTDB}" ];then
 	BACKUPNAME="$(echo ${FREQUENTDB}.$(date +%Y%m%d%H%M%S))"
 	mv "${FREQUENTDB}" "${BACKUPNAME}"
 	echo "Old frequent.db moved to ${BACKUPNAME}"
 fi
 sqlite3 "${FREQUENTDB}" ".read "${SCRIPT_DIR}/sqlite_frequent_db_schema.sql
+
+if [ -f "${FTSDB}" ];then
+	BACKUPNAME="$(echo ${FTSDB}.$(date +%Y%m%d%H%M%S))"
+	mv "${FTSDB}" "${BACKUPNAME}"
+	echo "Old chuletas_fts.db moved to ${BACKUPNAME}"
+fi
+sqlite3 "${FTSDB}" ".read "${SCRIPT_DIR}/chuletas_fts_db_schema.sql
 	
 if [ ! -d "${RUTA_CONF}" ];then
 	mkdir "${RUTA_CONF}"
