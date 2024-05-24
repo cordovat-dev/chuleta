@@ -150,7 +150,7 @@ if [ $somechange -eq 1 ];then
 	echo -n "attach '" > "${TEMP}"
 	echo -n ${FTSDB} >> "${TEMP}"
 	echo "' as ftsdb;" >> "${TEMP}"
-	cat "${SCRIPT_DIR}/chuleta_ins.trg" >> ${TEMP}	
+	cat "${SCRIPT_DIR}/chuleta_ins.trg" >> "${TEMP}"
 	echo ".echo on" >> "${TEMP}"
 	echo "BEGIN TRANSACTION;" >> "${TEMP}"
 	cat "${TEMPSCRIPT}" >> "${TEMP}"
