@@ -32,6 +32,13 @@ if [ ! -f compress_chuletas_backup ] || [[ $(find compress_chuletas_backup -mtim
 	touch compress_chuletas_backup
 fi
 
+compressed_file=backup.chuletas_fts.tar.gz.$(date +%Y%m%d%H%M%S)
+if [ ! -f compress_chuletas_fts_backup ] || [[ $(find compress_chuletas_fts_backup -mtime +7 -print) ]];then
+	find . -iname "chuletas_fts.db.*" -print0 | tar -czvf ${compressed_file} --remove-files --null -T -
+	test $(tar -ztvf ${compressed_file}|wc -l) -eq 0 && rm ${compressed_file}
+	touch compress_chuletas_fts_backup
+fi
+
 compressed_file=backup.frequent.tar.gz.$(date +%Y%m%d%H%M%S)
 if [ ! -f compress_frequent_backup ] || [[ $(find compress_frequent_backup -mtime +7 -print) ]];then
 	find . -iname "frequent.db.*" -print0 | tar -czvf ${compressed_file} --remove-files --null -T -
