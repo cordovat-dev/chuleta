@@ -1,6 +1,6 @@
 - man page
 - when opening in editor due to exceeding MAX_CAT_LENGTH, open a copy instead of original
-- option to print usage instead of all chuletas when no search term passed
+x option to print usage instead of all chuletas when no search term passed
 x fix issue with clipboard option and less
 - create a module to validate settings data types
 - create a separate script to check dependencies with separated MINGW and non/MINGW sections
