@@ -48,6 +48,19 @@ cat <<EOF
 EOF
 }
 
+function copy_to_clip {
+	CHULETA="$1"
+	if [ ${COPYTOCLIP} -eq 1 ] && [ "${MINGW}" = "YES" ];then
+		cat "${CHULETA}" > /dev/clipboard
+		echo
+		echo "...copied to clipboard"
+	elif [ ${COPYTOCLIP} -eq 1 ];then
+		cat "${CHULETA}" | xclip -selection c
+		echo
+		echo "...copied to clipboard"
+	fi
+}
+
 function abrir {
 	CHULETA="${BASE_DIR}"/"$1"
 	set +u
@@ -69,16 +82,8 @@ function abrir {
 	else
 		echo
 		cat "${CHULETA}"
-		if [ ${COPYTOCLIP} -eq 1 ] && [ "${MINGW}" = "YES" ];then
-			cat "${CHULETA}" > /dev/clipboard
-			echo
-			echo "...copied to clipboard"
-		elif [ ${COPYTOCLIP} -eq 1 ];then
-			cat "${CHULETA}" | xclip -selection c
-			echo
-			echo "...copied to clipboard"
-		fi		
 	fi
+	copy_to_clip "${CHULETA}"
 	if [ "${RNDCHU}" != "--random" ]; then
 		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"
 		sqlite3 ${CHULETADB} "insert or replace into last_opened values(1,'$1');"
