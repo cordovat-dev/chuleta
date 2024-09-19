@@ -90,7 +90,17 @@ function _bcat {
 		cat "${1}"
 	else
 		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
-		batcat -p "${TEMPBCAT}."$(detect_language "${1}")
+		batcat --paging never -p "${TEMPBCAT}."$(detect_language "${1}")
+	fi
+}
+
+function _bless {
+	_bcatpath=""
+	if [ "${MINGW}" = "YES" ]; then
+		less "${1}"
+	else
+		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+		batcat --pager less -p "${TEMPBCAT}."$(detect_language "${1}")
 	fi
 }
 
@@ -107,7 +117,7 @@ function abrir {
 	MAX_CAT_LENGTH=$(( $(tput lines ) - 3 - 3 ))
 	if [ ${LENGTH} -gt ${MAX_CAT_LENGTH} ];then
 		if [ ${PREFER_LESS} = "YES" ];then
-			less "${CHULETA}"
+			_bless "${CHULETA}"
 		else
 			echo "  opening in editor or viewer..."
 			${OPEN_COMMAND} "${CHULETA}"
