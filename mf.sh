@@ -61,6 +61,39 @@ function copy_to_clip {
 	fi
 }
 
+detect_language() {
+    local file_content=$(cat "$1")
+
+    shopt -s nocasematch
+
+    if [[ "$file_content" =~ ^#!/bin/bash ]]; then
+        echo "sh"
+    elif [[ "$file_content" =~ (public|class|static|void|main|System\.out\.println) ]]; then
+        echo "java"
+    elif [[ "$file_content" =~ (SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|MERGE|CALL|EXPLAIN|LOCK) ]]; then
+        echo "sql"
+    elif [[ "$file_content" =~ (DECLARE|BEGIN|EXCEPTION|END|LOOP|IF|ELSIF|ELSE|EXIT|WHILE|FOR|GOTO|RETURN|RAISE|NULL) ]]; then
+        echo "sql"
+    elif [[ "$file_content" =~ (function|var|let|const|console\.log|document\.getElementById) ]]; then
+        echo "js"
+    else
+        echo "txt"
+    fi
+
+   shopt -u nocasematch
+}
+
+
+function _bcat {
+	_bcatpath=""
+	if [ "${MINGW}" = "YES" ]; then
+		cat "${1}"
+	else
+		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+		batcat "${TEMPBCAT}."$(detect_language "${1}")
+	fi
+}
+
 function abrir {
 	CHULETA="${BASE_DIR}"/"$1"
 	set +u
@@ -81,7 +114,7 @@ function abrir {
 		fi
 	else
 		echo
-		cat "${CHULETA}"
+		_bcat "${CHULETA}"
 	fi
 	copy_to_clip "${CHULETA}"
 	if [ "${RNDCHU}" != "--random" ]; then
