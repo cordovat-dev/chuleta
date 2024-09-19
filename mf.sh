@@ -90,7 +90,7 @@ function _bcat {
 		cat "${1}"
 	else
 		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
-		batcat "${TEMPBCAT}."$(detect_language "${1}")
+		batcat -p "${TEMPBCAT}."$(detect_language "${1}")
 	fi
 }
 
