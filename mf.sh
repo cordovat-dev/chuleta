@@ -120,8 +120,9 @@ function abrir {
 		if [ ${PREFER_LESS} = "YES" ];then
 			_bless "${CHULETA}"
 		else
+			cp "${CHULETA}" "${TEMPBCAT}."$(detect_language "${CHULETA}")
 			echo "  opening in editor or viewer..."
-			${OPEN_COMMAND} "${CHULETA}"
+			${OPEN_COMMAND} "${TEMPBCAT}."$(detect_language "${CHULETA}")
 		fi
 	else
 		echo
