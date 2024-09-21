@@ -66,15 +66,17 @@ detect_language() {
 
     shopt -s nocasematch
 
-    if [[ "$file_content" =~ ^#!/bin/bash ]]; then
+    bashpattern="#!/bin/bash"
+
+    if [[ "$file_content" =~ ${bashpattern} ]]; then
         echo "sh"
-    elif [[ "$file_content" =~ (public|class|static|void|main|System\.out\.println) ]]; then
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(public|class|static|void|main|System\.out\.println)(^|[^[:alnum:]_]) ]]; then
         echo "java"
-    elif [[ "$file_content" =~ (SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|MERGE|CALL|EXPLAIN|LOCK) ]]; then
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|MERGE|CALL|EXPLAIN|LOCK)(^|[^[:alnum:]_]) ]]; then
         echo "sql"
-    elif [[ "$file_content" =~ (DECLARE|BEGIN|EXCEPTION|END|LOOP|IF|ELSIF|ELSE|EXIT|WHILE|FOR|GOTO|RETURN|RAISE|NULL) ]]; then
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(DECLARE|BEGIN|EXCEPTION|END|LOOP|IF|ELSIF|ELSE|EXIT|WHILE|FOR|GOTO|RETURN|RAISE|NULL)(^|[^[:alnum:]_]) ]]; then
         echo "sql"
-    elif [[ "$file_content" =~ (function|var|let|const|console\.log|document\.getElementById) ]]; then
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(function|var|let|const|console\.log|document\.getElementById)(^|[^[:alnum:]_]) ]]; then
         echo "js"
     else
         echo "txt"
@@ -90,6 +92,7 @@ function _bcat {
 		cat "${1}"
 	else
 		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+		#echo "${TEMPBCAT}."$(detect_language "${1}")
 		batcat --paging never -p "${TEMPBCAT}."$(detect_language "${1}")
 	fi
 }
