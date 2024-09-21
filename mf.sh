@@ -100,7 +100,8 @@ function _bless {
 		less "${1}"
 	else
 		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
-		batcat --pager less -p "${TEMPBCAT}."$(detect_language "${1}")
+		#echo "${TEMPBCAT}."$(detect_language "${1}")
+		batcat --pager "less -M" -p "${TEMPBCAT}."$(detect_language "${1}")
 	fi
 }
 
