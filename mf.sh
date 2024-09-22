@@ -108,6 +108,20 @@ function _bless {
 	fi
 }
 
+function temp_name {
+    _fullpath="${1}"
+    _newextension="${2}"
+
+    _path="${_fullpath%/*}"
+    _filename="${_fullpath##*/}"
+    _extension="${_filename##*.}"
+    _filenamenoext="${_filename%.*}"
+    _hash=$(echo -n "$_path" | md5sum | cut -d ' ' -f 1)
+    _last5=${_hash: -5}
+
+    echo "${_filenamenoext}"_"${_last5}.${_newextension}"
+}
+
 function abrir {
 	CHULETA="${BASE_DIR}"/"$1"
 	set +u
@@ -123,9 +137,9 @@ function abrir {
 		if [ ${PREFER_LESS} = "YES" ];then
 			_bless "${CHULETA}"
 		else
-			cp "${CHULETA}" "${TEMPBCAT}."$(detect_language "${CHULETA}")
+			cp "${CHULETA}" $(temp_name "${CHULETA}" $(detect_language "${CHULETA}"))
 			echo "  opening in editor or viewer..."
-			${OPEN_COMMAND} "${TEMPBCAT}."$(detect_language "${CHULETA}")
+			${OPEN_COMMAND} $(temp_name "${CHULETA}" $(detect_language "${CHULETA}"))
 		fi
 	else
 		echo
