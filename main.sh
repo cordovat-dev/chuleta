@@ -10,6 +10,8 @@ function exit_handler_main {
 	test -n "${TEMP}" && test -f "${TEMP}" && rm "${TEMP}"
 	test -n "${TEMP1}" && test -f "${TEMP1}" && rm "${TEMP1}"
 	test -n "${TEMP2}" && test -f "${TEMP2}" && rm "${TEMP2}"
+	test -n "${TEMPBCAT}" && test -f "${TEMPBCAT}" && rm "${TEMPBCAT}"
+
 
 	exit $1
 }
@@ -100,6 +102,8 @@ TEMPORARY="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPORARY2="$(mktemp /tmp/chuleta.XXXXX)"
 TEMPDIR="$(mktemp -d /tmp/chuleta.XXXXX)"
 TEMP2="$(mktemp /tmp/chuleta.XXXXX)"
+TEMPBCAT="$(mktemp /tmp/chuleta.XXXXX)"
+
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
 declare -r NULLGITTAG="chu_update_99999999999999"

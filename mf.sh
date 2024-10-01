@@ -61,6 +61,67 @@ function copy_to_clip {
 	fi
 }
 
+detect_language() {
+    local file_content=$(cat "$1")
+
+    shopt -s nocasematch
+
+    bashpattern="#!/bin/bash"
+
+    if [[ "$file_content" =~ ${bashpattern} ]]; then
+        echo "sh"
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(public|class|static|void|main|System\.out\.println)(^|[^[:alnum:]_]) ]]; then
+        echo "java"
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE|MERGE|CALL|EXPLAIN|LOCK)(^|[^[:alnum:]_]) ]]; then
+        echo "sql"
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(DECLARE|BEGIN|EXCEPTION|END|LOOP|IF|ELSIF|ELSE|EXIT|WHILE|FOR|GOTO|RETURN|RAISE|NULL)(^|[^[:alnum:]_]) ]]; then
+        echo "sql"
+    elif [[ "$file_content" =~ (^|[^[:alnum:]_])(function|var|let|const|console\.log|document\.getElementById)(^|[^[:alnum:]_]) ]]; then
+        echo "js"
+    else
+        echo "txt"
+    fi
+
+   shopt -u nocasematch
+}
+
+
+function _bcat {
+	_bcatpath=""
+	if [ "${MINGW}" = "YES" ]; then
+		cat "${1}"
+	else
+		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+		#echo "${TEMPBCAT}."$(detect_language "${1}")
+		batcat --paging never -p "${TEMPBCAT}."$(detect_language "${1}")
+	fi
+}
+
+function _bless {
+	_bcatpath=""
+	if [ "${MINGW}" = "YES" ]; then
+		less "${1}"
+	else
+		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+		#echo "${TEMPBCAT}."$(detect_language "${1}")
+		batcat --pager "less -M" -p "${TEMPBCAT}."$(detect_language "${1}")
+	fi
+}
+
+function _temp_file {
+    _fullpath="${1}"
+    _newextension="${2}"
+
+    _path="${_fullpath%/*}"
+    _filename="${_fullpath##*/}"
+    _extension="${_filename##*.}"
+    _filenamenoext="${_filename%.*}"
+    _hash=$(echo -n "$_path" | md5sum | cut -d ' ' -f 1)
+    _last5=${_hash: -5}
+
+    echo /tmp/"${_filenamenoext}"_"${_last5}.${_newextension}"
+}
+
 function abrir {
 	CHULETA="${BASE_DIR}"/"$1"
 	set +u
@@ -74,14 +135,15 @@ function abrir {
 	MAX_CAT_LENGTH=$(( $(tput lines ) - 3 - 3 ))
 	if [ ${LENGTH} -gt ${MAX_CAT_LENGTH} ];then
 		if [ ${PREFER_LESS} = "YES" ];then
-			less "${CHULETA}"
+			_bless "${CHULETA}"
 		else
+			cp "${CHULETA}" $(_temp_file "${CHULETA}" $(detect_language "${CHULETA}"))
 			echo "  opening in editor or viewer..."
-			${OPEN_COMMAND} "${CHULETA}"
+			${OPEN_COMMAND} $(_temp_file "${CHULETA}" $(detect_language "${CHULETA}"))
 		fi
 	else
 		echo
-		cat "${CHULETA}"
+		_bcat "${CHULETA}"
 	fi
 	copy_to_clip "${CHULETA}"
 	if [ "${RNDCHU}" != "--random" ]; then

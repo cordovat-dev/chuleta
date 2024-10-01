@@ -1,0 +1,2 @@
+x The copied chuleta in tmp should not be random but have the same name than the original (except for the extension if inffered)
+

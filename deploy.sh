@@ -40,6 +40,17 @@ if [ "${MINGW}" = "YES" ];then
 		exit 1
 	fi
 	set -e
+else
+# indentation not respected here for the "here document" to work
+if ! command -v batcat &> /dev/null; then
+cat <<EOF
+
+batcat could not be found
+Please install batcat in order to install
+and use Chuleta.
+EOF
+    exit 1
+fi
 fi
 
 if [ ! -d "${CACHE_DIR}" ];then
