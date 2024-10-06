@@ -88,24 +88,16 @@ detect_language() {
 
 function _bcat {
 	_bcatpath=""
-	if [ "${MINGW}" = "YES" ]; then
-		cat "${1}"
-	else
-		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
-		#echo "${TEMPBCAT}."$(detect_language "${1}")
-		batcat --paging never -p "${TEMPBCAT}."$(detect_language "${1}")
-	fi
+	cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+	#echo "${TEMPBCAT}."$(detect_language "${1}")
+	batcat --paging never -p "${TEMPBCAT}."$(detect_language "${1}")
 }
 
 function _bless {
 	_bcatpath=""
-	if [ "${MINGW}" = "YES" ]; then
-		less "${1}"
-	else
-		cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
-		#echo "${TEMPBCAT}."$(detect_language "${1}")
-		batcat --pager "less -M" -p "${TEMPBCAT}."$(detect_language "${1}")
-	fi
+	cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
+	#echo "${TEMPBCAT}."$(detect_language "${1}")
+	batcat --pager "less -M" -p "${TEMPBCAT}."$(detect_language "${1}")
 }
 
 function _temp_file {
@@ -135,7 +127,7 @@ function abrir {
 	MAX_CAT_LENGTH=$(( $(tput lines ) - 3 - 3 ))
 	if [ ${LENGTH} -gt ${MAX_CAT_LENGTH} ];then
 		if [ ${PREFER_LESS} = "YES" ];then
-			_bless "${CHULETA}"
+			${LESS_COMMAND} "${CHULETA}"
 		else
 			cp "${CHULETA}" $(_temp_file "${CHULETA}" $(detect_language "${CHULETA}"))
 			echo "  opening in editor or viewer..."
@@ -143,7 +135,7 @@ function abrir {
 		fi
 	else
 		echo
-		_bcat "${CHULETA}"
+		${CAT_COMMAND} "${CHULETA}"
 	fi
 	copy_to_clip "${CHULETA}"
 	if [ "${RNDCHU}" != "--random" ]; then

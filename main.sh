@@ -107,6 +107,10 @@ TEMPBCAT="$(mktemp /tmp/chuleta.XXXXX)"
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
 SHOW_CONFIG_FILTER=$([[ "${MINGW}" = "YES" ]] && echo cat || echo "batcat -pl INI")
+CAT_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo cat || echo _bcat)
+LESS_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo less || echo _bless)
+
+
 declare -r NULLGITTAG="chu_update_99999999999999"
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
