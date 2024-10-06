@@ -106,6 +106,11 @@ TEMPBCAT="$(mktemp /tmp/chuleta.XXXXX)"
 
 OPEN_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo start || echo xdg-open)
 SUDO_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo -n "" || echo sudo)
+SHOW_CONFIG_FILTER=$([[ "${MINGW}" = "YES" ]] && echo cat || echo "batcat -pl INI")
+CAT_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo cat || echo _bcat)
+LESS_COMMAND=$([[ "${MINGW}" = "YES" ]] && echo less || echo _bless)
+
+
 declare -r NULLGITTAG="chu_update_99999999999999"
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]];then
@@ -168,10 +173,10 @@ elif [ "${flag}" = "--frequent" ];then
 	exit 0
 elif [ "${flag}" = "--show-config" ];then
 	echo "-- Config file [ ${CONFIG_FILE} ] --"
-	cat "${CONFIG_FILE}"|sort 
+	cat "${CONFIG_FILE}"| sort | ${SHOW_CONFIG_FILTER}
 	echo
 	echo "-- Database [ ${CHULETADB} ] --"
-	sqlite3 "${CHULETADB}" "select * from v_settings_report;"
+	sqlite3 "${CHULETADB}" "select * from v_settings_report;" | ${SHOW_CONFIG_FILTER}
 	exit 0
 elif [ "${flag}" = "--random" ];then
 	"${SCRIPT_DIR}"/co.sh -w ${NO_OLD_DB_WRN} -c ${CACHE_DIR}
