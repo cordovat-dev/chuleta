@@ -12,3 +12,7 @@ x update fts table when updated file in git
 - make fts optional
 	- parametrized it
 	- make normal search default
+- find out a solution to do this for hypened search terms xxx-yyy -> "\"xxx-yyy\""
+  to avoid "Error: stepping, no such column: yyy (1)"
+
+
