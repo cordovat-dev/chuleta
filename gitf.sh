@@ -47,8 +47,7 @@ function listchanges {
 	set -e
 	if [ $result -eq 0 ];then
 		set +e
-		#egrep -v "^M" "${TEMPDIFFTREE}"
-		cat "${TEMPDIFFTREE}"
+		cat "${TEMPDIFFTREE}" | egrep "chuleta_.*\.txt$"
 		set -e
 	else
 		echo >&2
