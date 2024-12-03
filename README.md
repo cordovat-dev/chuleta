@@ -1,5 +1,5 @@
 # Chuleta
-This command-line utility for Linux/Unix facilitates the quick search, preview, and modification of text-based cheat-sheets. It leverages a folder structure as the entry point for topics and generates topic completion. Powered by a full-text search SQLite database, it also features Bash autocompletion for topics and terms to streamline the search process.
+This command-line utility for Linux/Unix facilitates the quick search, preview, and modification of text-based cheat-sheets. It leverages a folder structure as the entry point. Powered by a full-text search SQLite database, it also features Bash autocompletion for topics and terms to streamline the search process.
 
 ## Philosophy
 
@@ -10,6 +10,26 @@ I believe that even the most complex cheat-sheets, code snippets, and annotation
 ## Structure of cheat-sheets folder
 
 Cheat-sheets are stored in a directory tree starting from a base directory containing sub-directories (called topics and subtopics). Each directory contains cheat-sheet files (chuletas) that are plain text files that adhere to a name convention explained bellow.
+
+## Sqlite full-text search
+
+All cheat-sheet files are tonekized into a full-text search Sqlite database.
+
+## Bash autocompletion
+
+All search topics extracted from filanemes have Bash autompletion to streamline the search process.
+
+## Git integration for speedy updates
+
+If the folder where cheat-sheet files are located is tracked by Git, then the optional, Git-based update allows for partial updates of the database, speeding up the inclusion of any new or modified cheat-sheet in the full-text searchable database.
+
+## Rotating backups
+
+Every time the database is updated, a backup is made, week-old backups are compressed, and month-old backups are deleted.
+
+## Bash programming educational value
+
+The codebase has educational valud for learners of Bash scripting, it used good practices, advanced techniques and some OOP-like solutions.
 
 ## Directory name convention
 
