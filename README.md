@@ -11,9 +11,9 @@ I believe that even the most complex cheat-sheets, code snippets, and annotation
 
 Cheat-sheets are stored in a directory tree starting from a base directory containing sub-directories (called topics and subtopics). Each directory contains cheat-sheet files (chuletas) that are plain text files that adhere to a name convention explained bellow.
 
-## Sqlite full-text search
+## SQLite full-text search
 
-All cheat-sheet files are tonekized into a full-text search Sqlite database.
+All cheat-sheet files are tonekized into a full-text search SQLite database.
 
 ## Bash autocompletion
 
@@ -29,7 +29,7 @@ Every time the database is updated, a backup is made, week-old backups are compr
 
 ## Bash programming educational value
 
-The codebase has educational valud for learners of Bash scripting, it used good practices, advanced techniques and some OOP-like solutions.
+The codebase has educational value for learners of Bash scripting, it used good practices, advanced techniques and some OOP-like solutions.
 
 ## Directory name convention
 
