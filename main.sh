@@ -172,10 +172,10 @@ elif [ "${flag}" = "--frequent" ];then
 	fi
 	exit 0
 elif [ "${flag}" = "--show-config" ];then
-	echo "-- Config file [ ${CONFIG_FILE} ] --"
+	echo "[ Config file: ${CONFIG_FILE} ]"
 	cat "${CONFIG_FILE}"| sort | ${SHOW_CONFIG_FILTER}
 	echo
-	echo "-- Database [ ${CHULETADB} ] --"
+	echo "[ Database: ${CHULETADB} ]"
 	sqlite3 "${CHULETADB}" "select * from v_settings_report;" | ${SHOW_CONFIG_FILTER}
 	exit 0
 elif [ "${flag}" = "--random" ];then
