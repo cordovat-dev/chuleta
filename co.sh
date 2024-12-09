@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## check old. Check whether or not the database needs updating.
+
 NO_OLD_DB_WRN=""
 CACHE_DIR=""
 while getopts w:c: flag
