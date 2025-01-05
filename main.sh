@@ -144,7 +144,7 @@ elif [ "${flag}" = "--topics" ];then
 	fi
 	exit 0
 elif [ "${flag}" = "--terms" ];then
-	cat "${CACHE_DIR}"/lista_comp
+	cat "${CACHE_DIR}"/lista_comp | tr ' ' '\n'| column
 	exit 0
 elif [ "${flag}" = "--cached" ];then
 	set +u
