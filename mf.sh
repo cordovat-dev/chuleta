@@ -130,7 +130,9 @@ function abrir {
 			${LESS_COMMAND} "${CHULETA}"
 		else
 			cp "${CHULETA}" $(_temp_file "${CHULETA}" $(detect_language "${CHULETA}"))
+			echo
 			echo "  opening in editor or viewer..."
+			echo
 			${OPEN_COMMAND} $(_temp_file "${CHULETA}" $(detect_language "${CHULETA}"))
 		fi
 	else
@@ -145,7 +147,9 @@ function abrir {
 }
 
 function editar {
+	echo
 	echo "  opening in editor ..."
+	echo
 	${OPEN_COMMAND} "${BASE_DIR}"/"$1"
 }
 

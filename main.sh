@@ -154,12 +154,15 @@ elif [ "${flag}" = "--cached" ];then
 		if [[ ${LINENUM} =~ [0-9]+ ]];then
 			FILEDIR=$(grep " $2 " "${MENUCACHE_NC}"|awk '{print $2}')
 			if [ -n ${FILEDIR} ];then
+				echo
 				"${SCRIPT_DIR}"/ct.sh -n ${LINENUM} -d "${FILEDIR}" $(test ${COLOUR} = "YES" && echo "-c" || echo "")
 				echo
 				${COMMAND} "${FILEDIR}"
 			fi
 		else
+			echo
 			cat "${MENUCACHE}"
+			echo
 		fi
 	fi
 elif [ "${flag}" = "--frequent" ];then

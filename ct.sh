@@ -22,6 +22,7 @@ if [ ${COLOUR} -eq 0 ];then
 	exit 0
 fi
 
+echo
 printf "  %-4s%s\n" ${COUNT} ${DATA} | ${SCRIPT_DIR}/ac.sed
 
 exit 0
