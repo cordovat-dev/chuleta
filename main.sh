@@ -204,6 +204,7 @@ RESULT_COUNT=$(cat "${TEMPORARY}" | wc -l)
 if [ ${RESULT_COUNT} -eq 1 ]; then
 	"${SCRIPT_DIR}"/ct.sh -n 1 -d $(cat "${TEMPORARY}") $(test ${COLOUR} = "YES" && echo "-c" || echo "")
 	${COMMAND} $(cat "${TEMPORARY}")
+	echo
 elif [ ${RESULT_COUNT} -gt 0 -a ${RESULT_COUNT} -le ${MAX_MENU_LENGTH} ]; then
 	menu "${TEMPORARY}"
 elif [ ${RESULT_COUNT} -gt ${MAX_MENU_LENGTH} ];then
