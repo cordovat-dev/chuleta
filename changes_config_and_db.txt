@@ -1,6 +1,8 @@
 # EN ~/.config/chu
 
 sed -E -i.bak 's/NUM_DAYS_OLD/NUM_DAYS_OLD_DB_WRN/g' chu.conf
+sed -E -i.bak 's/NO_OLD_DB_WRN=0/NO_OLD_DB_WRN=NO/g' chu.conf
+
 
 # EN ~/.cache/chu
 

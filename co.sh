@@ -17,6 +17,6 @@ test -z ${CACHE_DIR} && exit 1
 
 CHULETADB=${CACHE_DIR}/chuletas.db
 
-if [ ${NO_OLD_DB_WRN} -ne 1 ];then
+if [ "${NO_OLD_DB_WRN}" != "YES" ];then
 	sqlite3 "${CHULETADB}" "select * from v_old_db_msg;"
 fi

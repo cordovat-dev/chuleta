@@ -14,7 +14,7 @@ set -euo pipefail
 source ~/.config/chu/chu.conf
 # variables read from conf file: NO_OLD_DB_WRN, LARGO_PERMITIDO, BASE_DIR, MAX_MENU_LENGTH
 MAX_DB_AGE=""
-test ${NO_OLD_DB_WRN} -eq 1 || MAX_DB_AGE="--max-database-age -1"
+test "${NO_OLD_DB_WRN}" == "YES" || MAX_DB_AGE="--max-database-age -1"
 
 BASE_DIR=$1
 NAMEDIRBASE="$(basename ${BASE_DIR})"
