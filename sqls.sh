@@ -12,7 +12,7 @@ set -euo pipefail
 
 BASE_DIR=""
 DB=""
-NUM_DAYS_OLD=""
+NUM_DAYS_OLD_DB_WRN=""
 FTSDB=""
 while getopts b:d:t:w: flag
 do
@@ -20,14 +20,14 @@ do
 		b) BASE_DIR=${OPTARG};;
 		d) DB=${OPTARG};;
 		t) FTSDB=${OPTARG};;
-		w) NUM_DAYS_OLD=${OPTARG};;
+		w) NUM_DAYS_OLD_DB_WRN=${OPTARG};;
     esac
 done
 
 test -z ${BASE_DIR} && exit 1
 test -z ${DB} && exit 1
 test -z ${FTSDB} && exit 1
-test -z ${NUM_DAYS_OLD} && exit 1
+test -z ${NUM_DAYS_OLD_DB_WRN} && exit 1
 
 DATATEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)
 SCRIPTTEMP=$(mktemp /tmp/chuleta_inserts.XXXXX)

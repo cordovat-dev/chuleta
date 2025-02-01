@@ -16,5 +16,6 @@
 !unit_tests.txt
 !git_based_todo.txt
 !todo_batcat.txt
+!changes_config_and_db.txt
 test.sh
 test2.sh

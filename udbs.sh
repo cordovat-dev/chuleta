@@ -49,7 +49,7 @@ fi
 
 local bdir=$(echo ${BASE_DIR})
 echo "insert or replace into settings (key,value) values ('BASE_DIR','${bdir}');"
-echo "insert or replace into settings (key,value) values ('NUM_DAYS_OLD','${NUM_DAYS_OLD:-8}');"
+echo "insert or replace into settings (key,value) values ('NUM_DAYS_OLD_DB_WRN','${NUM_DAYS_OLD_DB_WRN:-8}');"
 echo "END TRANSACTION;"
 }
 

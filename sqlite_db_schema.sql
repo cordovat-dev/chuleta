@@ -20,7 +20,7 @@ from
         (
 			select
 				(julianday(CURRENT_TIMESTAMP) - julianday(value)) >=
-				cast((select value from settings where key='NUM_DAYS_OLD') as int) old,
+				cast((select value from settings where key='NUM_DAYS_OLD_DB_WRN') as int) old,
 				(julianday(CURRENT_TIMESTAMP) - julianday(value)) age
 			from
 				settings
