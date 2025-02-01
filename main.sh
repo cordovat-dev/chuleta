@@ -80,8 +80,8 @@ WORD_LIST="$@"
 
 CONFIG_FILE=~/.config/chu/chu.conf
 source ${CONFIG_FILE}
-# variables read from conf file: NO_OLD_DB_WRN, BASE_DIR, MAX_MENU_LENGTH, MINGW, COLOUR
-NO_OLD_DB_WRN=${NO_OLD_DB_WRN:-NO}
+# variables read from conf file: OLD_DB_WRN, BASE_DIR, MAX_MENU_LENGTH, MINGW, COLOUR
+OLD_DB_WRN=${OLD_DB_WRN:-YES}
 BASE_DIR=${BASE_DIR:-~/chuleta/chuleta-data}
 MAX_MENU_LENGTH=${MAX_MENU_LENGTH:-12}
 MINGW=${MINGW:-YES}
@@ -89,7 +89,7 @@ COLOUR=${COLOUR:-YES}
 NUM_DAYS_OLD_DB_WRN=${NUM_DAYS_OLD_DB_WRN:-8}
 PREFER_LESS=${PREFER_LESS:-YES}
 GIT_INTEGRATION=${GIT_INTEGRATION:-NO}
-# if env var NO_OLD_DB_WRN is set to "YES", then age of database is ignored
+# if env var OLD_DB_WRN is set to "NO" (anythig other than "YES"), then age of database is ignored
 CACHE_DIR=~/.cache/chu
 FREQUENTDB="${CACHE_DIR}/frequent.db"
 CHULETADB="${CACHE_DIR}/chuletas.db"
@@ -130,7 +130,7 @@ elif [ "${flag}" = "--stats" ];then
 	awk '{printf "%s: %s %2s%s %s\n", $1, $2, $3, "%", $4}'|sed 's/[^0-9]0%/-/'|\
 	sed 's/\-$//g'|column -R 2,3 -t
 	echo
-	"${SCRIPT_DIR}"/co.sh -w "${NO_OLD_DB_WRN}" -c "${CACHE_DIR}"
+	"${SCRIPT_DIR}"/co.sh -w "${OLD_DB_WRN}" -c "${CACHE_DIR}"
 	echo $(sqlite3 "${CHULETADB}" "select count(*) from chuleta;") chuletas
 	exit 0
 elif [ "${flag}" = "--topics" ];then
@@ -182,7 +182,7 @@ elif [ "${flag}" = "--show-config" ];then
 	sqlite3 "${CHULETADB}" "select * from v_settings_report;" | ${SHOW_CONFIG_FILTER}
 	exit 0
 elif [ "${flag}" = "--random" ];then
-	"${SCRIPT_DIR}"/co.sh -w "${NO_OLD_DB_WRN}" -c ${CACHE_DIR}
+	"${SCRIPT_DIR}"/co.sh -w "${OLD_DB_WRN}" -c ${CACHE_DIR}
 	CHULETA=$(sqlite3 "${CHULETADB}" "select path from chuleta order by random() limit 1;")
 	"${SCRIPT_DIR}"/ct.sh -n "!" -d "${CHULETA}" $(test ${COLOUR} = "YES" && echo "-c" || echo "")
 	${COMMAND} "${CHULETA}" "--random"
@@ -195,7 +195,7 @@ elif [ "${flag}" = "--help" ];then
 elif [[ "${flag}" =~ -- ]]; then
 	usage
 else
-	"${SCRIPT_DIR}"/co.sh -w "${NO_OLD_DB_WRN}" -c "${CACHE_DIR}"
+	"${SCRIPT_DIR}"/co.sh -w "${OLD_DB_WRN}" -c "${CACHE_DIR}"
 	sqlite3 ${CHULETADB} "$(${SCRIPT_DIR}/gs.sh ${WORD_LIST})" > ${TEMPORARY}
 fi
 
