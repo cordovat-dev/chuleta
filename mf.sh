@@ -141,7 +141,7 @@ function abrir {
 	fi
 	copy_to_clip "${CHULETA}"
 	if [ "${RNDCHU}" != "--random" ]; then
-		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1);"
+		sqlite3 ${FREQUENTDB} "insert into frequent_log values('$1',1,CURRENT_TIMESTAMP);"
 		sqlite3 ${CHULETADB} "insert or replace into last_opened values(1,'$1');"
 	fi
 }

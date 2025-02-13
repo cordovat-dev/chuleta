@@ -1,4 +1,4 @@
-CREATE TABLE frequent_log(path text, count integer);
+CREATE TABLE frequent_log(path text, count integer, date text);
 CREATE VIEW v_log_count as select path, count(*) count from frequent_log group by path
 /* v_log_count(path,count) */;
 CREATE VIEW v_log_summary  as select count, path
