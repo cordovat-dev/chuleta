@@ -20,3 +20,5 @@
 test.sh
 test2.sh
 !replay.txt
+!debug.txt
+

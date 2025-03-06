@@ -1,0 +1,20 @@
+cd ~/chuleta/chuleta-data
+mv gsd gsd.old
+git clone C:/Users/cat1583/chuletas_gsd.git
+mv chuletas_gsd gsd
+rm -rf gsd.old
+cd gsd
+cd ~/.cache
+rm -rf chu
+cp -prf chu.20250306 chu
+cd ~/chuleta/chuleta-data
+cd gsd
+git mv gs/chuleta_tipos_pedido.txt gs/chuleta_t001_tipos_pedido.txt
+git ci -m "Pruebas"
+cd ~/chuleta/chuleta-data
+git tag chu_update_20250305094324
+cd gsd
+git tag chu_update_20250305094324 be188ab
+
+
+

@@ -1,8 +1,0 @@
-# in ~/.cache/chu
-
-pushd ~/.cache/chu 
-sqlite3 frequent.db
-alter table frequent_log add column date text;
-.quit
-popd
-

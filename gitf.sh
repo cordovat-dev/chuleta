@@ -89,8 +89,9 @@ function addpreffix {
 	local preffix="${1}"
 	if [ $usedepobasename -eq 1 ]; then
 		preffix=$(basename "${repodir}")/
+		echo ${preffix} > /tmp/addpreffix.txt
 	fi
-	sed -e "s#('#('${preffix}#"
+	sed -e "s#'#'${preffix}#"
 }
 
 function markrepos {
@@ -122,6 +123,8 @@ function getrepos {
 function readrepo {
 	local directory="${1}"
 	local preffix="${2:-}"
+	echo ${directory} > /tmp/directory.txt
+	echo ${preffix} > /tmp/preffix.txt
 	if [ ! -d "${directory}" ];then
 		echo "${directory} folder not found"
 		exit 1
@@ -135,12 +138,16 @@ function readrepo {
 		echo >&2 "Working tree in ${repodir} is not clean"
 	fi
 	listchanges > "${TEMPCHANGES}"
+	
 	if [ $(cat "${TEMPCHANGES}"|wc -l) -eq 0 ];then
 		echo "No changes found in ${directory}"
 	else
+		cat "${TEMPCHANGES}"|filterDML > /tmp/filterDML.txt
 		cat "${TEMPCHANGES}"|filterDML|addpreffix "${preffix}" > "${TEMPSCRIPT}"
 		somechange=1
 	fi
+	cp "${TEMPCHANGES}" /tmp/a.txt
+	cp "${TEMPSCRIPT}" /tmp/b.txt
 }
 
 getrepos
