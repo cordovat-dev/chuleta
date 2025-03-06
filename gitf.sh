@@ -90,7 +90,7 @@ function addpreffix {
 	if [ $usedepobasename -eq 1 ]; then
 		preffix=$(basename "${repodir}")/
 	fi
-	sed -e "s#('#('${preffix}#"
+	sed -e "s#'#'${preffix}#"
 }
 
 function markrepos {
