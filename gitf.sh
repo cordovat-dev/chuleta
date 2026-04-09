@@ -58,6 +58,7 @@ function listchanges {
 		echo >&2 "Solution 1: tag one commit repo with ${lasttag}"
 		echo >&2 "Solution 2: set GIT_INTEGRATION to NO to make a full update"
 		echo >&2 "Solution 3: set LAST_GIT_TAG to null in DB settings table to make a full update"
+		echo >&2 "Solution 4: run chu --clear-git-tags and then chu -u"
 		exit 1
 	fi
 }
