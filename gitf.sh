@@ -139,7 +139,7 @@ function readrepo {
 	if [ $(cat "${TEMPCHANGES}"|wc -l) -eq 0 ];then
 		echo "No changes found in ${directory}"
 	else
-		cat "${TEMPCHANGES}"|filterDML|addpreffix "${preffix}" > "${TEMPSCRIPT}"
+		cat "${TEMPCHANGES}"|filterDML|addpreffix "${preffix}" >> "${TEMPSCRIPT}"
 		somechange=1
 	fi
 }
