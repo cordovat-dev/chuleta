@@ -97,7 +97,7 @@ function _bless {
 	_bcatpath=""
 	cp "${1}" "${TEMPBCAT}."$(detect_language "${1}")
 	#echo "${TEMPBCAT}."$(detect_language "${1}")
-	batcat --pager "less -M" -p "${TEMPBCAT}."$(detect_language "${1}")
+	batcat --style=plain --pager "less -MR" -p "${TEMPBCAT}."$(detect_language "${1}")
 }
 
 function _temp_file {
